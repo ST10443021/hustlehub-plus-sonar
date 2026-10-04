@@ -1,0 +1,6 @@
+HustleHub+ Part 2 - Local Repo for now, will Merge Later
+
+Author: BLAKE GODFREY - ST10435415
+Author: MUZAMMIL CASSIM - ST10259792
+Author: SYED MUHAMMAD HAMZA KAZMI - ST10443021
+Author: CONNOR ALBERTYN - ST10437293
