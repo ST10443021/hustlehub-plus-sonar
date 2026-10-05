@@ -1,0 +1,33 @@
+{
+  "name": "insy7314_part1_hustlehub",
+  "version": "1.0.0",
+  "description": "HustleHub+ Part 1 - Secure backend foundations",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "gen-cert": "node scripts/generateCert.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.4.0",
+    "express-validator": "^7.2.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "xss-clean": "^0.1.4"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "eslint": "^10.8.1",
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,0 +1,19 @@
+﻿
+# Dependencies, builds and local configuration
+node_modules/
+dist/
+coverage/
+certs/
+.vs/
+obj/
+bin/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+*.log
+*.tsbuildinfo
