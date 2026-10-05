@@ -1,0 +1,802 @@
+{
+  "info": {
+    "name": "HustleHub Part 2 \u2014 DRAFT contract tests",
+    "description": "AI foundation for Blake/Hamza. New routes are proposals, NOT implemented in Part 1. Review the contract and use a test database. No live results are claimed. Expand JWT, rate-limit, malformed-input and transaction-failure cases before final submission.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:5443"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Health and initialise unique demo emails",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/health"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set('runId', Date.now().toString());",
+              "['clientToken', 'sellerToken', 'otherSellerToken', 'gigId'].forEach(k => pm.collectionVariables.unset(k));"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Register seller",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"seller-{{runId}}@example.com\",\n  \"password\": \"SamplePassw0rd123\",\n  \"role\": \"freelancer\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([201]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Register otherSeller",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"otherSeller-{{runId}}@example.com\",\n  \"password\": \"SamplePassw0rd123\",\n  \"role\": \"freelancer\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([201]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Register client",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"client-{{runId}}@example.com\",\n  \"password\": \"SamplePassw0rd123\",\n  \"role\": \"client\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([201]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Reject public admin registration \u2014 requires backend fix",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"admin-{{runId}}@example.com\",\n  \"password\": \"SamplePassw0rd123\",\n  \"role\": \"admin\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([400, 403]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Login seller",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"seller-{{runId}}@example.com\",\n  \"password\": \"SamplePassw0rd123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+              "pm.test('Returns token', () => pm.expect(pm.response.json().data.token).to.be.a('string').and.not.empty);",
+              "if (pm.response.code === 200) pm.collectionVariables.set('sellerToken', pm.response.json().data.token);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Login otherSeller",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"otherSeller-{{runId}}@example.com\",\n  \"password\": \"SamplePassw0rd123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+              "pm.test('Returns token', () => pm.expect(pm.response.json().data.token).to.be.a('string').and.not.empty);",
+              "if (pm.response.code === 200) pm.collectionVariables.set('otherSellerToken', pm.response.json().data.token);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Login client",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"client-{{runId}}@example.com\",\n  \"password\": \"SamplePassw0rd123\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+              "pm.test('Returns token', () => pm.expect(pm.response.json().data.token).to.be.a('string').and.not.empty);",
+              "if (pm.response.code === 200) pm.collectionVariables.set('clientToken', pm.response.json().data.token);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Freelancer creates a service",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{sellerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/gigs",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Part 2 test service\",\n  \"description\": \"A fictional service created by the live API test draft.\",\n  \"priceCents\": 12345\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([201]));",
+              "pm.test('Saved price matches', () => pm.expect(pm.response.json().data.gig.priceCents).to.eql(12345));",
+              "if (pm.response.code === 201) pm.collectionVariables.set('gigId', pm.response.json().data.gig.id);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 Browse services",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/gigs"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+              "pm.test('Services list', () => pm.expect(pm.response.json().data.gigs).to.be.an('array'));",
+              "pm.test('Created service is visible', () => pm.expect(pm.response.json().data.gigs.some(g => g.id === pm.collectionVariables.get('gigId'))).to.eql(true));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 Client cannot create a service",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{clientToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/gigs",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Client-made service\",\n  \"description\": \"This request must be blocked by the real server.\",\n  \"priceCents\": 10000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([403]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 Missing token cannot create a service",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{baseUrl}}/api/gigs",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Unauthenticated service\",\n  \"description\": \"This request must require real login credentials.\",\n  \"priceCents\": 10000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([401]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "13 Invalid price is rejected",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{sellerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/gigs",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Invalid price service\",\n  \"description\": \"A negative amount must not be stored by the backend.\",\n  \"priceCents\": -1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([400]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "14 Other freelancer cannot edit this service",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{otherSellerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/gigs/{{gigId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Not my service\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([403, 404]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "15 Owner edits service",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{sellerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/gigs/{{gigId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Updated Part 2 test service\",\n  \"description\": \"Updated fictional description for the API test draft.\",\n  \"priceCents\": 15000\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "16 Freelancer lists own services",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{sellerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/gigs/mine"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+              "pm.test('Own list includes test service', () => pm.expect(pm.response.json().data.gigs.some(g => g.id === pm.collectionVariables.get('gigId'))).to.eql(true));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "17 Client books service",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{clientToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/bookings",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"gigId\": \"{{gigId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([201]));",
+              "pm.test('Booking and transaction agree', () => { const {booking, transaction} = pm.response.json().data; pm.expect(booking.amountCents).to.eql(15000); pm.expect(transaction.amountCents).to.eql(15000); pm.expect(transaction.bookingId).to.eql(booking.id); pm.collectionVariables.set('bookingId', booking.id); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "18 Client views own booking list",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{clientToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/bookings/mine"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+              "pm.test('New booking appears', () => pm.expect(pm.response.json().data.bookings.some(b => b.id === pm.collectionVariables.get('bookingId'))).to.eql(true));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "19 Freelancer sees received bookings",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{sellerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/bookings/mine"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+              "pm.test('New booking appears', () => pm.expect(pm.response.json().data.bookings.some(b => b.id === pm.collectionVariables.get('bookingId'))).to.eql(true));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "20 Other freelancer sees no private test booking",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{otherSellerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/bookings/mine"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+              "pm.test('Other user cannot see the booking', () => pm.expect(pm.response.json().data.bookings.some(b => b.id === pm.collectionVariables.get('bookingId'))).to.eql(false));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "21 Freelancer views income",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{sellerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/income/mine"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+              "pm.test('Recorded transaction contributes to income', () => { const d = pm.response.json().data; pm.expect(d.amountCents).to.eql(15000); pm.expect(d.transactions.some(t => t.bookingId === pm.collectionVariables.get('bookingId'))).to.eql(true); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "22 Client cannot view freelancer income",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{clientToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/income/mine"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([403]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "23 Missing token cannot view private bookings",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/bookings/mine"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([401]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "24 Other freelancer cannot delete service",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{otherSellerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/gigs/{{gigId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([403, 404]));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "25 Owner removes service",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{sellerToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/gigs/{{gigId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+              "pm.test('Deleted ID matches', () => pm.expect(pm.response.json().data.id).to.eql(pm.collectionVariables.get('gigId')));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "26 Old booking fee remains after service removal",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{clientToken}}"
+          }
+        ],
+        "url": "{{baseUrl}}/api/bookings/mine"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Expected HTTP status', () => pm.expect(pm.response.code).to.be.oneOf([200]));",
+              "pm.test('Booking snapshot retained', () => { const b = pm.response.json().data.bookings.find(b => b.id === pm.collectionVariables.get('bookingId')); pm.expect(b).to.exist; pm.expect(b.amountCents).to.eql(15000); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
