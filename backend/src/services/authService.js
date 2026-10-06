@@ -1,7 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config/env');
-const userModel = require('../models/userModel');
+const userRepository = require('../repositories/userRepository');
+const { logEvent } = require('../utils/eventLogger');
 
 /**
  * Hash a plain-text password with bcrypt, an adaptive hashing algorithm
@@ -44,7 +45,13 @@ function verifyToken(token) {
 }
 
 async function registerUser({ email, password, role }) {
-  const existing = userModel.findByEmail(email);
+  if (role !== undefined && !userRepository.PUBLIC_ROLES.includes(role)) {
+    const err = new Error('Public registration supports client and freelancer accounts only.');
+    err.statusCode = 400;
+    err.expose = true;
+    throw err;
+  }
+  const existing = await userRepository.findByEmail(email);
   if (existing) {
     const err = new Error('An account with this email already exists.');
     err.statusCode = 409;
@@ -53,8 +60,8 @@ async function registerUser({ email, password, role }) {
   }
 
   const passwordHash = await hashPassword(password);
-  const user = userModel.create({ email, passwordHash, role });
-  return userModel.toPublicUser(user);
+  const user = await userRepository.create({ email, passwordHash, role });
+  return userRepository.toPublicUser(user);
 }
 
 async function loginUser({ email, password }) {
@@ -68,14 +75,20 @@ async function loginUser({ email, password }) {
     return err;
   };
 
-  const user = userModel.findByEmail(email);
-  if (!user) throw genericError();
+  const user = await userRepository.findByEmail(email);
+  if (!user) {
+    logEvent('login_failed', { email: String(email).toLowerCase(), reason: 'no_such_account' });
+    throw genericError();
+  }
 
   const passwordMatches = await verifyPassword(password, user.passwordHash);
-  if (!passwordMatches) throw genericError();
+  if (!passwordMatches) {
+    logEvent('login_failed', { email: user.email, reason: 'bad_password' });
+    throw genericError();
+  }
 
   const token = issueToken(user);
-  return { token, user: userModel.toPublicUser(user) };
+  return { token, user: userRepository.toPublicUser(user) };
 }
 
 module.exports = {

@@ -1,4 +1,6 @@
 const authService = require('../services/authService');
+const { logEvent } = require('../utils/eventLogger');
+const userRepository = require('../repositories/userRepository');
 
 /**
  * Wraps an async Express handler so thrown errors (including rejected
@@ -12,6 +14,7 @@ const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, ne
 const register = asyncHandler(async (req, res) => {
   const { email, password, role } = req.body;
   const user = await authService.registerUser({ email, password, role });
+  logEvent('user_registered', { userId: user.id, role: user.role });
 
   res.status(201).json({
     status: 'success',
@@ -23,11 +26,12 @@ const register = asyncHandler(async (req, res) => {
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   const { token, user } = await authService.loginUser({ email, password });
+  logEvent('user_login', { userId: user.id, role: user.role });
 
   res.status(200).json({
     status: 'success',
     message: 'Login successful.',
-    data: { token, user },
+    data: { token, user, expiresAt: require('jsonwebtoken').decode(token).exp * 1000 },
   });
 });
 
@@ -36,7 +40,7 @@ const getProfile = asyncHandler(async (req, res) => {
   res.status(200).json({
     status: 'success',
     message: 'Token verified - protected resource accessed.',
-    data: { user: req.user },
+    data: { user: userRepository.toPublicUser(await userRepository.findById(req.user.id)), expiresAt: req.authExpiresAt },
   });
 });
 

@@ -1,5 +1,5 @@
 const authService = require('../services/authService');
-const userModel = require('../models/userModel');
+const userRepository = require('../repositories/userRepository');
 
 
 /**
@@ -9,7 +9,7 @@ const userModel = require('../models/userModel');
  * tokens are never trusted once and cached (IIE, 2026).
  * Author: SYED MUHAMMAD HAMZA KAZMI - ST10443021
  */
-function requireAuth(req, res, next) {
+async function requireAuth(req, res, next) {
   const authHeader = req.headers.authorization || '';
   const [scheme, token] = authHeader.split(' ');
 
@@ -22,7 +22,7 @@ function requireAuth(req, res, next) {
 
   try {
     const payload = authService.verifyToken(token);
-    const user = userModel.findById(payload.sub);
+    const user = await userRepository.findById(payload.sub);
     // Deliberately generic: do not reveal whether the token was expired,
     // malformed, or had a bad signature - all are treated as "unauthorised",
     // avoiding information leakage that could assist an attacker (OWASP, 2021).
@@ -32,8 +32,10 @@ function requireAuth(req, res, next) {
 
     // Attach a minimal, trusted identity to the request for downstream handlers.
     req.user = { id: user.id, role: user.role };
+    req.authExpiresAt = payload.exp * 1000;
     return next();
   } catch (err) {
+    if (err.statusCode === 503) return next(err);
     // Deliberately generic: do not reveal whether the token was expired,
     // malformed, or had a bad signature - all are treated as "unauthorised".
     return res.status(401).json({ status: 'error', message: 'Invalid or expired token.' });
