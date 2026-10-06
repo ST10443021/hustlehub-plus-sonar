@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-10-05T12:52:24.044Z",
+  "environment": "Isolated local MongoDB and HTTPS API; real Mongoose repositories; temporary fictional users; bcrypt factor 4 for checks only.",
+  "requests": {
+    "total": 56,
+    "pending": 0,
+    "failed": 0
+  },
+  "assertions": {
+    "total": 65,
+    "pending": 0,
+    "failed": 0
+  },
+  "failures": [],
+  "apiProcessRestartPersistence": true,
+  "reactHtmlCsp": true
+}
