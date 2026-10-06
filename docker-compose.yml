@@ -1,0 +1,47 @@
+# Orchestrates the three MERN components for local, one-command startup
+# (MongoDB, Inc., n.d.). Full container hardening, health checks, and CI
+# wiring are extended in Part 3 (DevSecOps) - this compose file establishes
+# the baseline container-ready shape of the stack from Part 2 onward
+# (IIE, 2026).
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5443
+      JWT_SECRET: ${JWT_SECRET:?Set a strong JWT_SECRET in a .env file at the project root}
+      JWT_EXPIRES_IN: 1h
+      SSL_KEY_PATH: ./certs/key.pem
+      SSL_CERT_PATH: ./certs/cert.pem
+      BCRYPT_SALT_ROUNDS: 12
+      MONGODB_URI: mongodb://mongo:27017/hustlehub
+      CORS_ORIGINS: http://localhost:8080
+      TRUST_PROXY: 1
+    depends_on:
+      - mongo
+    # Only nginx reaches this trusted-proxy backend.
+    expose:
+      - "5443"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: /api
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  mongo-data:

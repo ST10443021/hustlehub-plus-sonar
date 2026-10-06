@@ -1,14 +1,18 @@
-# AI starter verification — 4 October 2026
+# Verification of the fixed package
 
-Observed checks for this starter:
+Checked on 5 October 2026 with Node 24.19.0.
 
-- Frontend production build: passed (`npm run build`).
-- Frontend starter tests: 9 passed across 3 files (`npm test`).
-- Chromium rendering at 1440 px and 390 px: checked; no page errors or horizontal overflow observed.
-- Chromium sample flow: booking confirmation, client booking list, freelancer received-booking list, and updated sample income all passed.
-- Original uploaded project files: byte comparison confirmed no modifications. New work is in `client` and `docs/part2`.
-- Postman draft: JSON parses and scripts parse for 26 requests. Live execution is pending.
+| Check | Observed result | Scope |
+| --- | --- | --- |
+| Backend Jest/Supertest | 27 passed, 0 failed | Test-only memory repositories; includes failed-write cleanup and security cases |
+| Frontend Vitest | 18 passed, 0 failed | Rendering/interactions/session handling with mocked HTTP |
+| Frontend production build | Passed | Vite generated the built React app |
+| Live Newman | 56 HTTP requests; 65 assertions passed, 0 failed | 38-request collection with repeated limit probes; real isolated MongoDB 7.0.24, Mongoose and local HTTPS |
+| API process restart | Passed | Freelancer income remained R1750 after stopping and restarting the API; the existing JWT still accessed the persisted account |
+| Served React HTML CSP | Passed | Built index document served from HTTPS backend with CSP |
 
-Environment: Node.js 24.19.0. The delivered frontend lockfile records installed dependencies.
+The safe live-run summary is in verification/newman-summary.json. It excludes tokens and response bodies. An ephemeral, real mongod process backed the live run; this was not the test-only memory repository. Bcrypt factor 4 was used in that isolated live-check environment for speed; the supplied normal default remains 12.
 
-The frontend tests use sample data and stubbed HTTP responses. These checks do not claim completion of MongoDB persistence, real authentication, server permissions, real marketplace routes, or full Part 2 integration. Blake/Hamza must run and record the live-system checks once their backend and authenticated frontend are connected.
+These checks were run on the fixed source package in this workspace, not on Blake's Windows checkout, Atlas deployment or a teammate's branch. The tests do not replace a manual browser walkthrough, mobile-width layout review or checks against the team's chosen MongoDB environment. Docker was not executed.
+
+The component tests exercise the React screens and the API tests exercise the server. No full browser-driven end-to-end run is claimed. Older screenshots in docs/screenshots came from the supplied ZIP and are not evidence of this update.
