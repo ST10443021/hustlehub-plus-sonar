@@ -1,0 +1,8 @@
+node_modules/
+.env
+certs/*.pem
+logs/*.log
+*.log
+npm-debug.log*
+.DS_Store
+coverage/
