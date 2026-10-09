@@ -59,13 +59,17 @@ async function updateGig(gigId, updates, requestingUserId) {
   }
   const gig = await getGigOrThrow(gigId);
   assertOwnership(gig, requestingUserId);
-  return gigRepository.update(gigId, updates);
+  const updated = await gigRepository.update(gigId, updates);
+  // Another request may have deleted the gig after the ownership lookup.
+  if (!updated) throw notFound();
+  return updated;
 }
 
 async function deleteGig(gigId, requestingUserId) {
   const gig = await getGigOrThrow(gigId);
   assertOwnership(gig, requestingUserId);
-  await gigRepository.remove(gigId);
+  const removed = await gigRepository.remove(gigId);
+  if (!removed) throw notFound();
 }
 
 module.exports = { createGig, listActiveGigs, listMyGigs, getGigOrThrow, updateGig, deleteGig, assertOwnership };
