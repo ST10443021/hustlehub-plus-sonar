@@ -317,3 +317,24 @@ The booking and the transaction are separate writes. If the transaction write fa
 
 ---
 
+## 10. Income and Tax Estimate
+
+The freelancer dashboard shows total income, tax-year income and an **estimated annual tax**, calculated from the SARS 2026/27 individual brackets and the R17,820 primary rebate (SARS, 2026).
+
+| Rule | Behaviour |
+| --- | --- |
+| Tax-year filter | Only income from the current SARS tax year (1 March to end of February, South African time, UTC+2) is taxed. Earlier income still counts toward total income. |
+| Tax threshold | The rebate cancels tax on the first R99,000 (R17,820 ÷ 18%). Below that, **R0.00 is the correct result**, and the dashboard explains it and shows how far the freelancer is from the threshold. |
+
+Worked examples:
+
+| Tax-year income | Estimated tax | Effective rate |
+| --- | --- | --- |
+| R10,500 (3 × R3,500) | R0.00 | 0% |
+| R150,000 | R9,180 | 6.12% |
+| R160,500 | R11,070 | ≈ 6.9% |
+
+To demonstrate a non-zero figure, book gigs totalling more than R99,000. The result is an **estimate on marketplace income only and is not tax advice**; the API returns this disclaimer with every summary.
+
+---
+
