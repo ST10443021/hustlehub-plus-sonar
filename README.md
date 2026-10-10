@@ -1,6 +1,6 @@
 # HustleHub+ — Part 2: Secure Stack
 
-INSY7314 | Quantum Coder | Updated source package: 9 October 2026
+**Team Members**:
 
 HustleHub+ connects clients and freelancers. Clients browse and book gigs. Freelancers manage their own gigs, see received bookings and view income. Payments are simulated. Each successful booking creates a transaction linked to its booking, client and freelancer.
 
