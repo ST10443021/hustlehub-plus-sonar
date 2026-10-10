@@ -246,3 +246,40 @@ MongoDB is **required** for normal runs. A missing or unreachable database stops
 
 ---
 
+## 8. Security Headers, CSP and HTTPS
+
+### Helmet and Content Security Policy (API and built pages)
+
+```
+default-src 'self'
+script-src  'self'
+style-src   'self' 'unsafe-inline'      # inline styles only; scripts are never inline
+img-src     'self' data:
+connect-src 'self'
+object-src  'none'
+frame-ancestors 'none'
+base-uri    'self'
+form-action 'self'
+upgrade-insecure-requests
+```
+
+Helmet also sets HSTS, `X-Content-Type-Options`, and `Cross-Origin-Resource-Policy: same-site`, among others. CORS is restricted to an explicit origin allow-list (`CORS_ORIGINS`), never a wildcard.
+
+| Serving mode | CSP source | Notes |
+| --- | --- | --- |
+| Built app via backend (`https://localhost:5443`) | Helmet in `app.js` | Strict: no inline scripts |
+| Vite dev server | `frontend/securityHeaders.js` (dev) | Relaxed only for hot refresh (inline script, local WebSocket) |
+| Vite preview | `frontend/securityHeaders.js` (build) | Strict build policy |
+| Docker / nginx | `frontend/nginx.conf` | Same CSP plus HSTS, `X-Frame-Options: DENY`, `Referrer-Policy` |
+
+If an external API origin is ever introduced, update the CSP and CORS together.
+
+### HTTPS only
+
+The backend binds to Node's native `https` module and **will not fall back to HTTP**. `npm run gen-cert` creates a small local Certificate Authority and a `localhost` certificate signed by it (SAN: `localhost`, `backend`, `127.0.0.1`, `::1`). `npm run trust-cert` adds that CA to your trust store so the browser shows a padlock instead of "Not secure" (Cooper et al., 2008; Mozilla, 2026a; Valsorda, n.d.).
+
+Certificates are for **local development only**, are git-ignored, and `*.pem` files must never be committed. Production (Part 3) should use a certificate from a public CA such as Let's Encrypt (Let's Encrypt, n.d.).
+
+---
+
+
