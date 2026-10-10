@@ -520,3 +520,22 @@ These are component tests with mocked HTTP, not a live-browser end-to-end run.
 
 ---
 
+## 15. Verification Status
+
+The table lists only checks that were actually run (full detail in `docs/part2/VERIFICATION.md`). No earlier pass claims were carried forward as proof.
+
+| Check | Result | Date | Scope |
+| --- | --- | --- | --- |
+| Backend Jest/Supertest | **46 passed, 0 failed** | 9 Oct 2026 | In-memory repositories |
+| Frontend Vitest | **28 passed, 0 failed** | 9 Oct 2026 | Mocked HTTP |
+| Frontend production build | Passed | 9 Oct 2026 | Vite build |
+| Live Newman (real MongoDB 7, HTTPS) | **65 of 65 assertions passed** (56 HTTP requests incl. repeated limit probes) | 5 Oct 2026 | Isolated database, bcrypt factor 4 for speed |
+| API restart persistence | Passed | 5 Oct 2026 | Income R1,750 survived restart; existing JWT still valid |
+| Certificate chain and live HTTPS | Passed | 9 Oct 2026 | `openssl verify`; curl trusted only `rootCA.pem` |
+| Tax figures (live) | Passed | 9 Oct 2026 | R10,500 → R0; R160,500 → R11,070 |
+| CSP on built React document | Passed | 5 Oct 2026 | Served from HTTPS backend |
+
+**Not yet run:** a manual browser walkthrough with real accounts, a phone-width layout review, the real browser padlock check, and Docker Compose. Re-run all three test commands on the exact version being submitted and keep the dated output.
+
+---
+
