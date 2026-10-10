@@ -359,3 +359,93 @@ To demonstrate a non-zero figure, book gigs totalling more than R99,000. The res
 
 ---
 
+## 12. Logging
+
+`backend/src/utils/eventLogger.js` appends structured JSON lines to `backend/logs/events.log` (git-ignored). Logged events include `user_registered`, `user_login`, `login_failed`, gig create/update/delete, booking creation, `booking_cleanup_failed`, and an `http_request` record (method, path, status, user ID) for every `/api/auth` and `/api/bookings` call.
+
+Logs never contain passwords, hashes, JWTs or raw request bodies, so the log cannot become a new source of leakage. Part 3 will forward these events to monitored storage.
+
+---
+
+## 13. Running the Project
+
+### Prerequisites
+
+Node.js ≥ 22.22.2 (Node 24 used for checks), npm, MongoDB (local service or Atlas) and OpenSSL. Commands below are for **Windows PowerShell**; use `npm` instead of `npm.cmd` on macOS/Linux.
+
+### Option A: Run locally
+
+**1. Backend**
+
+```powershell
+cd backend
+npm.cmd ci
+Copy-Item .env.example .env
+
+# Generate a strong JWT secret and place it in .env
+$secretBytes = New-Object byte[] 32
+$rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+$rng.GetBytes($secretBytes); $rng.Dispose()
+$jwtSecret = [Convert]::ToBase64String($secretBytes)
+(Get-Content .env -Raw).Replace('replace_this_with_a_long_random_string_at_least_32_chars', $jwtSecret) | Set-Content .env
+
+npm.cmd run gen-cert      # creates certs/rootCA.pem, cert.pem, key.pem
+npm.cmd run trust-cert    # Windows asks you to confirm: choose Yes
+```
+
+Set `MONGODB_URI` in `backend/.env` (default `mongodb://localhost:27017/hustlehub`). Keep `TRUST_PROXY=false` for direct local runs. After `trust-cert`, fully close and reopen the browser. Firefox uses its own store: enable `security.enterprise_roots.enabled` in `about:config`, or import `certs/rootCA.pem`. Undo with `npm.cmd run trust-cert -- --remove`.
+
+**2. Frontend**
+
+```powershell
+cd frontend
+npm.cmd ci
+npm.cmd run build
+```
+
+**3. Start**
+
+```powershell
+cd backend
+npm.cmd start
+```
+
+Open **https://localhost:5443**. The backend serves the built React app, so the UI and `/api` share one HTTPS origin.
+
+**Frontend development mode:** run `npm.cmd run dev` in `frontend/` and open `https://localhost:5173`. Vite uses the same certificate and proxies `/api` to the backend. `npm.cmd run preview` serves the build with the stricter CSP.
+
+### Option B: Docker Compose
+
+```powershell
+# 1. Create certificates first (mounted read-only into the containers)
+cd backend; npm.cmd run gen-cert; cd ..
+
+# 2. Create a root .env containing a strong JWT secret
+"JWT_SECRET=<your 32+ character random secret>" | Set-Content .env
+
+# 3. Build and start MongoDB, backend and frontend
+docker compose up --build
+```
+
+nginx serves the app at **https://localhost:8443** (port 8080 only redirects to it), proxies `/api` to the backend, and verifies the backend certificate against the local CA instead of disabling verification. The backend is not published directly.
+
+> **Note:** this Compose setup has **not been executed yet**; a full Docker run is Part 3 work.
+
+### Environment variables (`backend/.env`)
+
+| Variable | Purpose | Default / example |
+| --- | --- | --- |
+| `PORT` | HTTPS port | `5443` |
+| `NODE_ENV` | `development`, `production` or `test` | `development` |
+| `JWT_SECRET` | Token signing secret (≥ 32 chars, required) | none |
+| `JWT_EXPIRES_IN` | Token lifetime | `1h` |
+| `SSL_KEY_PATH`, `SSL_CERT_PATH` | HTTPS key and certificate | `./certs/key.pem`, `./certs/cert.pem` |
+| `BCRYPT_SALT_ROUNDS` | bcrypt work factor | `12` |
+| `MONGODB_URI` | MongoDB connection (required) | `mongodb://localhost:27017/hustlehub` |
+| `CORS_ORIGINS` | Comma-separated allowed origins | `https://localhost:5173,https://localhost:5443` |
+| `BOOKING_RATE_LIMIT_WINDOW_MS` / `_MAX` | Booking limiter | `900000` / `10` |
+| `TRUST_PROXY` | `1` only behind the controlled proxy | `false` |
+
+Never commit `.env` files or private keys.
+
+---
