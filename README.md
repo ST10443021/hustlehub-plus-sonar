@@ -539,3 +539,21 @@ The table lists only checks that were actually run (full detail in `docs/part2/V
 
 ---
 
+## 16. Submission Evidence Checklist
+
+| Deliverable | Status |
+| --- | --- |
+| Updated GitHub repository | ☐ Final review and merge into `main` |
+| Updated README | ✅ This document |
+| Backend and frontend code | ✅ |
+| Postman collection | ✅ `backend/postman/HustleHub_Part2.postman_collection.json` |
+| Newman execution evidence | ☐ Add fresh run output/screenshot for the final version (`docs/part2/verification/newman-summary.json` is from 5 Oct) |
+| Frontend test evidence | ☐ Add fresh `npm test` screenshot for the final version |
+| Screenshots of the application | ☐ Capture register, login, create gig, browse, booking confirmation, bookings lists, dashboard (store in `docs/screenshots/`) |
+| Demonstration video link | ☐ Add link: `<paste link here>` |
+
+**Video must show:** registration and login (both roles) → freelancer creates a gig → client books it → booking and transaction recorded → freelancer sees the received booking and income on the dashboard.
+
+Existing Part 1 Postman screenshots are not evidence of this version and must not be presented as new.
+
+---
