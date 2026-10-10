@@ -577,3 +577,13 @@ Existing Part 1 Postman screenshots are not evidence of this version and must no
 - Public-CA certificates and production secret management
 
 ---
+
+## 18. Git Workflow and Collaboration
+
+- Each member works on their own lowercase first-name branch (`blake`, `hamza`, `connor`, `muzammil`); Blake and Hamza form one shared unit.
+- Work is merged into `main` through **pull requests** with review. No direct pushes to `main`, no force pushes.
+- Commits use short, descriptive messages (for example `feat(bookings): create transaction on booking`, `fix(auth): reject public admin signup`, `test(income): cover R99,000 threshold`).
+- Coordinate changes to shared files: `BookingsPage.jsx`, `AuthContext.jsx`, `App.jsx`, `index.css`, and `backend/src/app.js`.
+- Never commit `.env`, `*.pem`, `node_modules/`, `dist/`, or log files (all git-ignored).
+
+---
