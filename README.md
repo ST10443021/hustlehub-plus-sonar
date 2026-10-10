@@ -146,3 +146,27 @@ HustleHub/
 > **Housekeeping:** the repository still contains empty `client/` and `server/` folders (plus `server/Docs/screenshots/`, which holds the Part 1 Postman screenshots) from the earlier plan, a leftover Visual Studio `CHANGELOG.md`, and a `.vs/` folder. These are not run paths. Move the Part 1 screenshots under `docs/` and delete the leftovers before final submission.
 
 ---
+
+## 4. Application Features (Functionality)
+
+| Area | What it does |
+| --- | --- |
+| Authentication | Client/freelancer registration, login, verified profile, logout, automatic logout at token expiry |
+| Gig management | Freelancers create, view, edit and delete **only their own** gigs |
+| Marketplace | Anyone can browse active gigs (optional category filter); clients book from a confirmation dialog |
+| Bookings | Client booking history; freelancer received-bookings list |
+| Transactions | Every successful booking creates a simulated-payment transaction linked to the booking, client and freelancer |
+| Income tracking | Freelancer income is summed from that freelancer's transactions only |
+| Tax estimate | Annual tax estimate on the freelancer dashboard using SARS 2026/27 brackets (see [section 10](#10-income-and-tax-estimate)) |
+| Data integrity | Booking stores a **title and price snapshot**, so history is correct after a gig is edited or deleted |
+| Resilient UI | Loading, empty, error/retry states, field-level messages and disabled buttons while a request is pending |
+
+### End-to-end flow
+
+```
+Register (freelancer) ──► Log in ──► Create gig
+Register (client)     ──► Log in ──► Browse ──► Confirm booking
+                                             └─► Booking + transaction created
+Freelancer ──► Received Bookings ──► Dashboard (total income + estimated tax)
+```
+
