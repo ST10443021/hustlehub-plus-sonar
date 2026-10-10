@@ -41,3 +41,18 @@ HustleHub+ is a secure freelance marketplace. **Freelancers** advertise gigs, **
 | Muzammil Cassim | ST10259792 | Frontend: `MyGigsPage.jsx` and `ReceivedBookingsPage.jsx` (gig management, received bookings); backend error handling, HTTPS server and proxy configuration |
 
 Per-file authorship is also recorded in header comments in the source. The shared component `frontend/src/components/BookingsPage.jsx` is used by both booking pages, so changes to it must be coordinated.
+
+---
+
+## 2. Technology Stack
+
+| Layer | Technology |
+| --- | --- |
+| Frontend | React 19, React Router 7, Axios, Vite 8 |
+| Backend | Node.js (≥ 22.22.2), Express 4, native `https` server |
+| Database | MongoDB with Mongoose 8 |
+| Authentication | JSON Web Tokens (`jsonwebtoken`), bcrypt (`bcryptjs`) |
+| Security middleware | Helmet, CORS allow-list, `express-rate-limit`, `express-validator`, `express-mongo-sanitize`, `xss-clean` |
+| Backend testing | Jest, Supertest, Postman collection, Newman |
+| Frontend testing | Vitest, React Testing Library, `user-event`, jsdom |
+| Containers | Docker, Docker Compose, nginx 1.27 (TLS-terminating reverse proxy) |
