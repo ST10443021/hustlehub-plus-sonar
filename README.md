@@ -557,3 +557,23 @@ The table lists only checks that were actually run (full detail in `docs/part2/V
 Existing Part 1 Postman screenshots are not evidence of this version and must not be presented as new.
 
 ---
+
+## 17. Known Limitations and Part 3 Roadmap
+
+**Known limitations (documented, not hidden)**
+
+- Booking and transaction are two writes with compensating cleanup rather than an atomic multi-document transaction; a crash during cleanup could need reconciliation using the logged booking ID.
+- The JWT is kept in `localStorage`. An `HttpOnly` cookie would remove script access to the token entirely and should be evaluated for production.
+- Admin has no management endpoints yet; adding any requires an explicit server-side policy.
+- The tax figure is an estimate on marketplace income only and is not tax advice.
+- Rate-limit state is per-process memory; a multi-instance deployment needs a shared store.
+- Docker Compose and the browser journey have not been executed on the final version.
+
+**Part 3 (DevSecOps, monitoring and finalisation)**
+
+- CI/CD pipeline covering backend and frontend: automated unit tests, API (Newman) tests and security scans (dependency audit, static analysis, image scanning)
+- Full container hardening, health checks and executed Compose runs
+- Centralised log forwarding and monitoring/alerting
+- Public-CA certificates and production secret management
+
+---
