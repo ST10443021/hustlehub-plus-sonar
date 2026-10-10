@@ -56,3 +56,29 @@ Per-file authorship is also recorded in header comments in the source. The share
 | Backend testing | Jest, Supertest, Postman collection, Newman |
 | Frontend testing | Vitest, React Testing Library, `user-event`, jsdom |
 | Containers | Docker, Docker Compose, nginx 1.27 (TLS-terminating reverse proxy) |
+
+---
+
+## 3. Architecture and Project Structure
+
+### 3.1 Layered design
+
+```
+Browser (React SPA)
+   │  HTTPS, same origin, /api
+   ▼
+Express: security middleware → routes → validators → auth/RBAC → controllers
+   ▼
+Services (business rules: ownership, booking, transaction, income, tax)
+   ▼
+Repositories (data access) → Mongoose schemas → MongoDB
+```
+
+| Layer | Location | Responsibility |
+| --- | --- | --- |
+| Presentation | `frontend/src/` | Screens, client-side validation, verified session, API calls |
+| HTTP and security | `backend/src/routes/`, `middleware/`, `controllers/` | JWT, roles, validation, rate limiting, safe responses |
+| Business rules | `backend/src/services/` | Gig ownership, booking, transaction creation, income and tax |
+| Data access | `backend/src/repositories/`, `schemas/` | MongoDB users, gigs, bookings, transactions |
+
+Controllers stay thin (HTTP ↔ service translation). Services hold every business and ownership rule, so rules cannot be bypassed by calling a different route.
