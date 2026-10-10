@@ -170,3 +170,27 @@ Register (client)     ──► Log in ──► Browse ──► Confirm bookin
 Freelancer ──► Received Bookings ──► Dashboard (total income + estimated tax)
 ```
 
+---
+
+## 5. Role-Based Access Control (RBAC)
+
+Access is enforced **on the server** by `requireAuth` then `requireRole(...)`. The frontend `ProtectedRoute` only improves the user experience; it is never the security boundary.
+
+| Capability | Client | Freelancer | Admin |
+| --- | :---: | :---: | :---: |
+| Browse active public gigs | ✅ | ✅ | ✅ |
+| Read own verified profile | ✅ | ✅ | ✅ |
+| Create / edit / delete **own** gigs | ❌ | ✅ | ❌ |
+| Create and view **own** bookings | ✅ | ❌ | ❌ |
+| View received bookings and own income | ❌ | ✅ | ❌ |
+
+**Ownership and object-level checks**
+
+- `gigService.assertOwnership` is re-evaluated on every update and delete; another freelancer's request returns **403**.
+- A booking accepts only a `gigId`. The client identity, freelancer identity and price are taken from the verified token and the saved gig, never from the request body.
+- Gig updates cannot change `freelancerId`, IDs or other protected fields; unknown fields are rejected with **400**.
+- A user cannot book their own gig.
+- Lists (`/bookings/mine`, `/bookings/received`, `/gigs/mine`, `/income/summary`) are always scoped to the authenticated user.
+- The server reloads the user from the database on every protected request to obtain the trusted role, so a stale or forged role claim in a token is ignored.
+
+**Admin role.** Public sign-up cannot create admins (the `role` field accepts only `client` or `freelancer`). Admin is deliberately limited to public browsing and its own profile at this stage, and no unrestricted override exists. Any future admin capability needs an explicit server-side policy.
