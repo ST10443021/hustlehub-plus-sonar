@@ -449,3 +449,74 @@ nginx serves the app at **https://localhost:8443** (port 8080 only redirects to 
 Never commit `.env` files or private keys.
 
 ---
+
+## 14. Testing
+
+### 14.1 Backend: Jest and Supertest
+
+```powershell
+cd backend
+npm.cmd test
+```
+
+Runs against isolated in-memory repositories (`NODE_ENV=test`). Four suites:
+
+| Suite | Covers |
+| --- | --- |
+| `api.test.js` | Registration (no password hash returned), duplicate email (409), invalid input (400), generic 401 on wrong password, missing/valid token on the protected route, client blocked from creating gigs (403), freelancer creates gig (201), non-owner update blocked (403), public browsing, booking → transaction → income update, freelancer cannot book (403), client cannot read income (403), CSP header present |
+| `gigManagement.test.js` | Owner edits and public browse reflects it, invalid edits leave the gig unchanged, clients/other freelancers/anonymous users cannot edit or delete, deletion preserves historic financial records, safe 404 when a gig disappears mid-request |
+| `security.test.js` | Public API cannot create admins, ownership cannot be transferred, booking identity/price tampering rejected, failed transaction write removes the booking, private booking lists scoped to both parties, price/title snapshots survive edits and deletion, invalid JSON returns a safe 400, forwarded IPs not trusted by default, safe profile output |
+| `income.test.js` | SARS 2026/27 brackets and rebate, tax-year boundaries (rollover at 1 March SAST), R10,500 → R0 with explanation, non-zero estimate above R99,000, previous-year income counted in total but not taxed again, empty-state note |
+
+These tests do **not** prove MongoDB persistence; Newman does that against a real database.
+
+### 14.2 Backend API: Postman and Newman
+
+Use a **dedicated test database** (for example `hustlehub_part2_test`): stop the API, point `MONGODB_URI` at it, restart, then in a second terminal:
+
+```powershell
+cd backend
+npm.cmd run test:api
+```
+
+`backend/postman/HustleHub_Part2.postman_collection.json` is a structured collection of **38 requests** in 7 folders, each with success and failure cases:
+
+| Folder | Cases covered |
+| --- | --- |
+| 1. Auth Setup | Register/login for two freelancers and a client; public admin signup rejected; duplicate signup; wrong password; missing and invalid JWT |
+| 2. Gig Management (RBAC + Ownership) | Client blocked (403); create (201); invalid input (400); public browse (200); own list; non-owner update blocked (403); owner update; ownership-field and unknown-field changes rejected; malformed ID rejected |
+| 3. Bookings + Transactions | Freelancer cannot book (403); client books (201 + transaction); non-existent gig (404); client list; freelancer received list; client blocked from received (403); identity/price tampering rejected; other freelancer sees nothing |
+| 4. Income Tracking (RBAC) | Freelancer summary ≥ R1,750; client blocked (403); second freelancer has R0 |
+| 5. Gig Deletion (Ownership) | Non-owner delete blocked (403); owner deletes; historic booking survives |
+| 6. Rate Limiting | Repeated booking and login calls must reach **429** |
+| 7. API Headers | Security headers present on `/health` |
+
+The runner writes a token-free summary to `backend/test-results/newman-summary.json`. `NEWMAN_BASE_URL` overrides the default `https://localhost:5443`. The Newman `--insecure` flag is scoped to local self-signed checks only.
+
+> The rate-limit folder deliberately **exhausts** the IP's auth and booking budgets. Wait 15 minutes or restart the dedicated test API before re-running the collection or using the UI against it. The collection creates unique fictional accounts but does not erase existing records.
+
+`HustleHub_Part1.postman_collection.json` is retained as Part 1 evidence.
+
+### 14.3 Frontend: Vitest and React Testing Library
+
+```powershell
+cd frontend
+npm.cmd test          # 28 component tests
+npm.cmd run build     # production build
+npm.cmd run lint      # oxlint
+```
+
+| Test file | Demonstrates |
+| --- | --- |
+| `LoginPage.test.jsx` | Fields and submit button render, typing works, safe error message on failed login |
+| `RegisterPage.test.jsx` | Fields render, role defaults to client and can switch to freelancer, password constraints shown |
+| `Marketplace.test.jsx` | Blank price is not accepted as free, field error after failed save, delete needs confirmation, received bookings load, loading state, booking confirmation sends only the gig ID, sign-up validated before the API call |
+| `GigCard.test.jsx` | Title, category, description and formatted price render; optional "Book" action renders |
+| `GigManagement.test.jsx` | Edit prefill and update, cancel editing, invalid edits never reach the API, failed save retry, Escape cancels delete, confirmed/failed delete, duplicate actions blocked while pending |
+| `Dashboard.test.jsx` | R0 explained below the threshold; non-zero estimate above it |
+| `Session.test.jsx` | Reload uses verified profile (not a saved role), expired session clears, backend-supplied expiry logs out |
+
+These are component tests with mocked HTTP, not a live-browser end-to-end run.
+
+---
+
