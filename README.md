@@ -28,3 +28,16 @@ HustleHub+ is a secure freelance marketplace. **Freelancers** advertise gigs, **
 17. [Known Limitations and Part 3 Roadmap](#17-known-limitations-and-part-3-roadmap)
 18. [Git Workflow and Collaboration](#18-git-workflow-and-collaboration)
 19. [References](#19-references)
+
+---
+
+## 1. Team
+
+| Name | Student Number | Main responsibility |
+| --- | --- | --- |
+| Blake Derek Godfrey | ST10435415 | Backend, auth and session, shared integration, income, security, final tests, README and evidence (with Hamza) |
+| Syed Muhammad Hamza Kazmi | ST10443021 | Backend, JWT/auth middleware, environment config, rate limiting, shared integration, income, security, final tests, README and evidence (with Blake) |
+| Connor Albertyn | ST10437293 | Frontend: `BrowseGigsPage.jsx` and `MyBookingsPage.jsx` (client browsing, booking confirmation, own bookings) |
+| Muzammil Cassim | ST10259792 | Frontend: `MyGigsPage.jsx` and `ReceivedBookingsPage.jsx` (gig management, received bookings); backend error handling, HTTPS server and proxy configuration |
+
+Per-file authorship is also recorded in header comments in the source. The shared component `frontend/src/components/BookingsPage.jsx` is used by both booking pages, so changes to it must be coordinated.
