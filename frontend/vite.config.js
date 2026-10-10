@@ -19,9 +19,22 @@ if (!https && process.env.VITEST === undefined) {
   console.warn('No HTTPS certificate found in backend/certs - run "npm run gen-cert" there. Falling back to HTTP, which browsers label "Not secure".');
 }
 
+// The dev server forwards /api to the HTTPS backend, so the target port must match the backend's
+// PORT. It is read from backend/.env (default 5443) so a changed PORT cannot silently break the
+// proxy, and API_PROXY_TARGET overrides it, for example https://localhost:5000 (Vite, n.d.).
+function backendTarget() {
+  if (process.env.API_PROXY_TARGET) return process.env.API_PROXY_TARGET;
+  let port = '5443';
+  try {
+    const match = fs.readFileSync(path.resolve(certDir, '../.env'), 'utf8').match(/^\s*PORT\s*=\s*(\d+)\s*$/m);
+    if (match) port = match[1];
+  } catch (err) { /* no .env yet: use the default port */ }
+  return `https://localhost:${port}`;
+}
+
 // The browser talks to Vite over HTTPS; Vite forwards /api to the HTTPS backend. `secure: false`
 // only relaxes verification of this dev-only server-to-server hop (Vite, n.d.).
-const proxy = { '/api': { target: 'https://localhost:5443', changeOrigin: true, secure: false } };
+const proxy = { '/api': { target: backendTarget(), changeOrigin: true, secure: false } };
 export default defineConfig({
   plugins: [react()],
   server: { https, proxy, headers: securityHeaders(true) },
