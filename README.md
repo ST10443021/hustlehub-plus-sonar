@@ -82,3 +82,67 @@ Repositories (data access) → Mongoose schemas → MongoDB
 | Data access | `backend/src/repositories/`, `schemas/` | MongoDB users, gigs, bookings, transactions |
 
 Controllers stay thin (HTTP ↔ service translation). Services hold every business and ownership rule, so rules cannot be bypassed by calling a different route.
+
+### 3.2 Repository layout
+
+```
+HustleHub/
+├── README.md                     # This document
+├── REFERENCES.md                 # Full IIE Harvard reference list (Parts 1 and 2)
+├── docker-compose.yml            # mongo + backend + frontend (nginx) stack
+├── .gitignore
+│
+├── backend/                      # Express API
+│   ├── src/
+│   │   ├── server.js             # HTTPS-only entry point; refuses to start without certs or MongoDB
+│   │   ├── app.js                # Security middleware stack, routes, static React serving
+│   │   ├── config/
+│   │   │   ├── env.js            # Validated environment config, tax brackets, fail-fast checks
+│   │   │   └── db.js             # MongoDB connection
+│   │   ├── routes/               # authRoutes, gigRoutes, bookingRoutes, incomeRoutes
+│   │   ├── middleware/
+│   │   │   ├── authMiddleware.js # requireAuth (JWT) and requireRole (RBAC)
+│   │   │   ├── validators.js     # express-validator rules, allow-listed body fields
+│   │   │   └── errorHandler.js   # Centralised, non-leaking error responses
+│   │   ├── controllers/          # auth, gig, booking, income (thin HTTP layer)
+│   │   ├── services/             # authService, gigService, bookingService, incomeService
+│   │   ├── repositories/         # user, gig, booking, transaction (Mongo + test-only memory)
+│   │   ├── schemas/              # Mongoose models: User, Gig, Booking, Transaction
+│   │   └── utils/eventLogger.js  # Structured security/business event log
+│   ├── tests/                    # Jest + Supertest: api, gigManagement, income, security
+│   ├── postman/                  # Part 1 and Part 2 Postman collections
+│   ├── scripts/
+│   │   ├── generateCert.js       # Local CA + localhost certificate (npm run gen-cert)
+│   │   ├── trustCert.js          # Adds the local CA to the OS trust store (npm run trust-cert)
+│   │   └── runNewman.js          # Runs the collection, writes a token-free summary
+│   ├── certs/  logs/             # Git-ignored runtime output (.gitkeep only)
+│   ├── Dockerfile                # Multi-stage, production dependencies only
+│   ├── .env.example              # Environment template (never commit .env)
+│   └── .env.test                 # Non-secret values for Jest
+│
+├── frontend/                     # React SPA
+│   ├── src/
+│   │   ├── main.jsx, App.jsx     # Entry point and route table
+│   │   ├── api/client.js         # Axios instance, bearer token, 401 handling, safe error text
+│   │   ├── context/AuthContext.jsx   # Verified session, expiry timer, login/register/logout
+│   │   ├── components/           # Navbar, ProtectedRoute, GigCard, BookingsPage, AlertMessage
+│   │   ├── pages/                # Login, Register, BrowseGigs, MyGigs, MyBookings,
+│   │   │                         # ReceivedBookings, Dashboard, NotFound
+│   │   ├── lib/validation.js     # Client-side form validation
+│   │   └── tests/                # Vitest + Testing Library component tests
+│   ├── securityHeaders.js        # Document CSP/headers for Vite dev and preview
+│   ├── vite.config.js            # HTTPS dev server, /api proxy, test config
+│   ├── nginx.conf                # TLS, HSTS, CSP, SPA fallback, verified proxy to backend
+│   ├── Dockerfile                # Build with Node, serve with nginx
+│   └── .env.example
+│
+└── docs/part2/
+    ├── VERIFICATION.md           # Dated record of checks actually run
+    ├── REMAINING_WORK.md         # Outstanding evidence and manual checks
+    ├── TEAM_HANDOFF.md           # Ownership and branch rules
+    └── verification/newman-summary.json   # Token-free live Newman result
+```
+
+> **Housekeeping:** the repository still contains empty `client/` and `server/` folders (plus `server/Docs/screenshots/`, which holds the Part 1 Postman screenshots) from the earlier plan, a leftover Visual Studio `CHANGELOG.md`, and a `.vs/` folder. These are not run paths. Move the Part 1 screenshots under `docs/` and delete the leftovers before final submission.
+
+---
