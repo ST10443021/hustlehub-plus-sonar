@@ -338,3 +338,24 @@ To demonstrate a non-zero figure, book gigs totalling more than R99,000. The res
 
 ---
 
+## 11. React Frontend
+
+| Route | Access | Screen |
+| --- | --- | --- |
+| `/` | Public | Browse gigs; clients see "Book this gig" and a confirmation dialog |
+| `/login`, `/register` | Public | Authentication forms with client-side validation and server error display |
+| `/my-gigs` | Freelancer | Create, edit and delete own gigs |
+| `/received-bookings` | Freelancer | Bookings received on own gigs |
+| `/dashboard` | Freelancer | Income and estimated tax |
+| `/my-bookings` | Client | Own booking history |
+| `/404`, `*` | Public | Not-found page |
+
+**Security and UX behaviour**
+
+- The session is verified with `/api/auth/profile` after every reload, the user is logged out at the expiry time supplied by the backend, and a 401 on any protected call clears the session.
+- Forms reject invalid input before sending (email, password rules, gig length and price) and show readable server error messages. Nothing sensitive (tokens, stack traces, hashes) is displayed.
+- Mutation buttons are disabled while a request is pending to prevent duplicate bookings.
+- The token is stored in `localStorage` to keep the supplied session design simple. That choice makes safe text rendering, sanitisation and the document CSP especially important, and is listed under limitations.
+
+---
+
