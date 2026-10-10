@@ -587,3 +587,19 @@ Existing Part 1 Postman screenshots are not evidence of this version and must no
 - Never commit `.env`, `*.pem`, `node_modules/`, `dist/`, or log files (all git-ignored).
 
 ---
+
+## 19. References
+
+In-text citations in this README and in code comments use IIE Harvard author-date style. The complete list is in [`REFERENCES.md`](./REFERENCES.md); sources cited here:
+
+Cooper, D., Santesson, S., Farrell, S., Boeyen, S., Housley, R. and Polk, W., 2008. *RFC 5280: Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile.* [online] IETF. Available at: https://www.rfc-editor.org/info/rfc5280 [Accessed 9 October 2026].
+
+Let's Encrypt, n.d. *Getting Started.* [online] Available at: https://letsencrypt.org/getting-started/ [Accessed 9 October 2026].
+
+Mozilla, 2026a. *Transport Layer Security (TLS).* [online] MDN Web Docs. Available at: https://developer.mozilla.org/en-US/docs/Web/Security/Transport_Layer_Security [Accessed 10 August 2026].
+
+South African Revenue Service (SARS), 2026. *Rates of Tax for Individuals.* [online] Available at: https://www.sars.gov.za/tax-rates/income-tax/rates-of-tax-for-individuals/ [Accessed 9 October 2026].
+
+The Independent Institute of Education (IIE), 2026b. *INSY7314 Portfolio of Evidence Part 2: Secure Stack - HustleHub+.* Module brief. Johannesburg: The Independent Institute of Education.
+
+Valsorda, F., n.d. *mkcert: A simple zero-config tool to make locally trusted development certificates.* [online] GitHub. Available at: https://github.com/FiloSottile/mkcert [Accessed 9 October 2026].
