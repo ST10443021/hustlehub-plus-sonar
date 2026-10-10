@@ -1,8 +1,9 @@
-# HustleHub+ — Part 2: Secure Stack
+# HustleHub+ — Secure Freelance Marketplace
 
-**Team Members**:
+**INSY7314 · Portfolio of Evidence · Part 2: Secure Stack (Full-Stack MERN)**
+Team: Quantum Coder · Last updated: 10 October 2026
 
-HustleHub+ connects clients and freelancers. Clients browse and book gigs. Freelancers manage their own gigs, see received bookings and view income. Payments are simulated. Each successful booking creates a transaction linked to its booking, client and freelancer.
+HustleHub+ is a secure freelance marketplace. **Freelancers** advertise gigs, **clients** browse and book them, and every booking produces a **simulated-payment transaction** that feeds the freelancer's **income and estimated-tax dashboard**. Security is built into every layer: authentication, role-based access, validation, sanitisation, rate limiting, security headers, HTTPS and safe error handling.
 
 ## Current source layout
 
