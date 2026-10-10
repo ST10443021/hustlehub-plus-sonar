@@ -282,4 +282,38 @@ Certificates are for **local development only**, are git-ignored, and `*.pem` fi
 
 ---
 
+## 9. API Reference
+
+Base URL: `https://localhost:5443`. Authenticated routes need `Authorization: Bearer <token>`. All responses are JSON with a `status` of `success` or `error`.
+
+| Method | Endpoint | Auth | Role | Purpose | Key responses |
+| --- | --- | :---: | --- | --- | --- |
+| GET | `/health` | No | Any | Health check | 200 |
+| POST | `/api/auth/register` | No | Any | Register (`email`, `password`, optional `role`) | 201, 400, 409, 429 |
+| POST | `/api/auth/login` | No | Any | Returns `token`, `user`, `expiresAt` | 200, 400, 401, 429 |
+| GET | `/api/auth/profile` | Yes | Any | Verify session, return user | 200, 401 |
+| GET | `/api/gigs` | No | Any | Browse active gigs (`?category=`) | 200, 400 |
+| GET | `/api/gigs/mine` | Yes | Freelancer | List own gigs | 200, 401, 403 |
+| POST | `/api/gigs` | Yes | Freelancer | Create gig | 201, 400, 403 |
+| PUT | `/api/gigs/:id` | Yes | Freelancer (owner) | Update own gig | 200, 400, 403, 404 |
+| DELETE | `/api/gigs/:id` | Yes | Freelancer (owner) | Delete own gig | 200, 400, 403, 404 |
+| POST | `/api/bookings` | Yes | Client | Book a gig (`gigId`); creates booking + transaction | 201, 400, 403, 404, 429 |
+| GET | `/api/bookings/mine` | Yes | Client | Own bookings | 200, 403 |
+| GET | `/api/bookings/received` | Yes | Freelancer | Bookings on own gigs | 200, 403 |
+| GET | `/api/income/summary` | Yes | Freelancer | Income and tax estimate | 200, 403 |
+
+### Data model
+
+| Collection | Key fields |
+| --- | --- |
+| `User` | `email` (unique, lowercase), `passwordHash`, `role`, `createdAt` |
+| `Gig` | `title`, `description`, `category`, `price`, `freelancerId`, `isActive` |
+| `Booking` | `gigId`, `clientId`, `freelancerId`, `priceAtBooking`, `gigTitle`, `status` |
+| `Transaction` | `bookingId`, `freelancerId`, `clientId`, `amount`, `type: booking_payment_simulated` |
+
+### Booking and transaction rule
+
+The booking and the transaction are separate writes. If the transaction write fails, the service removes the booking before reporting failure, and logs `booking_cleanup_failed` with the booking ID if even that cleanup cannot complete. This works on standalone MongoDB. It is **compensating cleanup, not a multi-document atomic transaction**; see [section 17](#17-known-limitations-and-part-3-roadmap).
+
+---
 
