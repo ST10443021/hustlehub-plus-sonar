@@ -1,6 +1,6 @@
 // Gig service: owns all gig-related business rules so that controllers
 // stay thin (HTTP <-> service translation only), matching the layering
-// established for authentication in Part 1 (IIE, 2026).
+// established for authentication in Part 1 (IIE, 2026b).
 const gigRepository = require('../repositories/gigRepository');
 
 function forbidden(message) {

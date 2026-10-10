@@ -6,7 +6,7 @@ const userRepository = require('../repositories/userRepository');
  * Protects a route by requiring a valid, non-expired JWT in the
  * Authorization header (Bearer scheme), per RFC 7519 (Jones, Bradley
  * & Sakimura, 2015). Runs on every request to a protected endpoint -
- * tokens are never trusted once and cached (IIE, 2026).
+ * tokens are never trusted once and cached (IIE, 2026b).
  * Author: SYED MUHAMMAD HAMZA KAZMI - ST10443021
  */
 async function requireAuth(req, res, next) {

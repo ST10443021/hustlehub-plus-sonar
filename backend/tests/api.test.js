@@ -3,7 +3,7 @@
 // Foundation, n.d.)). These exercise the Express `app` directly, in-process,
 // against the in-memory repositories (no live MongoDB required), covering
 // both the success paths and the RBAC/ownership failure paths the rubric
-// specifically rewards (IIE, 2026).
+// specifically rewards (IIE, 2026b).
 const request = require('supertest');
 const app = require('../src/app');
 

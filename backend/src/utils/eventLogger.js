@@ -1,9 +1,9 @@
 // Structured, append-only event log for security- and business-relevant
 // events (registration, login, gig created/updated/deleted, booking
 // created). This satisfies the overall "logging of key system events"
-// requirement (IIE, 2026) at a level appropriate for Part 2; Part 3's
+// requirement (IIE, 2026b) at a level appropriate for Part 2; Part 3's
 // DevSecOps stage is expected to forward this to a centralised, monitored
-// log store rather than a local file (IIE, 2026).
+// log store rather than a local file (IIE, 2026b).
 //
 // Logs are deliberately free of password hashes, JWTs, or raw request
 // bodies - only identifiers and outcomes are recorded - so the log file

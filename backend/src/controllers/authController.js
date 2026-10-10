@@ -35,7 +35,7 @@ const login = asyncHandler(async (req, res) => {
   });
 });
 
-/** Example protected endpoint used to demonstrate JWT-guarded routes (Jones, Bradley & Sakimura, 2015). */
+/** Example protected endpoint used to demonstrate JWT-guarded routes (Jones, Bradley and Sakimura, 2015). */
 const getProfile = asyncHandler(async (req, res) => {
   res.status(200).json({
     status: 'success',

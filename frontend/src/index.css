@@ -108,6 +108,7 @@ button:disabled { background: #94a3b8; cursor: not-allowed; }
 .alert-success { background: var(--color-success-bg); color: var(--color-success-text); }
 .alert-info { background: var(--color-info-bg); color: var(--color-info-text); }
 
+.dashboard-note { margin-top: 12px; font-size: 0.9rem; }
 .dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
 .card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 10px; padding: 20px; }
 .card .stat { font-size: 1.8rem; font-weight: 700; color: var(--color-primary); margin: 6px 0; }

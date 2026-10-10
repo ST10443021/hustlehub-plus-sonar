@@ -3,7 +3,7 @@ import apiClient from '../api/client';
 // (the standard choice for testing React components from the user's
 // perspective rather than implementation detail (Node.js Foundation,
 // n.d.)), satisfying the POE's "basic automated tests that demonstrate
-// component rendering and user interaction" requirement (IIE, 2026).
+// component rendering and user interaction" requirement (IIE, 2026b).
 import { describe, expect, test, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

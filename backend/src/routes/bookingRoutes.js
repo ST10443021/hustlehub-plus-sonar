@@ -9,7 +9,7 @@ const router = express.Router();
 
 // Booking creation is explicitly named as a "sensitive endpoint" requiring
 // rate limiting in the POE brief, since it creates financial/transaction
-// records (IIE, 2026). A tighter budget than the general API limiter
+// records (IIE, 2026b). A tighter budget than the general API limiter
 // applies here specifically.
 const bookingLimiter = rateLimit({
   windowMs: config.bookingRateLimitWindowMs,

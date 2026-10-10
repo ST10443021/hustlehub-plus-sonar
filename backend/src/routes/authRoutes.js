@@ -27,7 +27,7 @@ const authLimiter = rateLimit({
 router.post('/register', authLimiter, registerValidationRules, authController.register);
 router.post('/login', authLimiter, loginValidationRules, authController.login);
 
-// Protected route demonstrating JWT validation on every request (Jones, Bradley & Sakimura, 2015). (Jones, Bradley & Sakimura, 2015).
+// Protected route demonstrating JWT validation on every request (Jones, Bradley and Sakimura, 2015). (Jones, Bradley and Sakimura, 2015).
 router.get('/profile', requireAuth, authController.getProfile);
 
 module.exports = router;

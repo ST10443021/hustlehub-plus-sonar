@@ -2,7 +2,7 @@
 # (MongoDB, Inc., n.d.). Full container hardening, health checks, and CI
 # wiring are extended in Part 3 (DevSecOps) - this compose file establishes
 # the baseline container-ready shape of the stack from Part 2 onward
-# (IIE, 2026).
+# (IIE, 2026b).
 services:
   mongo:
     image: mongo:7
@@ -24,8 +24,12 @@ services:
       SSL_CERT_PATH: ./certs/cert.pem
       BCRYPT_SALT_ROUNDS: 12
       MONGODB_URI: mongodb://mongo:27017/hustlehub
-      CORS_ORIGINS: http://localhost:8080
+      CORS_ORIGINS: https://localhost:8443
       TRUST_PROXY: 1
+    # Locally trusted certificate made by "npm run gen-cert" in backend/ (read-only).
+    volumes:
+      - ./backend/certs/cert.pem:/app/certs/cert.pem:ro
+      - ./backend/certs/key.pem:/app/certs/key.pem:ro
     depends_on:
       - mongo
     # Only nginx reaches this trusted-proxy backend.
@@ -40,8 +44,15 @@ services:
     restart: unless-stopped
     depends_on:
       - backend
+    # HTTPS on 8443 (port 8080 only redirects to it), so the browser shows a padlock
+    # once "npm run trust-cert" has been run (Mozilla, 2026a; nginx, n.d.).
+    volumes:
+      - ./backend/certs/cert.pem:/etc/nginx/certs/cert.pem:ro
+      - ./backend/certs/key.pem:/etc/nginx/certs/key.pem:ro
+      - ./backend/certs/rootCA.pem:/etc/nginx/certs/rootCA.pem:ro
     ports:
       - "8080:80"
+      - "8443:443"
 
 volumes:
   mongo-data:

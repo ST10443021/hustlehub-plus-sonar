@@ -1,7 +1,7 @@
 // Booking service: encapsulates the "book a gig" workflow, which the POE
 // brief requires to always result in an associated transaction record -
 // payments themselves are simulated, but the resulting financial record
-// is real and feeds the freelancer's income dashboard (IIE, 2026).
+// is real and feeds the freelancer's income dashboard (IIE, 2026b).
 const gigRepository = require('../repositories/gigRepository');
 const bookingRepository = require('../repositories/bookingRepository');
 const transactionRepository = require('../repositories/transactionRepository');

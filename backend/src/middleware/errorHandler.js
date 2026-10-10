@@ -13,7 +13,7 @@ function notFoundHandler(req, res, next) {
  * for thrown/forwarded errors. This guarantees no stack trace, file path,
  * SQL/driver message, or other internal detail ever reaches the client,
  * satisfying both OWASP's guidance against verbose error messages
- * (OWASP, 2021) and the POE's "secure error handling" requirement (IIE, 2026).
+ * (OWASP, 2021) and the POE's "secure error handling" requirement (IIE, 2026b).
  *
  * Errors raised deliberately in the service layer set `err.expose = true`
  * and a safe `err.statusCode` + message; anything else is logged server-side

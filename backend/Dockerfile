@@ -17,7 +17,7 @@ COPY . .
 # Bakes in a container-local self-signed certificate so the image is
 # runnable standalone for local/demo purposes without a manual setup step;
 # a real deployment would instead mount a CA-issued certificate at these
-# same paths (Mozilla, 2026) - see README for the production note.
+# same paths (Mozilla, 2026a) - see README for the production note.
 RUN node scripts/generateCert.js
 EXPOSE 5443
 CMD ["node", "src/server.js"]

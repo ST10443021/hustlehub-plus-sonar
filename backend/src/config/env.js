@@ -1,13 +1,13 @@
 // Centralised, validated access to environment configuration.
 // Failing fast here means the app never starts in a half-configured,
-// insecure state (e.g. with a missing JWT secret) (Jones, Bradley & Sakimura, 2015),
+// insecure state (e.g. with a missing JWT secret) (Jones, Bradley and Sakimura, 2015),
 // following Node.js's recommended pattern for environment-driven configuration
 // (Node.js Foundation, n.d.).
 
 // Author : SYED MUHAMMAD HAMZA KAZMI - ST10443021
 // Loads .env.test when running under Jest (NODE_ENV=test), otherwise the
 // usual .env, so the test suite never depends on a developer's local
-// secrets/ports and can run unattended in CI (IIE, 2026).
+// secrets/ports and can run unattended in CI (IIE, 2026b).
 require('dotenv').config({ path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env' });
 
 const required = ['JWT_SECRET', ...(process.env.NODE_ENV === 'test' ? [] : ['MONGODB_URI'])];
@@ -46,7 +46,7 @@ module.exports = {
 
   // Separate, stricter rate-limit budget for booking creation, since
   // booking endpoints create financial/transaction records and are a
-  // POE-specified sensitive endpoint (IIE, 2026).
+  // POE-specified sensitive endpoint (IIE, 2026b).
   bookingRateLimitWindowMs: parseInt(process.env.BOOKING_RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
   bookingRateLimitMax: parseInt(process.env.BOOKING_RATE_LIMIT_MAX, 10) || 10,
 
@@ -67,4 +67,16 @@ module.exports = {
     { upTo: Infinity, rate: 0.45, base: 666339 },
   ],
   taxPrimaryRebate: 17820, // SARS (2026) primary rebate, under-65 taxpayers, 2026/27 tax year
+
+  // Income below this amount produces R0 tax because the primary rebate wipes out
+  // the first-bracket tax: R17,820 / 18% = R99,000, matching SARS's published
+  // under-65 tax threshold for the 2026/27 tax year (SARS, 2026). Derived, not
+  // hard-coded, so it can never drift away from the bracket table above.
+  get taxFreeThreshold() {
+    return this.taxPrimaryRebate / this.taxBrackets[0].rate;
+  },
+  // South African tax years run from 1 March to the end of February (SARS, 2026),
+  // and South Africa is UTC+2 all year (no daylight saving).
+  taxYearStartMonth: 2, // 0-based month index: March
+  localUtcOffsetHours: 2,
 };

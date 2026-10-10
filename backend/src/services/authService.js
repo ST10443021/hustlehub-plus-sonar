@@ -27,10 +27,10 @@ async function verifyPassword(plainTextPassword, passwordHash) {
 
 /**
  * Issue a signed JWT for an authenticated user, as specified in RFC 7519
- * (Jones, Bradley & Sakimura, 2015). The payload intentionally carries
+ * (Jones, Bradley and Sakimura, 2015). The payload intentionally carries
  * only non-sensitive identifiers (id, role) - never the password hash or
  * email - since JWT payloads are base64-encoded, not encrypted, and can
- * be read by anyone holding the token (Jones, Bradley & Sakimura, 2015).
+ * be read by anyone holding the token (Jones, Bradley and Sakimura, 2015).
  */
 function issueToken(user) {
   return jwt.sign(
@@ -39,7 +39,7 @@ function issueToken(user) {
     { expiresIn: config.jwtExpiresIn, issuer: 'hustlehub-plus-api' }
   );
 }
-/** Verifies signature, issuer, and expiry on every call, per RFC 7519 (Jones, Bradley & Sakimura, 2015). */
+/** Verifies signature, issuer, and expiry on every call, per RFC 7519 (Jones, Bradley and Sakimura, 2015). */
 function verifyToken(token) {
   return jwt.verify(token, config.jwtSecret, { issuer: 'hustlehub-plus-api' });
 }

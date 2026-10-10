@@ -26,8 +26,8 @@ app.set('trust proxy', config.trustProxy);
 // Layered "defence in depth" pipeline, per OWASP's Top 10 guidance (OWASP, 2021).
 app.use(
   helmet({
-    // Explicit Content Security Policy, required for Part 2 (IIE, 2026), configured
-    // per Mozilla/MDN's CSP guidance (Mozilla, 2026) and OWASP's recommendation to
+    // Explicit Content Security Policy, required for Part 2 (IIE, 2026b), configured
+    // per Mozilla/MDN's CSP guidance (Mozilla, 2026b) and OWASP's recommendation to
     // default-deny and allow-list only what the application actually needs (OWASP, 2021).
     contentSecurityPolicy: {
       directives: {
@@ -57,7 +57,7 @@ app.use(mongoSanitize()); // strips NoSQL operator injection payloads, now direc
 app.use(xssClean()); // sanitises user input against reflected XSS payloads (OWASP, 2024b)
 
 // Global rate limiter (defence-in-depth on top of the stricter per-route limiters on the
-// auth and booking endpoints specifically named as "sensitive" in the POE brief) (OWASP, 2021; IIE, 2026).
+// auth and booking endpoints specifically named as "sensitive" in the POE brief) (OWASP, 2021; IIE, 2026b).
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 300 }));
 
 // Structured request logging (dev console; Part 3 wires this to a persistent log store)
@@ -66,7 +66,7 @@ app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev'));
 
 // Lightweight structured event log for key system events (registrations, logins, gig
 // and booking creation), satisfying the overall "logging of key system events"
-// requirement (IIE, 2026) ahead of Part 3's full monitoring/observability stack.
+// requirement (IIE, 2026b) ahead of Part 3's full monitoring/observability stack.
 app.use(requestLogger);
 
 // --- Routes ---

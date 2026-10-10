@@ -8,6 +8,7 @@
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "gen-cert": "node scripts/generateCert.js",
+    "trust-cert": "node scripts/trustCert.js",
     "test": "cross-env NODE_ENV=test jest --runInBand",
     "test:watch": "jest --watch",
     "test:api": "node scripts/runNewman.js"
