@@ -194,3 +194,55 @@ Access is enforced **on the server** by `requireAuth` then `requireRole(...)`. T
 - The server reloads the user from the database on every protected request to obtain the trusted role, so a stale or forged role claim in a token is ignored.
 
 **Admin role.** Public sign-up cannot create admins (the `role` field accepts only `client` or `freelancer`). Admin is deliberately limited to public browsing and its own profile at this stage, and no unrestricted override exists. Any future admin capability needs an explicit server-side policy.
+
+---
+
+## 6. API Security: JWT, Validation, Sanitisation
+
+### Authentication
+
+- Passwords are hashed with **bcrypt** (default work factor 12, `BCRYPT_SALT_ROUNDS`). New passwords must be 8–72 characters (and ≤ 72 UTF-8 bytes, so bcrypt never silently truncates), with an uppercase letter, a lowercase letter and a digit.
+- **JWTs** are signed, carry only `sub` and `role`, expire after 1 hour by default, and are verified for signature, issuer (`hustlehub-plus-api`) and expiry on **every** protected request.
+- Failed token checks return a deliberately generic message so an attacker cannot tell *why* a token failed.
+- Login failures are logged without exposing which of email or password was wrong.
+- The app refuses to start if `JWT_SECRET` is missing, shorter than 32 characters, or still the placeholder value.
+- Password hashes and secrets are never returned in API responses.
+
+### Validation
+
+- `express-validator` checks types, lengths, price ranges (R0–R1,000,000, max 2 decimals), booleans and MongoDB ID format.
+- Request bodies use an **allow-list of fields**; unexpected properties are rejected.
+- Request bodies are capped at **10 KB**, and malformed JSON returns a clean 400.
+
+### Sanitisation
+
+- `express-mongo-sanitize` strips NoSQL operator injection (`$gt`, `$ne`, …).
+- `xss-clean` sanitises scripting payloads in input.
+- React renders every value as text, giving a second layer against stored XSS.
+- Values are not HTML-escaped again in validators, to avoid double-encoding on edits.
+
+### Safe error handling
+
+A central handler returns only intentionally exposed messages. Stack traces, driver errors, file paths and connection strings never reach the client; full detail goes to server-side logs only. Database errors (validation, duplicate key, cast errors) are mapped to safe 400/409 responses.
+
+### Persistence behaviour
+
+MongoDB is **required** for normal runs. A missing or unreachable database stops start-up, and a lost connection makes operations fail rather than switch to temporary data. In-memory repositories exist **only** under `NODE_ENV=test` for isolated Jest runs.
+
+---
+
+## 7. Rate Limiting
+
+| Scope | Limit | Window | Response when exceeded |
+| --- | --- | --- | --- |
+| Global (all routes) | 300 requests | 15 min | **429** |
+| Auth: `POST /api/auth/register`, `POST /api/auth/login` | 20 requests | 15 min | **429** `{"status":"error","message":"Too many attempts. Please try again later."}` |
+| Booking: `POST /api/bookings` | 10 requests | 15 min (configurable) | **429** `{"status":"error","message":"Too many booking attempts. Please try again later."}` |
+
+- Standard `RateLimit-*` headers are returned; legacy `X-RateLimit-*` headers are off.
+- Booking limits are configurable through `BOOKING_RATE_LIMIT_WINDOW_MS` and `BOOKING_RATE_LIMIT_MAX`.
+- Limiters are skipped **only** when `NODE_ENV=test`, so Jest is deterministic. Rate limiting is proven separately by Newman against a live server, where probes repeat until a 429 is received.
+- Direct local runs do not trust forwarded IP headers. `TRUST_PROXY=1` is for the controlled nginx proxy only.
+
+---
+
