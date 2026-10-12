@@ -1,9 +1,11 @@
-# HustleHub+ — Secure Freelance Marketplace
+<img width="1693" height="325" alt="image" src="https://github.com/user-attachments/assets/2e7ef263-0eca-436b-a333-3c4aad7719cd" /># HustleHub+ — Secure Freelance Marketplace
 
 **INSY7314 · Portfolio of Evidence · Part 2: Secure Stack (Full-Stack MERN)**
 Team: Quantum Coder · Last updated: 10 October 2026
 
 HustleHub+ is a secure freelance marketplace. **Freelancers** advertise gigs, **clients** browse and book them, and every booking produces a **simulated-payment transaction** that feeds the freelancer's **income and estimated-tax dashboard**. Security is built into every layer: authentication, role-based access, validation, sanitisation, rate limiting, security headers, HTTPS and safe error handling.
+
+**YouTube Demo Video**: https://youtu.be/sJGUPNklwoA
 
 ---
 
