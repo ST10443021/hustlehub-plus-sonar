@@ -1,4 +1,4 @@
-**INSY7314 · Portfolio of Evidence · Part 2: Secure Stack (Full-Stack MERN)**
+# **INSY7314 · Portfolio of Evidence · Part 2: Secure Stack (Full-Stack MERN)**
 Team: Quantum Coder · Last updated: 10 October 2026
 
 HustleHub+ is a secure freelance marketplace. **Freelancers** advertise gigs, **clients** browse and book them, and every booking produces a **simulated-payment transaction** that feeds the freelancer's **income and estimated-tax dashboard**. Security is built into every layer: authentication, role-based access, validation, sanitisation, rate limiting, security headers, HTTPS and safe error handling.
