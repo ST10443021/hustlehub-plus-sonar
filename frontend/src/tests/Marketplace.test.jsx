@@ -12,6 +12,8 @@ const gig = { id: 'gig-1', title: 'Logo Design', description: 'Design a useful b
 const response = (data) => ({ data: { data } });
 
 async function fillGig(user, price = '') {
+  // The form stays disabled until the initial listings request finishes.
+  await waitFor(() => expect(screen.getByLabelText('Title')).toBeEnabled());
   await user.type(screen.getByLabelText('Title'), gig.title);
   await user.type(screen.getByLabelText('Category'), gig.category);
   await user.type(screen.getByLabelText('Description'), gig.description);

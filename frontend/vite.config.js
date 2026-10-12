@@ -39,5 +39,12 @@ export default defineConfig({
   plugins: [react()],
   server: { https, proxy, headers: securityHeaders(true) },
   preview: { https, proxy, headers: securityHeaders(false) },
-  test: { environment: 'jsdom', globals: true, setupFiles: './src/setupTests.js' },
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/setupTests.js',
+    // Limit competing jsdom workers on slower development machines.
+    maxWorkers: 2,
+    testTimeout: 15000,
+  },
 });
