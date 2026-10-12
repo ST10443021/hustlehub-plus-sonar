@@ -1,5 +1,3 @@
-<img width="1693" height="325" alt="image" src="https://github.com/user-attachments/assets/2e7ef263-0eca-436b-a333-3c4aad7719cd" /># HustleHub+ — Secure Freelance Marketplace
-
 **INSY7314 · Portfolio of Evidence · Part 2: Secure Stack (Full-Stack MERN)**
 Team: Quantum Coder · Last updated: 10 October 2026
 
