@@ -25,7 +25,7 @@ function allowedFields(fields, requireChange = false) {
 function validId(value) {
   if (typeof value !== 'string') return false;
   const mongoId = /^[a-f0-9]{24}$/i.test(value);
-  const testId = config.nodeEnv === 'test' && /^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i.test(value);
+  const testId = config.nodeEnv === 'test' && /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(value);
   return mongoId || testId;
 }
 
@@ -82,4 +82,10 @@ const browseValidationRules = [query('category').optional().isString().bail().tr
 const bookingValidationRules = [
   allowedFields(['gigId']), body('gigId').custom(validId).withMessage('Choose a valid gig.'), handleValidationErrors,
 ];
-module.exports = { registerValidationRules, loginValidationRules, gigValidationRules, gigUpdateValidationRules, gigIdValidationRules, browseValidationRules, bookingValidationRules };
+// ?limit= for the admin listings: a whole number from 1 to 200 (OWASP, 2024b).
+const adminListQueryRules = [
+  query('limit').optional().isInt({ min: 1, max: 200 }).withMessage('limit must be a whole number from 1 to 200.').toInt(),
+  handleValidationErrors,
+];
+
+module.exports = { adminListQueryRules, registerValidationRules, loginValidationRules, gigValidationRules, gigUpdateValidationRules, gigIdValidationRules, browseValidationRules, bookingValidationRules };

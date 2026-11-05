@@ -16,6 +16,13 @@ export function AuthProvider({ children }) {
     setUser(null); setExpiresAt(null);
     setSessionError('');
   }, []);
+  // Asks the server to invalidate every token issued to this user (server-side logout), then clears
+  // the local session. If the server cannot be reached the local session is still cleared (OWASP, 2024e).
+  const signOut = useCallback(async () => {
+    try { if (localStorage.getItem(TOKEN_KEY)) await apiClient.post('/auth/logout'); }
+    catch { /* the token is discarded below either way */ }
+    logout();
+  }, [logout]);
   const refreshSession = useCallback(async () => {
     setInitialising(true);
     setSessionError('');
@@ -66,8 +73,8 @@ export function AuthProvider({ children }) {
     } catch (err) { throw new Error(getErrorMessage(err)); }
     finally { setLoading(false); }
   }, []);
-  const value = useMemo(() => ({ user, isAuthenticated: Boolean(user), loading, initialising, sessionError, refreshSession, register, login, logout }),
-    [user, loading, initialising, sessionError, refreshSession, register, login, logout]);
+  const value = useMemo(() => ({ user, isAuthenticated: Boolean(user), loading, initialising, sessionError, refreshSession, register, login, logout, signOut }),
+    [user, loading, initialising, sessionError, refreshSession, register, login, logout, signOut]);
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 export function useAuth() {

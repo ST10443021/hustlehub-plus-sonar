@@ -25,8 +25,8 @@ const register = asyncHandler(async (req, res) => {
 
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  const { token, user } = await authService.loginUser({ email, password });
-  logEvent('user_login', { userId: user.id, role: user.role });
+  const { token, user } = await authService.loginUser({ email, password }, { ip: req.ip, requestId: req.id });
+  logEvent('user_login', { userId: user.id, role: user.role, ip: req.ip, requestId: req.id });
 
   res.status(200).json({
     status: 'success',
@@ -44,4 +44,11 @@ const getProfile = asyncHandler(async (req, res) => {
   });
 });
 
-module.exports = { register, login, getProfile };
+/** Ends the session on the server by invalidating all of this user's tokens (OWASP, 2024e). */
+const logout = asyncHandler(async (req, res) => {
+  await authService.logoutUser(req.user.id);
+  logEvent('user_logout', { userId: req.user.id, ip: req.ip, requestId: req.id });
+  res.status(200).json({ status: 'success', message: 'Logged out. Existing tokens are no longer valid.' });
+});
+
+module.exports = { register, login, logout, getProfile };
