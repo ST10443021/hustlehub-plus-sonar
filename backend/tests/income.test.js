@@ -63,3 +63,54 @@ describe('getIncomeSummary', () => {
     expect(s.taxNote).toMatch(/No income recorded yet/);
   });
 });
+
+// ---- Part 3: dashboard analytics (SARS, 2026) ----
+const { buildTaxBreakdown, buildMonthlyIncome, getMarginalRate } = require('../src/services/incomeService');
+
+describe('buildTaxBreakdown', () => {
+  test.each([0, 10500, 150000, 300000, 600000, 2000000])('bracket amounts add up to the same tax as estimateAnnualTax for R%d', (income) => {
+    const breakdown = buildTaxBreakdown(income);
+    expect(breakdown.netTax).toBe(estimateAnnualTax(income));
+    expect(breakdown.brackets.reduce((sum, row) => sum + row.amountInBracket, 0)).toBeCloseTo(income, 2);
+  });
+  test('only brackets that contain income are listed', () => {
+    expect(buildTaxBreakdown(300000).brackets.map((b) => b.rate)).toEqual([0.18, 0.26]);
+  });
+});
+
+describe('getMarginalRate', () => {
+  test.each([[0, 0.18], [100000, 0.18], [300000, 0.26], [500000, 0.31], [5000000, 0.45]])('R%d -> %s', (income, rate) => {
+    expect(getMarginalRate(income)).toBe(rate);
+  });
+});
+
+describe('buildMonthlyIncome', () => {
+  const now = new Date('2026-10-29T10:00:00Z');
+  test('returns 12 consecutive months ending in the current month, filling gaps with zero', () => {
+    const months = buildMonthlyIncome([], now);
+    expect(months).toHaveLength(12);
+    expect(months[0].key).toBe('2025-11');
+    expect(months[11]).toMatchObject({ key: '2026-10', label: 'Oct 2026', income: 0 });
+  });
+  test('groups by South African month (UTC+2): 23:00 UTC on 31 Aug is already 1 September', () => {
+    const months = buildMonthlyIncome([{ amount: 200, createdAt: '2026-08-31T23:00:00Z' }, { amount: 50, createdAt: '2026-09-10T08:00:00Z' }], now);
+    expect(months.find((m) => m.key === '2026-08').income).toBe(0);
+    expect(months.find((m) => m.key === '2026-09').income).toBe(250);
+  });
+  test('ignores income older than 12 months and records with a bad date', () => {
+    const months = buildMonthlyIncome([{ amount: 999, createdAt: '2024-01-01T00:00:00Z' }, { amount: 5, createdAt: 'not-a-date' }], now);
+    expect(months.reduce((sum, m) => sum + m.income, 0)).toBe(0);
+  });
+});
+
+describe('getIncomeSummary analytics fields', () => {
+  test('includes net income, marginal rate, breakdown, monthly series and methodology', async () => {
+    transactionRepository.findByFreelancer.mockResolvedValue([{ amount: 150000, createdAt: '2026-09-01T08:00:00Z' }]);
+    const s = await getIncomeSummary('f1', new Date('2026-10-09T21:00:00Z'));
+    expect(s).toMatchObject({ netIncomeAfterTax: 140820, marginalTaxRate: 18 });
+    expect(s.taxBreakdown).toMatchObject({ grossTax: 27000, primaryRebate: 17820, netTax: 9180 });
+    expect(s.monthlyIncome).toHaveLength(12);
+    expect(s.monthlyIncome.find((m) => m.key === '2026-09').income).toBe(150000);
+    expect(s.methodology.length).toBeGreaterThanOrEqual(5);
+  });
+});

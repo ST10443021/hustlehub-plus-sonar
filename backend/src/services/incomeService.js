@@ -1,7 +1,7 @@
 // Income / tax-estimate service.
 //
 // Implements the "tracking of income for Freelancers" and "calculation
-// and display of estimated tax values" requirements (IIE, 2026b). The
+// and display of estimated tax values" requirements (IIE, 2026c). The
 // figure produced here is explicitly an *estimate* for a simulated
 // marketplace - it applies SARS's published 2026/27 individual marginal
 // tax brackets and primary rebate (SARS, 2026) to the freelancer's
@@ -18,6 +18,7 @@ const transactionRepository = require('../repositories/transactionRepository');
 const config = require('../config/env');
 
 const HOUR_MS = 60 * 60 * 1000;
+const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const round2 = (n) => Math.round(n * 100) / 100;
 
 /** Formats a rand amount for the explanatory notes, e.g. 99000 -> "R99,000" (SARS, 2026). */
@@ -55,6 +56,69 @@ function estimateAnnualTax(taxableIncome) {
   return round2(netTax);
 }
 
+
+/**
+ * Shows how the tax figure is built, one SARS bracket at a time (SARS, 2026). Because the bracket
+ * "base" amounts in config.js are the cumulative tax on all lower brackets, the per-bracket amounts
+ * below add up exactly to the same gross tax that estimateAnnualTax() calculates.
+ */
+function buildTaxBreakdown(taxableIncome) {
+  let previousCeiling = 0;
+  const rows = config.taxBrackets.map((bracket) => {
+    const from = previousCeiling;
+    const to = bracket.upTo === Infinity ? null : bracket.upTo;
+    const inBracket = Math.max(0, Math.min(taxableIncome, bracket.upTo) - from);
+    previousCeiling = bracket.upTo;
+    return { from, to, rate: bracket.rate, amountInBracket: round2(inBracket), taxInBracket: round2(inBracket * bracket.rate) };
+  });
+  const grossTax = round2(rows.reduce((sum, row) => sum + row.taxInBracket, 0));
+  return {
+    brackets: rows.filter((row) => row.amountInBracket > 0),
+    grossTax,
+    primaryRebate: config.taxPrimaryRebate,
+    netTax: round2(Math.max(0, grossTax - config.taxPrimaryRebate)),
+  };
+}
+
+/** Marginal rate: the rate that applies to the next rand earned (SARS, 2026). */
+function getMarginalRate(taxableIncome) {
+  if (taxableIncome <= 0) return config.taxBrackets[0].rate;
+  return config.taxBrackets.find((b) => taxableIncome <= b.upTo).rate;
+}
+
+/**
+ * Income per calendar month for the last 12 months, in South African time, oldest first.
+ * Months with no income are included as zero so the dashboard chart has no gaps.
+ */
+function buildMonthlyIncome(transactions, now = new Date()) {
+  const offsetMs = config.localUtcOffsetHours * HOUR_MS;
+  const local = new Date(now.getTime() + offsetMs);
+  const buckets = [];
+  for (let i = 11; i >= 0; i -= 1) {
+    const d = new Date(Date.UTC(local.getUTCFullYear(), local.getUTCMonth() - i, 1));
+    buckets.push({ key: `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`, label: `${MONTH_NAMES[d.getUTCMonth()]} ${d.getUTCFullYear()}`, income: 0 });
+  }
+  const byKey = new Map(buckets.map((b) => [b.key, b]));
+  transactions.forEach((t) => {
+    const when = new Date(new Date(t.createdAt).getTime() + offsetMs);
+    if (Number.isNaN(when.getTime())) return;
+    const bucket = byKey.get(`${when.getUTCFullYear()}-${String(when.getUTCMonth() + 1).padStart(2, '0')}`);
+    if (bucket) bucket.income = round2(bucket.income + t.amount);
+  });
+  return buckets;
+}
+
+/** The calculation, in plain language, shown to the freelancer so the estimate is never a black box. */
+function buildMethodology(taxYearLabel) {
+  return [
+    `1. Add up every simulated booking payment received in the ${taxYearLabel} tax year (1 March to the end of February).`,
+    '2. Apply the SARS individual income tax brackets to that amount: each slice of income is taxed at its own rate.',
+    `3. Subtract the primary rebate of ${formatRand(config.taxPrimaryRebate)}; tax can never go below R0.`,
+    `4. Income up to ${formatRand(config.taxFreeThreshold)} therefore results in R0 tax.`,
+    '5. The effective rate is the estimated tax divided by that tax-year income.',
+  ];
+}
+
 /** Plain-language explanation shown next to the estimate (SARS, 2026). */
 function buildTaxNote({ taxYearLabel, taxYearIncome, estimatedAnnualTax }) {
   const threshold = formatRand(config.taxFreeThreshold);
@@ -87,6 +151,11 @@ async function getIncomeSummary(freelancerId, now = new Date()) {
     amountUntilTaxApplies: round2(Math.max(0, config.taxFreeThreshold - taxYearIncome)),
     estimatedAnnualTax,
     effectiveTaxRate, // percentage
+    marginalTaxRate: round2(getMarginalRate(taxYearIncome) * 100), // percentage
+    netIncomeAfterTax: round2(taxYearIncome - estimatedAnnualTax),
+    taxBreakdown: buildTaxBreakdown(taxYearIncome),
+    monthlyIncome: buildMonthlyIncome(transactions, now),
+    methodology: buildMethodology(taxYear.label),
     taxNote: buildTaxNote({ taxYearLabel: taxYear.label, taxYearIncome, estimatedAnnualTax }),
     currency: 'ZAR',
     disclaimer: 'Estimated figure based on marketplace income only, using SARS 2026/27 individual tax brackets. Not professional tax advice.',
@@ -94,4 +163,4 @@ async function getIncomeSummary(freelancerId, now = new Date()) {
   };
 }
 
-module.exports = { getIncomeSummary, estimateAnnualTax, getTaxYear };
+module.exports = { getIncomeSummary, estimateAnnualTax, getTaxYear, buildTaxBreakdown, buildMonthlyIncome, getMarginalRate };
