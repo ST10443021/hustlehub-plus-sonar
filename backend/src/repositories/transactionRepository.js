@@ -40,4 +40,14 @@ async function findByFreelancer(freelancerId) {
   return memoryStore.filter((t) => t.freelancerId === freelancerId).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 }
 
-module.exports = { create, findByFreelancer, _memoryStore: memoryStore };
+/** Number and combined value of all transactions, for the admin overview. */
+async function totals() {
+  if (isDbConnected()) {
+    const [row] = await TransactionSchema.aggregate([{ $group: { _id: null, count: { $sum: 1 }, value: { $sum: '$amount' } } }]);
+    return { count: row ? row.count : 0, value: row ? Math.round(row.value * 100) / 100 : 0 };
+  }
+  const value = memoryStore.reduce((sum, t) => sum + t.amount, 0);
+  return { count: memoryStore.length, value: Math.round(value * 100) / 100 };
+}
+
+module.exports = { totals, create, findByFreelancer, _memoryStore: memoryStore };

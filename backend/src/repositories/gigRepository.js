@@ -93,4 +93,13 @@ async function remove(id) {
   return true;
 }
 
-module.exports = { create, findById, findActive, findByFreelancer, update, remove, _memoryStore: memoryStore };
+/** Total and active gig counts for the admin overview. */
+async function countAll() {
+  if (isDbConnected()) {
+    const [total, active] = await Promise.all([GigSchema.countDocuments({}), GigSchema.countDocuments({ isActive: true })]);
+    return { total, active };
+  }
+  return { total: memoryStore.length, active: memoryStore.filter((g) => g.isActive).length };
+}
+
+module.exports = { countAll, create, findById, findActive, findByFreelancer, update, remove, _memoryStore: memoryStore };

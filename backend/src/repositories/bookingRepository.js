@@ -66,4 +66,10 @@ async function remove(id) {
   if (index !== -1) memoryStore.splice(index, 1);
 }
 
-module.exports = { create, remove, findByClient, findByFreelancer, findById, _memoryStore: memoryStore };
+/** Total number of bookings for the admin overview. */
+async function countAll() {
+  if (isDbConnected()) return BookingSchema.countDocuments({});
+  return memoryStore.length;
+}
+
+module.exports = { countAll, create, remove, findByClient, findByFreelancer, findById, _memoryStore: memoryStore };
