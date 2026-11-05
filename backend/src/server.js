@@ -1,15 +1,18 @@
+/* eslint-disable security/detect-non-literal-fs-filename --
+   The certificate paths come from operator-supplied configuration (SSL_KEY_PATH, SSL_CERT_PATH), not from requests. */
 const fs = require('fs');
 const https = require('https');
 const path = require('path');
 const app = require('./app');
 const config = require('./config/env');
 const { connectDB } = require('./config/db');
+const cloudLogger = require('./utils/cloudLogger');
+const { logEvent } = require('./utils/eventLogger');
 
 const keyPath = path.resolve(config.sslKeyPath);
 const certPath = path.resolve(config.sslCertPath);
 
 if (!fs.existsSync(keyPath) || !fs.existsSync(certPath)) {
-  // eslint-disable-next-line no-console
   // Author: MUZAMMIL CASSIM - ST10259792
   console.error(
     `SSL certificate not found at "${keyPath}" / "${certPath}".\n` +
@@ -39,14 +42,26 @@ const httpsOptions = {
 
 // Fail startup if MongoDB is unavailable; never accept non-persistent live writes.
 connectDB().then(() => {
-  https.createServer(httpsOptions, app).listen(config.port, () => {
-    // eslint-disable-next-line no-console
+  const server = https.createServer(httpsOptions, app).listen(config.port, () => {
     console.log(`HustleHub+ API listening securely on https://localhost:${config.port}`);
-    // eslint-disable-next-line no-console
     console.log(`Environment: ${config.nodeEnv}`);
-    // eslint-disable-next-line no-console
     console.log('Browser says "Not secure"? Run "npm run gen-cert" then "npm run trust-cert" once, then fully restart the browser (Mozilla, 2026a).');
+    logEvent('server_started', { port: config.port, environment: config.nodeEnv, cloudLogging: cloudLogger.isEnabled() });
   });
+
+  // Graceful shutdown: "docker compose stop" sends SIGTERM. Closing the listener and sending any
+  // buffered log entries first means the final events are not lost (Docker, Inc., n.d.a).
+  const shutdown = (signal) => {
+    logEvent('server_stopping', { signal });
+    server.close(async () => {
+      await cloudLogger.flushAll();
+      process.exit(0);
+    });
+    // Do not hang forever if a connection refuses to close.
+    setTimeout(() => process.exit(0), 8000).unref();
+  };
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 }).catch(() => {
   console.error('MongoDB startup failed. Check MONGODB_URI and start MongoDB. The API has not started.');
   process.exit(1);

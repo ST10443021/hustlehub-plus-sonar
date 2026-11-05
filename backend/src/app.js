@@ -2,7 +2,6 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 
@@ -10,6 +9,8 @@ const authRoutes = require('./routes/authRoutes');
 const gigRoutes = require('./routes/gigRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const incomeRoutes = require('./routes/incomeRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const { globalLimiter } = require('./middleware/rateLimiters');
 const { notFoundHandler, errorHandler } = require('./middleware/errorHandler');
 const { requestLogger } = require('./utils/eventLogger');
 const config = require('./config/env');
@@ -18,7 +19,7 @@ const fs = require('fs');
 
 const app = express();
 
-// Trust the first proxy hop (relevant once deployed behind a reverse proxy / load balancer in Part 3).
+// Trust the first proxy hop (the nginx reverse proxy in the Docker Compose stack).
 // Author: MUZAMMIL CASSIM - ST10259792
 app.set('trust proxy', config.trustProxy);
 
@@ -53,28 +54,30 @@ app.use(
 app.use(cors({ origin: config.corsOrigins, credentials: false }));
 
 app.use(express.json({ limit: '10kb' })); // small body limit mitigates payload-based DoS (OWASP, 2021)
-app.use(mongoSanitize()); // strips NoSQL operator injection payloads, now directly relevant with MongoDB/Mongoose live (OWASP, 2024b; MongoDB, Inc., n.d.)
+app.use(mongoSanitize()); // strips NoSQL operator injection payloads, now directly relevant with MongoDB/Mongoose live (OWASP, 2024b; MongoDB, Inc., n.d.a)
 app.use(xssClean()); // sanitises user input against reflected XSS payloads (OWASP, 2024b)
 
 // Global rate limiter (defence-in-depth on top of the stricter per-route limiters on the
 // auth and booking endpoints specifically named as "sensitive" in the POE brief) (OWASP, 2021; IIE, 2026b).
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 300 }));
+app.use(globalLimiter);
 
-// Structured request logging (dev console; Part 3 wires this to a persistent log store)
-// via Node.js's standard module ecosystem (Node.js Foundation, n.d.).
-app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev'));
+// Human-readable access log for the console; structured, searchable events come from requestLogger below.
+// Health checks run every few seconds, so they are left out of the access log to keep it readable.
+app.use(morgan(config.nodeEnv === 'production' ? 'combined' : 'dev', { skip: (req) => req.path === '/health' || req.path === '/api/health' }));
 
-// Lightweight structured event log for key system events (registrations, logins, gig
-// and booking creation), satisfying the overall "logging of key system events"
-// requirement (IIE, 2026b) ahead of Part 3's full monitoring/observability stack.
+// Request IDs and structured security/business events, also shipped to the cloud log platform
+// when configured (IIE, 2026c; OWASP, 2024d).
 app.use(requestLogger);
 
 // --- Routes ---
-app.get('/health', (req, res) => res.status(200).json({ status: 'success', message: 'HustleHub+ API is running.' }));
+const health = (req, res) => res.status(200).json({ status: 'success', message: 'HustleHub+ API is running.' });
+app.get('/health', health);
+app.get('/api/health', health); // also reachable through the nginx proxy, used by the CI pipeline and Docker checks
 app.use('/api/auth', authRoutes);
 app.use('/api/gigs', gigRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/income', incomeRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Built React pages share the API's HTTPS origin and Helmet/CSP headers.
 const frontendDist = path.resolve(__dirname, '../../frontend/dist');

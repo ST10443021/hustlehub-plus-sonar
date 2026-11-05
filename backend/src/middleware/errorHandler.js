@@ -1,4 +1,5 @@
 const config = require('../config/env');
+const { logEvent, sanitise } = require('../utils/eventLogger');
 
 /** Catches unmatched routes and forwards a clean 404 into the error handler. */
 function notFoundHandler(req, res, next) {
@@ -26,7 +27,7 @@ function notFoundHandler(req, res, next) {
  * equivalents of the same `{ statusCode, message, expose }` contract used
  * by deliberately-thrown service errors, so a database-layer failure never
  * surfaces a raw driver message, collection name, or connection string to
- * the client (OWASP, 2021; MongoDB, Inc., n.d.).
+ * the client (OWASP, 2021; MongoDB, Inc., n.d.a).
  */
 function normaliseDbError(err) {
   if (err.name === 'ValidationError') {
@@ -41,7 +42,6 @@ function normaliseDbError(err) {
   return null;
 }
 
-// eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, next) {
   if (err.type === 'entity.parse.failed' || err.type === 'entity.too.large') {
     err.statusCode = err.type === 'entity.too.large' ? 413 : 400;
@@ -54,9 +54,24 @@ function errorHandler(err, req, res, next) {
   const statusCode = err.expose && err.statusCode ? err.statusCode : 500;
   const message = err.expose ? err.message : 'An unexpected error occurred. Please try again later.';
 
-  // Full detail goes to server-side logs only, never in the HTTP response.
-  // eslint-disable-next-line no-console
-  console.error(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} -> ${statusCode}`, config.nodeEnv === 'development' ? err.stack : err.message);
+  // Console output is collected by Docker too, so use the same redaction as the event log.
+  // Query strings can contain credentials; keep only the route path and request ID.
+  const consoleDetails = sanitise({
+    requestId: req.id,
+    method: req.method,
+    path: String(req.originalUrl).split('?')[0],
+    statusCode,
+    message: err.message,
+    ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+  });
+  console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+
+  // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+  // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+  if (statusCode >= 500) {
+    logEvent('server_error', { requestId: req.id, method: req.method, path: String(req.originalUrl).split('?')[0], statusCode, message: err.message, ip: req.ip });
+  }
+  if (err.retryAfterSeconds) res.set('Retry-After', String(err.retryAfterSeconds));
 
   res.status(statusCode).json({
     status: 'error',

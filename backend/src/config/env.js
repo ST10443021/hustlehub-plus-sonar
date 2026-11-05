@@ -11,10 +11,10 @@
 require('dotenv').config({ path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env' });
 
 const required = ['JWT_SECRET', ...(process.env.NODE_ENV === 'test' ? [] : ['MONGODB_URI'])];
+// eslint-disable-next-line security/detect-object-injection -- keys come from the fixed "required" list above, never from input
 const missing = required.filter((key) => !process.env[key]);
 
 if (missing.length > 0) {
-  // eslint-disable-next-line no-console
   console.error(`Missing required environment variables: ${missing.join(', ')}`);
   process.exit(1);
 }
@@ -49,6 +49,26 @@ module.exports = {
   // POE-specified sensitive endpoint (IIE, 2026b).
   bookingRateLimitWindowMs: parseInt(process.env.BOOKING_RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
   bookingRateLimitMax: parseInt(process.env.BOOKING_RATE_LIMIT_MAX, 10) || 10,
+
+  // --- Part 3 additions ---
+  // Directory for the local structured event log. Overridable so a container can mount a volume here.
+  logDir: process.env.LOG_DIR || require('path').resolve(__dirname, '..', '..', 'logs'),
+
+  // Optional Azure custom-event delivery. Copy the FULL connection string from the resource
+  // Overview. Azure takes precedence over the legacy HTTP settings when this is supplied.
+  applicationInsightsConnectionString: (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING || '').trim(),
+
+  // Optional cloud log shipping over HTTPS (Better Stack Logs or any HTTPS JSON log-ingest endpoint).
+  // Both values must be set to enable it. A plain http:// URL is refused so log data is never sent
+  // unencrypted (OWASP, 2021; Better Stack, n.d.).
+  logCloudUrl: /^https:\/\//i.test(process.env.LOG_CLOUD_URL || '') ? process.env.LOG_CLOUD_URL : '',
+  logCloudToken: process.env.LOG_CLOUD_TOKEN || '',
+
+  // Account lockout: after this many consecutive failed sign-ins the account is locked for a
+  // fixed period, which slows online password guessing per account as well as per IP address
+  // (OWASP, 2024c; Grassi et al., 2017).
+  lockoutMaxAttempts: parseInt(process.env.LOCKOUT_MAX_ATTEMPTS, 10) || 5,
+  lockoutMinutes: parseInt(process.env.LOCKOUT_MINUTES, 10) || 15,
 
   // Illustrative freelancer income-tax bracket table for the 2026/27 South
   // African tax year (1 March 2026 - 28 February 2027 - the tax year
