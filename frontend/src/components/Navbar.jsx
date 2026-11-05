@@ -2,11 +2,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function Navbar() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, signOut } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await signOut();
     navigate('/login');
   };
 
@@ -22,6 +22,7 @@ export default function Navbar() {
             <Link to="/dashboard">Dashboard</Link>
           </>
         )}
+        {isAuthenticated && user.role === 'admin' && <Link to="/admin">Admin</Link>}
         {isAuthenticated && user.role === 'client' && <Link to="/my-bookings">My Bookings</Link>}
         {isAuthenticated ? (
           <>

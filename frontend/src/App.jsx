@@ -9,6 +9,7 @@ import MyGigsPage from './pages/MyGigsPage';
 import DashboardPage from './pages/DashboardPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import ReceivedBookingsPage from './pages/ReceivedBookingsPage';
+import AdminPage from './pages/AdminPage';
 import NotFoundPage from './pages/NotFoundPage';
 import './index.css';
 
@@ -50,6 +51,7 @@ function App() {
             }
           />
           <Route path="/received-bookings" element={<ProtectedRoute role="freelancer"><ReceivedBookingsPage /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute role="admin"><AdminPage /></ProtectedRoute>} />
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>
