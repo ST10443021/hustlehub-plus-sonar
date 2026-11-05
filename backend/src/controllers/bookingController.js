@@ -7,7 +7,8 @@ const asyncHandler = (fn) => (req, res, next) => Promise.resolve(fn(req, res, ne
 const createBooking = asyncHandler(async (req, res) => {
   const { gigId } = req.body;
   const { booking, transaction, gig } = await bookingService.createBooking(gigId, req.user.id);
-  logEvent('booking_created', { bookingId: booking.id, gigId: gig.id, clientId: req.user.id, freelancerId: gig.freelancerId, transactionId: transaction.id });
+  logEvent('booking_created', { requestId: req.id, bookingId: booking.id, gigId: gig.id, clientId: req.user.id, freelancerId: gig.freelancerId, transactionId: transaction.id });
+  logEvent('transaction_created', { transactionId: transaction.id, bookingId: booking.id, clientId: req.user.id, freelancerId: gig.freelancerId, amount: transaction.amount, requestId: req.id });
   res.status(201).json({
     status: 'success',
     message: 'Booking confirmed (payment simulated).',
