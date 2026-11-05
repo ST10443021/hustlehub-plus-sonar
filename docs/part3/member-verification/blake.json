@@ -1,0 +1,34 @@
+{
+    "packId":  "hustlehub-poe3-20261105-r1",
+    "member":  "blake",
+    "checkedByGitName":  "st10435415",
+    "checkedAtUtc":  "2026-11-05T14:18:22.6064193Z",
+    "sourceHistoryBase":  "0f255f9c6d504f20fcffda240f9b6b38d91499ea",
+    "branchBaseBeforeImport":  "07cdbf6d4197ede98884337eb9c1f07e3b46a713",
+    "contextSha256":  "08e9939a7cd1cf047ba0e1365f6c69a774c0be1aa5f77a2aec25ff950a91c0f4",
+    "scope":  "Supplied complete integration candidate; unit/component tests use mocks. This is not a live API, Docker, Azure or final-commit CI result.",
+    "aiAssistance":  "Supplied code and test scaffolding require member review. Import messages do not claim original authorship.",
+    "checks":  [
+                   {
+                       "check":  "backend-install",
+                       "command":  "npm ci --no-audit --fund=false",
+                       "directory":  "backend",
+                       "exitCode":  0,
+                       "result":  "passed"
+                   },
+                   {
+                       "check":  "backend-lint",
+                       "command":  "npm run lint",
+                       "directory":  "backend",
+                       "exitCode":  0,
+                       "result":  "passed"
+                   },
+                   {
+                       "check":  "backend-tests",
+                       "command":  "npm test",
+                       "directory":  "backend",
+                       "exitCode":  0,
+                       "result":  "passed"
+                   }
+               ]
+}
