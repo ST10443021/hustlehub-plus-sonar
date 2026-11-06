@@ -1,0 +1,116 @@
+# npm test (Jest + Supertest) - backend
+PASS tests/injection.test.js
+    ✓ a login that uses query operators instead of strings is rejected (183 ms)
+    ✓ operator objects hidden in the email field cannot match an account (17 ms)
+    ✓ operators in the browse filter do not widen the query (24 ms)
+    ✓ operator keys inside a gig body are refused or stripped, never stored (13 ms)
+    ✓ script tags in a gig are escaped before they are stored or returned (16 ms)
+    ✓ a script tag in the registration email is rejected by validation (3 ms)
+    ✓ a __proto__ payload is refused and does not pollute Object (13 ms)
+    ✓ role and ownership fields cannot be injected into a gig (11 ms)
+    ✓ a user cannot promote themselves through registration (4 ms)
+    ✓ a body larger than 10 kb is refused (34 ms)
+    ✓ a very long password is rejected without being hashed (6 ms)
+PASS tests/securityFeatures.test.js
+    ✓ locks the account after the configured number of failures, even for the right password (134 ms)
+    ✓ does not lock other accounts (101 ms)
+    ✓ a successful sign-in resets the failure counter (89 ms)
+    ✓ the lock ends when the lock time has passed (57 ms)
+    ✓ lockout data is never exposed through the API (35 ms)
+    ✓ a token stops working after logout, and a new login works again (25 ms)
+    ✓ logout needs a valid token (4 ms)
+    ✓ logging out one user does not affect another (41 ms)
+    ✓ /api/admin/overview rejects missing tokens (4 ms)
+    ✓ /api/admin/users rejects missing tokens (3 ms)
+    ✓ /api/admin/security-events rejects missing tokens (3 ms)
+    ✓ client accounts cannot use admin endpoints (27 ms)
+    ✓ freelancer accounts cannot use admin endpoints (25 ms)
+    ✓ public registration still cannot create an admin (5 ms)
+    ✓ an admin sees platform totals (62 ms)
+    ✓ the user list contains no password hashes or security counters, and flags locked accounts (167 ms)
+    ✓ security events can be read and the limit is validated (24 ms)
+    ✓ a token signed with another HMAC algorithm is refused even with the right secret (12 ms)
+    ✓ an unsigned ("alg": "none") token is refused (22 ms)
+    ✓ a correctly signed HS256 token still works (15 ms)
+PASS tests/api.test.js
+    ✓ registers a new user and never returns the password hash (51 ms)
+    ✓ rejects duplicate registration with 409 (10 ms)
+    ✓ rejects invalid registration input with 400 (3 ms)
+    ✓ login with wrong password returns a generic 401 (15 ms)
+    ✓ protected route rejects a missing token with 401 (2 ms)
+    ✓ protected route accepts a valid token (11 ms)
+    ✓ a client cannot create a gig (403) (11 ms)
+    ✓ a freelancer can create a gig (201) (13 ms)
+    ✓ invalid gig input is rejected with 400 (27 ms)
+    ✓ a freelancer cannot update another freelancer's gig (403 ownership) (34 ms)
+    ✓ gigs are publicly browsable without authentication (3 ms)
+    ✓ a client booking a gig creates a transaction and updates freelancer income (50 ms)
+    ✓ a freelancer cannot book a gig (403 RBAC) (15 ms)
+    ✓ a client cannot access the income summary endpoint (403 RBAC) (16 ms)
+    ✓ responses include a Content-Security-Policy header (2 ms)
+PASS tests/security.test.js
+  ✓ public API cannot create admin accounts (54 ms)
+  ✓ gig ownership cannot be transferred through updates (129 ms)
+  ✓ client identity and price cannot be supplied on a booking (20 ms)
+  ✓ a failed transaction write removes the newly created booking (21 ms)
+  ✓ private booking lists are scoped to both correct parties (60 ms)
+  ✓ old booking amount and title survive gig edits and deletion (28 ms)
+  ✓ rejects invalid, expired or tampered JWT (2 ms)
+  ✓ rejects invalid, expired or tampered JWT (2 ms)
+  ✓ rejects invalid, expired or tampered JWT (4 ms)
+  ✓ invalid JSON returns a safe 400, not a server error (6 ms)
+  ✓ forwarded IPs are not trusted on the default direct backend
+  ✓ profile exposes a safe verified email and role (11 ms)
+PASS tests/gigManagement.test.js
+  ✓ an owner can edit all gig details and public browsing uses the saved values (40 ms)
+  ✓ invalid edits leave the original gig unchanged (14 ms)
+  ✓ clients, other freelancers and unauthenticated users cannot edit or delete a gig (70 ms)
+  ✓ deletion removes the gig from both lists, prevents new bookings and preserves old financial records (48 ms)
+  ✓ editing a gig removed after the ownership lookup returns a safe 404 (18 ms)
+  ✓ deleting a gig removed after the ownership lookup returns a safe 404 (17 ms)
+PASS tests/logging.test.js
+    ✓ replaces sensitive fields and masks credentials inside connection strings (2 ms)
+    ✓ truncates very long values and does not log nested objects (1 ms)
+    ✓ writes a JSON line with timestamp, level and category (1 ms)
+    ✓ never stores a password even if a caller passes one by mistake
+    ✓ readRecentEvents filters by category and limit (1 ms)
+    ✓ a failed login, a booking and its transaction are all recorded, and requests get an ID (288 ms)
+    ✓ a role violation is logged as access_denied and a bad token as token_rejected (21 ms)
+    ✓ an unexpected failure is logged as a server_error without leaking details to the client (14 ms)
+    ✓ is disabled unless both the URL and token are configured (1 ms)
+    ✓ posts a JSON batch over HTTPS with a bearer token (5 ms)
+    ✓ keeps entries and retries when the log service is down, without throwing (1 ms)
+    ✓ flushAll drains everything queued (2 ms)
+PASS tests/income.test.js
+    ✓ R0 of income -> R0 tax (1 ms)
+    ✓ R10500 of income -> R0 tax
+    ✓ R99000 of income -> R0 tax (1 ms)
+    ✓ R150000 of income -> R9180 tax
+    ✓ R245100 of income -> R26298 tax
+    ✓ R300000 of income -> R40572 tax
+    ✓ 9 October 2026 falls in 2026/27
+    ✓ the year rolls over at midnight on 1 March in SAST
+    ✓ January 2027 still belongs to 2026/27
+    ✓ R10,500 gives R0 tax with an explanation and the distance to the threshold (1 ms)
+    ✓ income above the threshold produces a non-zero estimate (1 ms)
+    ✓ income from a previous tax year counts towards total income but is not taxed again (1 ms)
+    ✓ no transactions gives a friendly note, not an error (5 ms)
+    ✓ bracket amounts add up to the same tax as estimateAnnualTax for R0 (1 ms)
+    ✓ bracket amounts add up to the same tax as estimateAnnualTax for R10500
+    ✓ bracket amounts add up to the same tax as estimateAnnualTax for R150000 (6 ms)
+    ✓ bracket amounts add up to the same tax as estimateAnnualTax for R300000 (1 ms)
+    ✓ bracket amounts add up to the same tax as estimateAnnualTax for R600000
+    ✓ bracket amounts add up to the same tax as estimateAnnualTax for R2000000 (1 ms)
+    ✓ only brackets that contain income are listed
+    ✓ R0 -> 0.18
+    ✓ R100000 -> 0.18
+    ✓ R300000 -> 0.26
+    ✓ R500000 -> 0.31
+    ✓ R5000000 -> 0.45 (1 ms)
+    ✓ returns 12 consecutive months ending in the current month, filling gaps with zero
+    ✓ groups by South African month (UTC+2): 23:00 UTC on 31 Aug is already 1 September (1 ms)
+    ✓ ignores income older than 12 months and records with a bad date (1 ms)
+    ✓ includes net income, marginal rate, breakdown, monthly series and methodology (1 ms)
+Test Suites: 7 passed, 7 total
+Tests:       105 passed, 105 total
+Time:        5.414 s

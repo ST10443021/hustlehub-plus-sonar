@@ -1,0 +1,9 @@
+# frontend production build
+✓ 98 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.46 kB │ gzip:   0.29 kB
+dist/assets/index-B4fJFHx_.css    5.55 kB │ gzip:   1.65 kB
+dist/assets/index-ChBw98ym.js   337.77 kB │ gzip: 107.87 kB
+
+✓ built in 1.09s
