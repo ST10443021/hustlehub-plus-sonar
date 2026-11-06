@@ -1,8 +1,13 @@
 node_modules
 npm-debug.log
 .env
-.env.test
+.env.*
+!.env.example
 certs/*.pem
+certs/*.srl
 logs/*.log
 coverage
+test-results
 tests
+postman
+eslint.config.js

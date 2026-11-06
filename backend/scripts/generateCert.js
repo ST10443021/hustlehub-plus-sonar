@@ -11,11 +11,13 @@
 //
 // The files are created with OpenSSL (OpenSSL Project, n.d.), are for LOCAL
 // DEVELOPMENT ONLY, and are git-ignored so private keys are never committed
-// (OWASP, 2021). Production deployments (Part 3) use a certificate from a trusted
+// (OWASP, 2021). Production deployments use a certificate from a trusted
 // CA such as Let's Encrypt instead (Let's Encrypt, n.d.).
 //
 // Usage: npm run gen-cert            (reuses an existing CA so trust stays valid)
 //        npm run gen-cert -- --force (creates a brand-new CA and certificate)
+/* eslint-disable security/detect-non-literal-fs-filename --
+   Paths are fixed file names inside the repository's certs folder; the script takes no user input. */
 const { execFileSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');

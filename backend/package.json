@@ -1,7 +1,7 @@
 {
   "name": "hustlehub-backend",
-  "version": "2.0.0",
-  "description": "HustleHub+ Part 2 - Secure full-stack MERN marketplace backend (INSY7314)",
+  "version": "3.0.0",
+  "description": "HustleHub+ Final PoE - Secure full-stack MERN marketplace API with DevSecOps pipeline (INSY7314)",
   "main": "src/server.js",
   "type": "commonjs",
   "scripts": {
@@ -11,7 +11,11 @@
     "trust-cert": "node scripts/trustCert.js",
     "test": "cross-env NODE_ENV=test jest --runInBand",
     "test:watch": "jest --watch",
-    "test:api": "node scripts/runNewman.js"
+    "test:api": "node scripts/runNewman.js",
+    "lint": "eslint . --max-warnings 0",
+    "lint:report": "eslint . --max-warnings 0 -f json -o test-results/eslint-report.json",
+    "seed-admin": "node scripts/seedAdmin.js",
+    "audit": "npm audit --omit=dev --audit-level=high"
   },
   "keywords": [
     "hustlehub",
@@ -38,7 +42,11 @@
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "cross-env": "^7.0.3",
+    "eslint": "^9.39.5",
+    "eslint-plugin-security": "^3.0.1",
+    "globals": "^17.13.0",
     "jest": "^29.7.0",
     "newman": "^6.2.2",
     "nodemon": "^3.1.4",

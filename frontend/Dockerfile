@@ -1,6 +1,8 @@
-# Builds the React app and serves the static output with a minimal, pinned
-# nginx image - keeping the runtime image free of Node.js/npm entirely,
-# which again reduces attack surface for the shipped container (OWASP, 2021).
+# HustleHub+ web image: builds the React app, then serves the static files with nginx.
+#
+# The final stage uses the unprivileged nginx image, so the web server runs as a non-root user and
+# listens on ports above 1024 (8080 redirects to HTTPS on 8443). The Node.js toolchain never reaches
+# the final image, which keeps the attack surface small (OWASP, 2024f; Docker, Inc., n.d.b).
 FROM node:24-alpine AS build
 WORKDIR /app
 COPY package*.json ./
@@ -10,8 +12,10 @@ ARG VITE_API_BASE_URL=/api
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
-FROM nginx:1.27-alpine AS runner
+FROM nginxinc/nginx-unprivileged:1.28-alpine AS runner
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-# 80 only redirects to HTTPS on 443 (see nginx.conf; Mozilla, 2026a).
-EXPOSE 80 443
+USER nginx
+EXPOSE 8080 8443
+HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=5 \
+  CMD wget -q --spider http://127.0.0.1:8080/healthz || exit 1
