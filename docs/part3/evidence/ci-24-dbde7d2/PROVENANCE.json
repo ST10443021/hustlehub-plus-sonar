@@ -1,0 +1,95 @@
+{
+  "reviewedApplication": {
+    "branch": "blake",
+    "commitPrefix": "dbde7d2",
+    "workflowRunNumber": 24,
+    "date": "2026-11-07",
+    "association": "User supplied artifacts after identifying this successful run; archive contents do not independently identify the commit/run ID."
+  },
+  "archives": [
+    {
+      "name": "backend-static-analysis.zip",
+      "sha256": "55418893eaa8c1f22a0e78082f1e22a2d04badf9880cb0ef47f7066504c30b03"
+    },
+    {
+      "name": "frontend-static-analysis.zip",
+      "sha256": "da48f5b561fd22db9ad05015c0c2fdd19563ada07fdda6fbbc04c9889930a20a"
+    },
+    {
+      "name": "trivy-repository-report.zip",
+      "sha256": "ec31aec54bb614fccf8fd4b14b4989ffad5889880f6628f0567148b0c61348a3"
+    },
+    {
+      "name": "stack-evidence.zip",
+      "sha256": "828b08dee3f5620474f5f47086eef5119caa7992ed1f3b5c221264ba6c29037e"
+    }
+  ],
+  "reports": [
+    {
+      "artifactPath": "backend-static-analysis/eslint-report.json",
+      "savedPath": "backend/eslint-report.json",
+      "sha256": "2ce2ef7e0698254ae601fce59c6127572c31499b818f2bcac6031b90d24d36c9",
+      "copiedUnchanged": true
+    },
+    {
+      "artifactPath": "backend-static-analysis/npm-audit-production.txt",
+      "savedPath": "backend/npm-audit-production.txt",
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "copiedUnchanged": true
+    },
+    {
+      "artifactPath": "backend-static-analysis/npm-audit-full.json",
+      "savedPath": "backend/npm-audit-full.json",
+      "sha256": "88d5c944b195c792258d981c9683d1ce4f89aae2f02d48314c69939ba9659315",
+      "copiedUnchanged": true
+    },
+    {
+      "artifactPath": "frontend-static-analysis/eslint-report.json",
+      "savedPath": "frontend/eslint-report.json",
+      "sha256": "4df58150c27dc570ee254809b9f3e326a66a083507ff0b79af03a984247868fb",
+      "copiedUnchanged": true
+    },
+    {
+      "artifactPath": "frontend-static-analysis/npm-audit-production.txt",
+      "savedPath": "frontend/npm-audit-production.txt",
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "copiedUnchanged": true
+    },
+    {
+      "artifactPath": "frontend-static-analysis/npm-audit-full.json",
+      "savedPath": "frontend/npm-audit-full.json",
+      "sha256": "047f654090ee630a299dcbc7e2905ae03e9331f900eb1d8999fcd41a74ebc85c",
+      "copiedUnchanged": true
+    },
+    {
+      "artifactPath": "trivy-repository-report/trivy-repo.txt",
+      "savedPath": "trivy/trivy-repo.txt",
+      "sha256": "f0042205bfeda0507adcf51d3326aadddaefa8de2529295969f8cd1b6b9c5dd2",
+      "copiedUnchanged": true
+    },
+    {
+      "artifactPath": "stack-evidence/trivy-hustlehub_backend_local-high.txt",
+      "savedPath": "trivy/trivy-backend-image.txt",
+      "sha256": "0043b83d820527d3b3f945877afc236f80f3eb392400a86a713357abae8db309",
+      "copiedUnchanged": true
+    },
+    {
+      "artifactPath": "stack-evidence/trivy-hustlehub_frontend_local-high.txt",
+      "savedPath": "trivy/trivy-frontend-image.txt",
+      "sha256": "b39b952dd6362531a3c64e78c76feec5714339ef855c15a6a538580ac8e9cf19",
+      "copiedUnchanged": true
+    },
+    {
+      "artifactPath": "stack-evidence/newman-summary.json",
+      "savedPath": "stack/newman-summary.json",
+      "sha256": "ba46099a2675055f6570314a9713cc072ce082d5fb31243118703c81379bb726",
+      "copiedUnchanged": true
+    },
+    {
+      "artifactPath": "stack-evidence/compose-ps.txt",
+      "savedPath": "stack/compose-ps.txt",
+      "sha256": "de69878ac5a5f550bee39793629349254077d6ee4d64d48bd05fbb2b8afc448d",
+      "copiedUnchanged": true
+    }
+  ]
+}

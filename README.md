@@ -56,9 +56,9 @@ Every requirement and rubric criterion of the Part 3 brief (IIE, 2026c) maps to 
 | Requirement / rubric criterion | How it is met | Where to look |
 | --- | --- | --- |
 | **Final features: tax and income dashboard** | SARS 2026/27 tax estimate with a bracket-by-bracket breakdown, effective and marginal rate, income after tax, 12-month income bar chart, progress towards the tax threshold and a plain-language explanation | [Section 8](#8-tax-estimation-and-income-dashboard); `backend/src/services/incomeService.js`; `frontend/src/pages/DashboardPage.jsx`; `frontend/src/components/IncomeChart.jsx` |
-| **CI/CD pipeline (backend and frontend)** | GitHub Actions: install, lint, test, audit, build both apps, CodeQL, Trivy, Docker Compose stack, Newman API tests, logging check; explicit Bash failure propagation is configured; actual final-run evidence remains pending | [Section 14](#14-cicd-pipeline); `.github/workflows/ci.yml` |
-| **Static code analysis** | ESLint with `eslint-plugin-security` (backend and frontend, zero warnings allowed), CodeQL, Trivy, `npm audit`; results and fixes explained | [Section 15](#15-static-code-analysis); `docs/part3/STATIC_ANALYSIS.md`; `docs/part3/evidence/eslint-*.txt` |
-| **Docker (backend and frontend)** | One Dockerfile in each of `backend/` and `frontend/`, orchestrated by `docker-compose.yml` with MongoDB; the workflow is configured to build, start and test both containers; final execution evidence remains pending | [Section 16](#16-docker-and-docker-compose); `backend/Dockerfile`; `frontend/Dockerfile`; `docker-compose.yml` |
+| **CI/CD pipeline (backend and frontend)** | GitHub Actions: install, lint, test, audit, build both apps, Trivy, Docker Compose stack, Newman API tests, browser integration and logging checks; CI 24 passed on `blake` at `dbde7d2` | [Section 14](#14-cicd-pipeline); `.github/workflows/ci.yml` |
+| **Static code analysis** | ESLint with `eslint-plugin-security` (backend and frontend, zero warnings allowed), Trivy and `npm audit`; CI 24 results, fixes and remaining development-tool findings explained | [Section 15](#15-static-code-analysis); `docs/part3/STATIC_ANALYSIS.md`; `docs/part3/evidence/eslint-*.txt` |
+| **Docker (backend and frontend)** | One Dockerfile in each of `backend/` and `frontend/`, orchestrated by `docker-compose.yml` with MongoDB; CI 24 built and ran both containers, with all three services healthy | [Section 16](#16-docker-and-docker-compose); `backend/Dockerfile`; `frontend/Dockerfile`; `docker-compose.yml` |
 | **Logging** | Structured events written to a file, container output and, when configured, Azure Application Insights or Better Stack; sensitive values are redacted | [Section 11](#11-logging-and-monitoring); `backend/src/utils/eventLogger.js`; `backend/src/utils/cloudLogger.js` |
 | **Own security features (at least two)** | Account lockout, server-side token revocation (logout), and an admin security console; plus JWT algorithm pinning, request IDs, hardened containers and database authentication | [Section 10](#10-additional-security-features) |
 | **Security review in README** | Threat-to-protection table with evidence for injection, XSS, authentication, access control and more | [Section 18](#18-final-security-review) |
@@ -77,7 +77,7 @@ Every requirement and rubric criterion of the Part 3 brief (IIE, 2026c) maps to 
 | Database | MongoDB 7 (authenticated, private network) |
 | Security middleware | Helmet (CSP and headers), express-rate-limit, express-validator, express-mongo-sanitize, xss-clean, CORS allow-list |
 | Testing | Jest and Supertest (backend), Vitest and React Testing Library (frontend), Postman and Newman (API) (Jest, n.d.; Testing Library, n.d.; Vitest, n.d.; Postman, n.d.) |
-| DevSecOps | GitHub Actions, ESLint with eslint-plugin-security, CodeQL, Trivy, npm audit, Dependabot (GitHub, n.d.a; ESLint, n.d.) |
+| DevSecOps | GitHub Actions, ESLint with eslint-plugin-security, Trivy, npm audit, Dependabot (GitHub, n.d.a; ESLint, n.d.) |
 | Containers | Docker and Docker Compose, nginx (unprivileged) as TLS front end (Docker, Inc., n.d.a) |
 | Logging | Structured JSON, local file, container output, optional Azure Application Insights or Better Stack Logs |
 
@@ -107,7 +107,7 @@ flowchart LR
 ```text
 HustleHub/
 ├── .github/
-│   ├── workflows/ci.yml            # CI/CD pipeline (lint, test, audit, CodeQL, Trivy, Docker stack, Newman)
+│   ├── workflows/ci.yml            # CI/CD pipeline (lint, test, audit, Trivy, Docker stack, Newman, browser checks)
 │   └── dependabot.yml              # automatic dependency update pull requests
 ├── backend/                        # Node.js + Express API
 │   ├── Dockerfile                  # multi-stage, non-root, health check
@@ -352,7 +352,7 @@ The brief asks for at least two features beyond the minimum (IIE, 2026c). Three 
 | Log redaction | Passwords, tokens, hashes and credentials in connection strings are never written to a log (tested) |
 | Hardened containers | Non-root users, no Linux capabilities for the API, `no-new-privileges`, health checks, read-only certificate mounts |
 | Authenticated database | MongoDB requires a password, is on an internal network and has no published port |
-| Supply chain | Dependabot, `npm audit` gate, Trivy and CodeQL in the pipeline |
+| Supply chain | Dependabot, ESLint security rules, production `npm audit` gate and Trivy in the pipeline; full dev-tool audit retained |
 
 ---
 
@@ -586,7 +586,7 @@ npm run lint        # static analysis (see Section 15)
 | `logging.test.js` | **Events for logins, bookings, transactions and errors; redaction; request IDs; cloud shipping and retry** |
 | `azureLogging.test.js` | Azure payload mapping, configuration, batching, retry and redaction with mocked HTTP |
 
-### 13.2 API: Postman and Newman — 55 request definitions; final live run pending
+### 13.2 API: Postman and Newman — 55 request definitions; CI 24 live run passed
 
 ```bash
 cd backend
@@ -627,11 +627,11 @@ The supplied repository was checked in an isolated Linux audit workspace on **7 
 | Backend / frontend ESLint | Exit 0; zero warnings allowed | [Backend](docs/part3/evidence/review-2026-11-07/eslint-backend.txt), [frontend](docs/part3/evidence/review-2026-11-07/eslint-frontend.txt) |
 | Production dependency audits | **0 reported vulnerabilities** in both projects | [Backend](docs/part3/evidence/review-2026-11-07/npm-audit-backend.txt), [frontend](docs/part3/evidence/review-2026-11-07/npm-audit-frontend.txt) |
 | Frontend production build | Passed | [Build output](docs/part3/evidence/review-2026-11-07/frontend-build.txt) |
-| Live Newman, final Docker stack, CodeQL and Trivy | **Not run in this audit workspace** | Complete on the actual final commit and retain the results |
+| Live Newman, Docker stack and Trivy | **Not run in the earlier local audit workspace.** Subsequently observed in the supplied CI 24 artifacts | [CI 24 review](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md): 67 requests / 90 assertions, 0 failures; all services healthy; image reports show no fixable HIGH/CRITICAL findings |
 
 The older October Newman output (67 executions / 90 assertions) is historical, not a new final-stack result. The collection contains 55 request definitions and deliberately repeats lockout/rate-limit probes; execution counts can also depend on whether admin checks are enabled.
 
-The evidence directory contains dated local-review outputs. GitHub Actions artifacts and final commit identity must be added after the actual run. See [the evidence index](docs/part3/EVIDENCE.md).
+The evidence directory contains the historical local-review outputs and the supplied [CI 24 results](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md) for application commit [`dbde7d2`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/dbde7d2). The successful run screenshot also confirms the browser-integration workflow passed. Keep a green run for the final submitted version. See [the evidence index](docs/part3/EVIDENCE.md).
 
 ---
 
@@ -641,57 +641,53 @@ The pipeline is defined in `.github/workflows/ci.yml` and is configured to run o
 
 ```mermaid
 flowchart TD
-    P["push or pull request"] --> B["backend<br/>install, ESLint, Jest, npm audit"]
-    P --> F["frontend<br/>install, ESLint, Vitest, build, npm audit"]
-    P --> C["codeql<br/>CodeQL security analysis"]
-    P --> R["repo-scan<br/>Trivy: secrets, vulnerabilities, misconfiguration"]
-    B --> S
-    F --> S["stack<br/>build both images, docker compose up,<br/>health and smoke tests, Newman API tests,<br/>log check, Trivy image scan"]
-    S --> G["pipeline-passed<br/>fails if any job failed"]
-    B --> G
+    P["Push or pull request"] --> B["Backend checks"]
+    P --> F["Frontend checks and build"]
+    P --> R["Trivy repository scan"]
+    B --> S["Docker stack, API and browser tests, image scans"]
+    F --> S
+    B --> G["Pipeline result"]
     F --> G
-    C --> G
     R --> G
+    S --> G
 ```
 
 | Job | What it does | Fails when |
 | --- | --- | --- |
 | **backend** | `npm ci`, ESLint with security rules (`--max-warnings 0`), Jest tests, production `npm audit` | A lint warning, a failing test or a high/critical vulnerability |
 | **frontend** | `npm ci`, ESLint, Vitest, **production build**, production `npm audit` | Same, or the build breaks |
-| **codeql** | GitHub CodeQL with the `security-extended` query set for JavaScript (GitHub, n.d.c) | CodeQL cannot run; findings appear in the Security tab |
 | **repo-scan** | Trivy scans the repository for committed secrets, fixable HIGH/CRITICAL vulnerabilities and Dockerfile misconfiguration (Aqua Security, n.d.) | Any such finding |
-| **stack** | Creates a throw-away certificate and secrets, **builds both Docker images**, starts MongoDB, API and web with Docker Compose, waits for health, **checks all three containers are running**, smoke-tests the web app, API and security headers, creates the admin account, runs **Newman against the running containers**, checks that the key log events appeared in the container log and that no secret did, then scans both images with Trivy | A container does not become healthy, any API assertion fails, a log event is missing or a secret leaks, or an image has a fixable CRITICAL vulnerability |
+| **stack** | Creates a throw-away certificate and secrets, **builds both Docker images**, starts MongoDB, API and web with Docker Compose, waits for health, **checks all three containers are running**, smoke-tests the web app, API and security headers, creates the admin account, runs **Newman against the running containers**, checks that the key log events appeared in the container log and that no secret did, restarts the CI API to reset Newman's deliberately exhausted rate limits, runs the two Playwright browser integration tests, then scans both images with Trivy | A container does not become healthy, any API assertion or browser test fails, a log event is missing or a secret leaks, or an image has a fixable CRITICAL vulnerability |
 | **pipeline-passed** | Collects every job result | Any job failed, was cancelled or was skipped |
 
-**Security tests in the pipeline:** ESLint security rules, CodeQL, Trivy (repository and both images), `npm audit`, the 11 injection and 3 JWT attack tests in Jest, the Newman RBAC, ownership, lockout, revocation and rate-limit checks, and the logging leak check.
+**Security tests in the pipeline:** ESLint security rules, Trivy (repository and both images), `npm audit`, the 11 injection and 3 JWT attack tests in Jest, the Newman RBAC, ownership, lockout, revocation and rate-limit checks, and the logging leak check.
 
-**Evidence configured as artifacts** on each run: backend/frontend test output, production audit output, frontend build output, lint reports, full `npm audit` reports, Newman JUnit and summary, container logs, `docker compose ps` and Trivy reports.
+**Evidence configured as artifacts** on each run: backend/frontend test output, production audit output, frontend build output, lint reports, full `npm audit` reports, Newman JUnit and summary, container logs, `docker compose ps` Trivy reports and browser HTML/JUnit reports.
 
 **Making failures block merging.** In the repository settings, add a branch protection rule for `main` that requires the **Pipeline result** check, so a red pipeline cannot be merged. Dependabot (`.github/dependabot.yml`) opens weekly pull requests for npm, Docker and Actions updates, which the pipeline then tests (GitHub, n.d.b).
 
-**Repository visibility.** CodeQL results in the Security tab need a public repository or GitHub Advanced Security.
+**CodeQL service limitation.** The private Classroom repository could not upload CodeQL results without the required Code Security feature. The unsupported job was removed explicitly; ESLint/security rules remain the active source analysis. CodeQL is not claimed as passed. See [the CI repair](docs/part3/CI_REPAIR.md).
 
 ---
 
 ## 15. Static Code Analysis
 
-Static analysis reads the source without running it to find bugs and risky patterns early (ESLint, n.d.). Four tools are used, each looking for something different.
+Static analysis reads the source without running it to find bugs and risky patterns early (ESLint, n.d.). ESLint provides source analysis; Trivy and npm audit add repository, image and dependency checks.
 
 | Tool | Scope | Looks for |
 | --- | --- | --- |
 | **ESLint** + `eslint-plugin-security` (backend) | API source and scripts | `eval`, unsafe regular expressions (ReDoS), non-literal file paths, object-injection sinks, child-process use, unused code (eslint-community, n.d.) |
 | **ESLint** + React, React Hooks and security rules (frontend) | React source | `dangerouslySetInnerHTML` (blocked by `react/no-danger`), hook mistakes, unescaped entities, the same security patterns |
-| **CodeQL** | Whole repository | Data-flow vulnerabilities such as injection, XSS, path traversal and weak crypto (GitHub, n.d.c) |
 | **Trivy** and **npm audit** | Dependencies, secrets, Dockerfiles, images | Known vulnerable packages, committed secrets, insecure container configuration (npm, n.d.) |
 
-### Results (ESLint, final run)
+### Results (ESLint, reviewed CI 24)
 
 | | Backend | Frontend |
 | --- | --- | --- |
 | Errors | **0** | **0** |
 | Warnings | **0** (`--max-warnings 0`) | **0** |
 
-The first run found **30 warnings** in the backend and **1 error** in the frontend. The workflow is configured to reject any new warning; final-run evidence remains pending. `npm audit` initially found **3 vulnerable packages in the backend's production dependencies** (1 high, 2 moderate). Raw outputs are in `docs/part3/evidence/`, and the full explanation is in [`docs/part3/STATIC_ANALYSIS.md`](docs/part3/STATIC_ANALYSIS.md).
+The first run found **30 warnings** in the backend and **1 error** in the frontend. CI 24 rejected new warnings and passed with zero active errors/warnings in both projects. The actual [reports and full review](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md) are retained, including the backend's targeted suppressions. `npm audit` initially found **3 vulnerable packages in the backend's production dependencies** (1 high, 2 moderate). Raw outputs are in `docs/part3/evidence/`, and the full explanation is in [`docs/part3/STATIC_ANALYSIS.md`](docs/part3/STATIC_ANALYSIS.md).
 
 ### What the results indicate and the fixes applied
 
@@ -706,9 +702,11 @@ The first run found **30 warnings** in the backend and **1 error** in the fronte
 | `react/no-unescaped-entities` in `LoginPage.jsx` | A raw apostrophe in JSX text | Replaced with `&apos;` |
 | `npm audit`: `body-parser`, `qs`, `ip-address` (backend) | Known denial-of-service issues in transitive production dependencies | Earlier fixes updated them within allowed versions; the 7 November review passed all 127 backend tests and reported zero production dependency vulnerabilities |
 
-**Accepted and documented risk.** `npm audit` still lists advisories in **Newman's own dependencies** (a development-only test tool). The only automatic fix would downgrade Newman to version 4 (a breaking change to an older release). Newman is not installed in the production image (`npm ci --omit=dev`), it only runs our own collection in CI, and the pipeline gates on production dependencies while publishing the full report as an artifact.
+**Current dependency and image results.** Both production audits report **0 vulnerabilities**. The frontend full audit also reports **0**. The repository and both image reports show no findings at their configured HIGH/CRITICAL and fix-availability filters. Results and original report links are in the [CI 24 review](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md).
 
-**Reading CodeQL results.** After the first pipeline run, open **Security → Code scanning** in GitHub. Any alert listed there should be fixed or dismissed with a written reason before final submission.
+**Development-tool findings.** The backend full audit reports **27 affected development-tool package entries: 6 LOW, 8 MODERATE, 12 HIGH and 1 CRITICAL**. These are in Newman/Postman, Jest and nodemon chains; all affected nodes are development-only and excluded from the production image. The critical package is Handlebars in the Postman runtime chain. Trusted project test inputs and a disposable CI stack limit exposure, but do not fix these advisories. The report identifies a compatible nodemon-chain fix and suggests major downgrades for other chains; dependency changes require review and retesting. We retain the full report and [package-by-package follow-up](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md#development-tool-risk-review). We do not claim zero unresolved issues in the full backend dependency tree.
+
+**CodeQL status.** The earlier upload failed because the private Classroom repository did not have the required Code Security feature. It is not an active required job or a clean scan result. ESLint/security rules are the submission's source-analysis tool. The [repair note](docs/part3/CI_REPAIR.md) records the service limitation.
 
 ---
 
@@ -730,7 +728,7 @@ The first run found **30 warnings** in the backend and **1 error** in the fronte
 | `backend` | `hustlehub/backend:local` | `db-net`, `app-net` | **none** (nginx proxies to it) | Starts only after MongoDB is healthy; no Linux capabilities; logs in volume `backend-logs` |
 | `frontend` | `hustlehub/frontend:local` | `app-net` | `8443` (HTTPS), `8080` (redirect) | Starts only after the API is healthy; serves the SPA and proxies `/api` with certificate verification |
 
-**Container hardening applied** (OWASP, 2024f; Docker, Inc., n.d.b): multi-stage builds; non-root users in both application images; `no-new-privileges` on every service; `cap_drop: ALL` on the API; MongoDB authentication and no host port; internal database network; application secrets supplied as runtime environment values; read-only host certificate mounts; version-tagged base images (not immutable digest pins); `.dockerignore` files; health checks; best-effort graceful log flushing. The backend build generates fallback demonstration certificate keys inside its image; those are not a substitute for separately managed deployment certificates (see Section 18).
+**Container hardening applied** (OWASP, 2024f; Docker, Inc., n.d.b): multi-stage builds; non-root users in both application images; `no-new-privileges` on every service; `cap_drop: ALL` on the API; MongoDB authentication and no host port; internal database network; application secrets supplied as runtime environment values; read-only host certificate mounts; version-tagged base images (not immutable digest pins); `.dockerignore` files; health checks; best-effort graceful log flushing. The CI repair removed build-generated fallback certificate keys and the unused npm/npx runtime toolchain. Compose mounts host-generated TLS credentials at runtime (see Section 18).
 
 **Configured pipeline behaviour; final execution still to verify.** The `stack` job runs `docker compose build`, `docker compose up -d --wait --wait-timeout 180`, waits for every service to report healthy, checks that `mongo`, `backend` and `frontend` are all running, and then runs the API tests against `https://localhost:8443`, so the intended check covers both application containers. A successful final GitHub run and its artifacts are still required.
 
@@ -783,15 +781,15 @@ The first four rows address the threats explicitly named in the PoE. The remaini
 | **Authentication weaknesses** | Passwords are bcrypt-hashed (12 rounds in the Docker configuration). Registration enforces password rules and a 72-byte limit. Ordinary login failures use a generic message. Authentication has an IP rate limit and account lockout. JWT checks pin HS256, verify issuer/expiry and compare token version with the database. Logout increments the version and invalidates every earlier token for that account. | `authService.js`, `authMiddleware.js`, `rateLimiters.js`, `userRepository.js`; `security.test.js` and `securityFeatures.test.js`. Live Docker check: repeated failures produced the account-lock message. Live token check: profile **200**, logout **200**, old token **401**, fresh token **200**. |
 | **Broken access control / IDOR** | Protected routes require a valid token; role-restricted routes add `requireRole`. The current user and role are loaded from the database. Gig changes check ownership in the service. Booking history and income queries are scoped to the verified user. Booking owner and amount come from the saved gig. Public registration cannot create admins; existing admin endpoints are read-only. | `backend/src/routes/`, `authMiddleware.js`, `gigService.js`, `bookingService.js`, `incomeController.js`; `gigManagement.test.js`, `security.test.js`, `securityFeatures.test.js` cover missing authentication, wrong roles, another freelancer's gig, private lists and admin escalation. These backend suites passed using test repositories. |
 | **Sensitive data and unsafe errors** | Browser-to-nginx and nginx-to-API traffic use HTTPS; nginx verifies the backend certificate. Public user objects omit password hashes, lock counters and token versions. Unexpected errors return a generic response. Error-console and structured-event fields use redaction; the cloud sender avoids raw network-error output. | `frontend/nginx.conf`, `userRepository.js`, patched `errorHandler.js`, `eventLogger.js`, `cloudLogger.js`; `logging.test.js` checks credential masking in responses and console/structured logs in test, production and development modes. `azureLogging.test.js` checks the cloud payload and delivery-error output. These tests passed. This is not a guarantee that arbitrary secret text in any field or access-log query is detected. |
-| **Security misconfiguration and container exposure** | Helmet, nginx security headers, explicit CORS origins, request body limits and strong JWT-secret startup checks are present. Compose requires MongoDB authentication, publishes only the web ports and uses an internal database network. The application images run as non-root and runtime certificates are mounted read-only. | `backend/src/app.js`, `backend/src/config/env.js`, Dockerfiles, `.dockerignore` files, `docker-compose.yml`, `frontend/nginx.conf`. Blake observed healthy containers, working HTTPS health checks and application flows under Pillar 4. Final image/misconfiguration scan results remain pending. |
-| **Vulnerable components and supply chain** | Lockfiles, local lint/audits and configured CI scans provide checks. Production backend and frontend audits reported zero findings in the observed 4 November runs. This is a dated result, not a guarantee about future advisories or development tools. | User-supplied production audit output; frontend `follow-redirects` was updated to **1.16.2** and its tests/build passed. Full frontend audit still reported **six moderate affected packages** in the ESLint/minimatch development-tool chain. CodeQL and Trivy outcomes are pending under Pillars 2/3; no clean scan result is claimed here. |
+| **Security misconfiguration and container exposure** | Helmet, nginx security headers, explicit CORS origins, request body limits and strong JWT-secret startup checks are present. Compose requires MongoDB authentication, publishes only the web ports and uses an internal database network. The application images run as non-root and runtime certificates are mounted read-only. | `backend/src/app.js`, `backend/src/config/env.js`, Dockerfiles, `.dockerignore` files, `docker-compose.yml`, `frontend/nginx.conf`. Blake observed healthy containers, working HTTPS health checks and application flows under Pillar 4. The CI 24 repository and image reports show no findings at the configured filters; see the saved analysis review. |
+| **Vulnerable components and supply chain** | CI 24: production audits report zero in both apps; the full frontend audit reports zero. The backend full audit retains 27 development-tool package findings, including one critical Handlebars entry; these packages are excluded from the runtime image. | [Actual audit and Trivy reports](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md). Remaining tool-chain findings and follow-up are recorded explicitly; no all-dependency zero-findings claim is made. |
 | **Logging and monitoring failures** | Structured events cover authentication, security decisions, gigs, bookings, transactions and system errors. Timestamps, levels and request IDs help connect activity. Local files/container output remain available and configured events also reach Azure Application Insights. Redaction runs before the Azure mapping. | `eventLogger.js`, `cloudLogger.js`, `azureLogTransport.js`, `logging.test.js`, `azureLogging.test.js`. Live Azure screenshots show successful/failed logins, logout, booking and transaction events; related records share a request ID. Delivery is best-effort and no alert rule has been demonstrated. |
 | **CSRF** | Current authentication uses an explicit bearer `Authorization` header, not an authentication cookie automatically attached by the browser. Restricted CORS origins provide an additional browser boundary. CORS is not a replacement for authentication, permissions or XSS prevention. | `frontend/src/api/client.js`, `AuthContext.jsx`, `backend/src/app.js`, `authMiddleware.js`. If cookie authentication is introduced later, add suitable CSRF controls. |
 | **Brute force and denial of service** | Default limits are 300 general requests, 20 authentication requests and 10 bookings per 15 minutes per IP, plus per-account lockout after five failures for 15 minutes. Express accepts JSON up to 10 KB; nginx has a 20 KB body limit. The cloud queue is bounded. | `rateLimiters.js`, `env.js`, `frontend/nginx.conf`, `cloudLogger.js`; oversized-payload and lockout tests passed, and account lockout was shown live. This does not claim protection from a distributed or volumetric denial-of-service attack. |
 | **Mass assignment and transaction tampering** | Allow-lists reject client-supplied ownership, role and price fields. Booking records snapshot the saved gig's title and price. If the transaction write fails, the service attempts to remove the booking and logs a failed clean-up. | `validators.js`, `gigService.js`, `bookingService.js`; `security.test.js`, `injection.test.js`, `gigManagement.test.js` passed. This compensation is not an atomic multi-document database transaction. |
 | **SSRF** | No marketplace endpoint accepts a URL and fetches it on behalf of the caller. Cloud destinations come from trusted operator configuration; the Azure adapter requires an HTTPS ingestion endpoint and rejects redirects. | `env.js`, `azureLogTransport.js`, `cloudLogger.js`. Database connections and log delivery are outbound operations; they are not user-selected fetch endpoints. Operator access to environment settings remains trusted. |
 | **Log injection and leakage** | Structured events use JSON encoding so line breaks do not create separate events. Sensitive field names and URL credentials are masked, nested values omitted and strings truncated. Email/IP information is still present in some security records and needs restricted access and suitable retention. | `eventLogger.js`, patched `errorHandler.js`, logging tests and observed Azure events. Morgan's separate access log can include URL query strings; credentials must not be placed in URLs. Log handling follows the principle of excluding passwords and access tokens (OWASP, n.d.k). |
-| **Container build and scan limitations** | `.dockerignore` excludes the host's `.env` and certificates. Compose supplies real runtime configuration separately. However, the backend Dockerfile also generates a demonstration certificate/key set during image build. Therefore this review does not claim that the image contains no keys. | `backend/Dockerfile`, `backend/.dockerignore`, `docker-compose.yml`. Build-generated demo keys must not be trusted for a public deployment; generate/mount deployment certificates separately. Tags are version-labelled, not pinned to immutable digests. CI image results remain pending. |
+| **Container build and scan limitations** | Host secrets/certificates are excluded from the build context. The repair removed build-generated fallback keys and the unused npm/npx runtime toolchain. Compose mounts host-generated TLS credentials read-only. | [CI repair](docs/part3/CI_REPAIR.md); [CI 24 image reports](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md). Both reports show no fixable HIGH/CRITICAL findings; tags are version-labelled rather than immutable digest pins. |
 
 ### 18.2 What has actually been verified
 
@@ -802,7 +800,7 @@ The first four rows address the threats explicitly named in the PoE. The remaini
 | Docker and marketplace flow | **Confirmed by Blake under Pillars 1/4.** Real MongoDB-backed bookings updated the correct freelancer; containers and HTTPS health checks worked. |
 | Account lockout and server-side logout | **Demonstrated live under Pillar 6 on 5 November.** Lockout screenshot and the 200 → 200 → 401 → 200 token sequence were reviewed. |
 | Cloud delivery | **Demonstrated live under Pillar 5 on 5 November.** Azure queried actual events; this is stronger evidence than the startup `cloudLogging` flag. |
-| GitHub Actions, CodeQL, Trivy, final Newman run and failure gates | **Pending on the final repository commit under Pillar 2.** Workflow definitions and old evidence are not treated as a successful final run. |
+| GitHub Actions, Trivy, live Newman and failure gates | **CI 24 passed on `blake`, commit `dbde7d2`.** Supplied artifacts show 67 live requests / 90 assertions with zero failures, healthy containers and passing scan gates. Earlier failing runs showed that failed checks produce a failed pipeline. CodeQL was explicitly removed for the documented service limitation. |
 | Current committed-secret/history check and final evidence links | **Pending final repository work.** Ignore patterns alone do not prove that secrets were never committed. |
 
 Supporting review notes, evidence filenames and follow-up items are in [SECURITY_REVIEW.md](docs/part3/SECURITY_REVIEW.md). Save the screenshots and terminal output there as described; this review does not claim the new local evidence files or final commit already exist in GitHub.
@@ -811,7 +809,7 @@ Supporting review notes, evidence filenames and follow-up items are in [SECURITY
 
 JWTs remain in `localStorage`, so successful same-origin script injection could read them even with the current CSP and text rendering. A future session design can use appropriately configured `HttpOnly`, `Secure`, `SameSite` cookies with CSRF protection; it is not implemented in this version (OWASP, n.d.i). Logout revocation also requires the server request to succeed; clearing browser storage alone does not revoke a stolen token.
 
-Other limits include development-tool advisories, in-memory IP-rate counters, best-effort cloud delivery, local certificate trust, build-generated demo keys and non-atomic booking/transaction writes. They are recorded in [Section 20](#20-known-limitations-and-future-work). The restored workflow now declares `defaults.run.shell: bash`, so a failing upstream command in a `tee` pipeline propagates failure. Local failure-propagation checks do not replace demonstrating an actual failing GitHub check and retaining the final green run (GitHub, n.d.d).
+Other limits include development-tool advisories, in-memory IP-rate counters, best-effort cloud delivery, local certificate trust and non-atomic booking/transaction writes. They are recorded in [Section 20](#20-known-limitations-and-future-work). The restored workflow now declares `defaults.run.shell: bash`, so a failing upstream command in a `tee` pipeline propagates failure. Local failure-propagation checks do not replace demonstrating an actual failing GitHub check and retaining the final green run (GitHub, n.d.d).
 
 **Review conclusion:** the four required threat areas have specific implemented controls and supporting tests, and the two extra authentication controls and Azure delivery have live evidence. The security-review documentation is prepared for Pillar 7. Final CI results, the tested commit and evidence links must still be attached before final submission; neither this review nor a green test count certifies the system as vulnerability-free.
 
@@ -826,11 +824,11 @@ Other limits include development-tool advisories, in-memory IP-rate counters, be
 | Part 1 Postman screenshots | `docs/part1/screenshots/` |
 | Backend test results (127 passed, audit workspace, 7 November) | [Saved output](docs/part3/evidence/review-2026-11-07/backend-tests.txt) |
 | Frontend test results (63 passed, audit workspace, 7 November) | [Saved output](docs/part3/evidence/review-2026-11-07/frontend-tests.txt) |
-| Historical Newman results (30 October; not the final Docker run) | `docs/part3/evidence/newman-local-run.txt`, `newman-local-summary.json`; final run pending |
+| Newman results | Historical October files remain under `docs/part3/evidence/`; [CI 24 safe summary](docs/part3/evidence/ci-24-dbde7d2/stack/newman-summary.json) records a new Docker-backed run: 67 requests, 90 assertions, zero failures |
 | **Static analysis results** (ESLint, npm audit) and explanation | [Dated local outputs](docs/part3/evidence/review-2026-11-07/); [results and fixes](docs/part3/STATIC_ANALYSIS.md) |
 | **Logging evidence**: structured events from a real run | `docs/part3/evidence/logging-sample.jsonl` |
 | Frontend production build (7 November) | [Saved output](docs/part3/evidence/review-2026-11-07/frontend-build.txt) |
-| CI pipeline run (all jobs green), CodeQL results, container status and Trivy output | GitHub **Actions** tab and artifacts; screenshots in `docs/part3/screenshots/` |
+| CI pipeline run, static analysis, container status and Trivy output | [Application commit and checks](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/dbde7d2/checks); [saved CI 24 analysis evidence](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md); keep the run and analysis screenshots in `docs/part3/screenshots/` |
 | **Cloud logging evidence** (Azure events, 5 November) | [Login, booking and transaction](docs/part3/screenshots/Logging1.png); [failed login and logout](docs/part3/screenshots/Logging2.png) |
 | Extra security controls, original-system evidence | [Account lockout](docs/part3/screenshots/SecurityTest2.png); [token revocation: 200, 200, 401, 200](docs/part3/screenshots/SecurityTest.png) |
 
@@ -845,18 +843,18 @@ Other limits include development-tool advisories, in-memory IP-rate counters, be
 | The JWT is kept in `localStorage` | Readable by successful same-origin injected script despite current CSP/text rendering | A reviewed cookie-based design with `HttpOnly`, `Secure`, `SameSite` and CSRF protection; not implemented here |
 | Payments are simulated; booking and transaction writes are not one database transaction | Brief allows simulation; a single-node MongoDB has no multi-document transactions | Replica set with transactions, or an outbox pattern |
 | Rate-limit counters are in process memory | Adequate for one API instance | Shared store such as Redis when running several instances |
-| Local certificate authority and build-generated demo keys | Local coursework HTTPS; backend image also generates fallback keys even though host keys are excluded | Remove build-generated fallback keys and supply separately managed deployment certificates for public hosting |
+| Local certificate authority | Coursework HTTPS uses host-generated, runtime-mounted certificates; build-generated fallback keys were removed | Use separately managed trusted deployment certificates if publicly hosting |
 | Lockout message reveals that an account exists, after repeated failures | Users need to know why sign-in is refused | Same message plus an email notification to the owner |
 | Tax estimate is simplified | Marketplace income only; under-65 rebate; no deductions, provisional tax or VAT | Capture deductions and age, integrate SARS tables |
 | Admin console is read-only | Smallest safe privilege | Add audited actions such as disabling an account |
 | Suggested alerts are not deployed by this code | Alert rules must be created in the selected cloud platform | Configure and test rules if needed; do not claim alerts based on log ingestion alone |
 | Trivy runs from its `latest` image | Always uses the newest vulnerability rules | Pin a version and update with Dependabot |
-| Development tools are not vulnerability-free | The observed frontend full audit listed six moderate affected packages in the ESLint/minimatch chain; the archived backend report also listed Newman advisories | Validate compatible tooling updates; refresh both full reports; do not use a forced breaking downgrade as an untested fix |
+| Development tools are not vulnerability-free | CI 24: frontend full audit zero; backend full audit 27 affected dev-tool package entries (6 low, 8 moderate, 12 high, 1 critical), excluded from the production image | Review compatible updates, starting with the nodemon-chain fix; retain the package-level exposure/follow-up record and retest changes |
 | Single MongoDB node, no backups | Coursework scope | Replica set, scheduled backups |
 | Failed offline logout cannot revoke server-side tokens | The browser clears its local session even if the logout request fails | Treat revocation as confirmed only after the server accepts logout; tokens otherwise remain valid until expiry or later revocation |
 | Cloud logging uses a bounded in-memory queue | Queue overflow or forced exit can lose cloud entries; uncertain network acknowledgements can cause duplicates | Durable shipping/spooling if stronger delivery guarantees become necessary |
 | Log redaction is scoped, not a universal secret detector | Structured/error fields are redacted; access logs can contain URLs and ordinary text could contain unexpected secrets | Never pass credentials in URLs; restrict log access/retention and review new logging fields |
-| Final CI scan and failure-gate evidence is pending | Explicit Bash/pipefail handling is restored; GitHub execution is not demonstrated by this package | Run the workflow, resolve actual findings and retain final-commit results and failure-gate evidence |
+| CI evidence is tied to a specific application commit | CI 24 passed on `blake` at `dbde7d2`; its artifacts are retained. Documentation commits and future dependency/code changes have their own runs | Keep a green run for the actual merged submission version and review fresh results when code or dependencies change |
 
 ---
 

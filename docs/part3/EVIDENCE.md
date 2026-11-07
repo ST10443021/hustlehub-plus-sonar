@@ -1,15 +1,15 @@
 # Final PoE evidence index
 
-Updated 7 November 2026. Configuration and dated observations are listed separately from execution still required on the final repository commit.
+Updated 7 November 2026. CI 24 on `blake` (`dbde7d2`) has passed. Its supplied analysis/stack artifacts are recorded separately from older local evidence and from work still required for final submission.
 
 ## Included implementation and evidence
 
 | Item | Location | Evidence boundary |
 | --- | --- | --- |
-| Pipeline and dependency updates | [Workflow](../../.github/workflows/ci.yml), [Dependabot](../../.github/dependabot.yml) | Restored configuration; final GitHub run pending |
-| Containers and orchestration | [Backend Dockerfile](../../backend/Dockerfile), [frontend Dockerfile](../../frontend/Dockerfile), [Compose](../../docker-compose.yml) | Corrected configuration; final run and pipeline proof pending |
+| Pipeline and dependency updates | [Workflow](../../.github/workflows/ci.yml), [Dependabot](../../.github/dependabot.yml) | CI 24 passed at `dbde7d2`; [run review](evidence/ci-24-dbde7d2/REVIEW.md) |
+| Containers and orchestration | [Backend Dockerfile](../../backend/Dockerfile), [frontend Dockerfile](../../frontend/Dockerfile), [Compose](../../docker-compose.yml) | CI 24: all services healthy; [container status](evidence/ci-24-dbde7d2/stack/compose-ps.txt) |
 | Final documentation and security review | [README](../../README.md), [supporting review](SECURITY_REVIEW.md) | Final README restored; pending items are marked explicitly |
-| Static analysis explanation | [STATIC_ANALYSIS.md](STATIC_ANALYSIS.md) | Local lint/audit results present; actual CodeQL/Trivy results pending |
+| Static analysis explanation | [STATIC_ANALYSIS.md](STATIC_ANALYSIS.md) | Actual lint/audit/Trivy reports reviewed; 27 backend development-tool package findings remain documented; CodeQL not active |
 | Backend tests | [7 November output](evidence/review-2026-11-07/backend-tests.txt) | 127 tests / 8 suites; memory repositories and mocked cloud HTTP |
 | Frontend tests | [7 November output](evidence/review-2026-11-07/frontend-tests.txt) | 63 tests / 13 files; mocked API component tests |
 | Frontend build | [7 November output](evidence/review-2026-11-07/frontend-build.txt) | Production build succeeded in the audit workspace |
@@ -22,12 +22,25 @@ Updated 7 November 2026. Configuration and dated observations are listed separat
 
 Older top-level backend/frontend evidence files describe earlier 105/54-test runs. They are retained as history, not presented as the latest verification. The collection has 55 saved request definitions; deliberate repeats and optional admin checks affect execution counts.
 
+## Reviewed CI 24 evidence
+
+Application commit: [`dbde7d2`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/dbde7d2). [Checks tab](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/dbde7d2/checks). Artifacts were supplied by Blake after showing the green run; the ZIPs do not independently identify their Actions run ID.
+
+- [x] Backend/frontend ESLint reports: zero active errors/warnings.
+- [x] Production audits: zero reported vulnerabilities in both apps; frontend full audit also zero.
+- [x] Full backend audit reviewed: 27 affected dev-tool packages, including one critical; exposure, mitigations and follow-up recorded.
+- [x] Repository and both image Trivy reports reviewed at their configured filters.
+- [x] Container status and safe live Newman summary retained: all services healthy; 67 requests, 90 assertions, no failures.
+- [x] CodeQL entitlement limitation explained; active/pending scan claims corrected.
+
+The [review and all report links](evidence/ci-24-dbde7d2/REVIEW.md) include the provenance/hashes. Browser integration was part of the successful run shown in the supplied screenshot; its separate artifact was not included among these four ZIPs. Download/retain it separately if needed.
+
 ## Still to record on the final version
 
-- [ ] Latest GitHub Actions run, with all jobs green and a link to the exact commit.
-- [ ] Actual CodeQL outcomes reviewed and actual Trivy repository/image results entered in STATIC_ANALYSIS.md.
-- [ ] Containers running in the pipeline, with Newman results and downloaded artifacts.
-- [ ] A real failing check shown to make the GitHub pipeline fail; distinguish this from the local Bash failure-propagation check.
+- [ ] Retain the green CI 24 screenshot and an ESLint analysis-step screenshot; keep a green run for the actual merged submission version.
+- [ ] Review and resolve or explicitly retain the documented backend development-tool advisories; reassess if dependencies change. Recorded risk is not a remediation claim.
+- [x] CI 24 containers and safe Newman summary retained with the analysis artifacts.
+- [x] Supplied earlier GitHub screenshots show failed checks failing the pipeline; CI 24 is the subsequent successful application run.
 - [ ] Local Docker/MongoDB marketplace flow and final dashboard screenshot with income/chart/tax breakdown.
 - [ ] Final security/admin screenshots where needed, and a cloud ingestion recheck after deployment.
 - [ ] Final accessible demonstration video link in README section 19.
@@ -35,9 +48,9 @@ Older top-level backend/frontend evidence files describe earlier 105/54-test run
 - [ ] Contribution history reviewed against the supplied rubric without padding commits.
 - [ ] Secrets/private keys excluded from tracked files and submitted archives.
 
-Suggested new screenshots: `01-ci-pipeline-green.png`, `02-ci-stack-containers-running.png`, `03-codeql-code-scanning.png`, `04-trivy-image-scan.png`, `07-dashboard-chart.png`, `08-admin-console.png`, `09-docker-compose-ps.png`. Link the existing Azure screenshots above; changing cloud providers is unnecessary.
+Suggested new screenshots: `01-ci-pipeline-green.png`, `02-ci-stack-containers-running.png`, `03-eslint-static-analysis.png`, `04-trivy-image-scan.png`, `07-dashboard-chart.png`, `08-admin-console.png`, `09-docker-compose-ps.png`. Link the existing Azure screenshots above; changing cloud providers is unnecessary.
 
-Download `backend-static-analysis`, `frontend-static-analysis`, `trivy-repository-report` and `stack-evidence` from Actions. Review logs before committing any artifact. Follow [FINAL_VERIFICATION.md](FINAL_VERIFICATION.md) for isolated live testing.
+The four supplied CI 24 artifacts have been reviewed and the selected safe reports are retained under `evidence/ci-24-dbde7d2/`. Download fresh artifacts after application/dependency changes. Review logs before committing any artifact. Follow [FINAL_VERIFICATION.md](FINAL_VERIFICATION.md) for isolated live testing.
 
 ## Demonstration sequence
 

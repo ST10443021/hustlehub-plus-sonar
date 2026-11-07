@@ -1,6 +1,6 @@
 # Static Code Analysis — HustleHub+ Final PoE
 
-Static analysis examines source code and dependency files **without running the program**, so risky patterns are found before they reach users (ESLint, n.d.). The pipeline in `.github/workflows/ci.yml` is configured to run it on the agreed branches and pull requests. The restored workflow declares Bash/pipefail so an upstream scan failure cannot be hidden by `tee`. Actual final GitHub outcomes remain pending.
+Static analysis examines source code and dependency files **without running the program**, so risky patterns are found before they reach users (ESLint, n.d.). The pipeline in `.github/workflows/ci.yml` is configured to run it on the agreed branches and pull requests. The restored workflow declares Bash/pipefail so an upstream scan failure cannot be hidden by `tee`. The reviewed GitHub run is **CI 24**, branch `blake`, commit [`dbde7d2`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/dbde7d2), on 7 November 2026. Its supplied artifacts are preserved in [the run review](evidence/ci-24-dbde7d2/REVIEW.md).
 
 ## 1. Tools and what each one covers
 
@@ -8,7 +8,6 @@ Static analysis examines source code and dependency files **without running the 
 | --- | --- | --- | --- |
 | ESLint 9 with `eslint-plugin-security` | Backend source, scripts and tests | `cd backend && npm run lint` | Any error **or warning** fails (`--max-warnings 0`) |
 | ESLint 9 with React, React Hooks and `eslint-plugin-security` | Frontend source | `cd frontend && npm run lint` | Any error or warning fails |
-| CodeQL (`security-extended` queries) | Whole repository, JavaScript | `codeql` job in CI | Results appear in **Security → Code scanning** |
 | Trivy | Repository files (vulnerabilities, secrets, Dockerfile misconfiguration) and both Docker images | `repo-scan` and `stack` jobs in CI | Fixable HIGH/CRITICAL in the repository; fixable CRITICAL in images |
 | `npm audit` | Production dependencies of both apps | `npm run audit` | HIGH or CRITICAL fails |
 
@@ -41,7 +40,20 @@ Frontend error: `react/no-unescaped-entities` in `LoginPage.jsx` (a raw apostrop
 | Backend | **0** | **0** | [Saved backend result](evidence/review-2026-11-07/eslint-backend.txt) |
 | Frontend | **0** | **0** | [Saved frontend result](evidence/review-2026-11-07/eslint-frontend.txt) |
 
-### 2.3 npm audit
+### 2.3 GitHub CI 24 results, 7 November 2026
+
+| Check | Observed result |
+| --- | --- |
+| Backend ESLint | **0 errors, 0 warnings**, 47 file entries; 12 targeted suppressed messages retained for review |
+| Frontend ESLint | **0 errors, 0 warnings**, 40 file entries; no suppressed messages |
+| Production npm audits | **0 reported vulnerabilities** in both apps |
+| Frontend full npm audit | **0 reported vulnerabilities**, including development tools |
+| Backend full npm audit | **27 affected dev-tool package entries:** 6 low, 8 moderate, 12 high, 1 critical |
+| Trivy repository and both images | **0 displayed findings at the configured severity/fix filters** |
+
+See the [actual reports and interpretation](evidence/ci-24-dbde7d2/REVIEW.md). These results belong to application commit `dbde7d2`; earlier local output below remains historical.
+
+### 2.4 Earlier npm audit results
 
 | Scope | Before | After |
 | --- | --- | --- |
@@ -63,32 +75,29 @@ Production audits were rerun in the audit workspace on 7 November 2026: [backend
 | `react/no-unescaped-entities` | A raw `'` in JSX text can hide typing mistakes and is rejected by the React rules | **Fixed** with `&apos;` |
 | `npm audit`: `body-parser` (high), `qs`, `ip-address` | Known denial-of-service weaknesses in packages that Express depends on | **Fixed.** `npm audit fix` raised them to patched versions within the allowed ranges. Lock file updated; all backend tests pass |
 
-The configured pipeline rejects warnings. A successful final GitHub execution and actual CodeQL/Trivy outcomes must still be retained.
+The configured pipeline rejects warnings. CI 24 passed these checks; its actual lint/audit/Trivy reports are linked above. The remaining backend development-tool advisories are recorded below rather than labelled fixed.
 
-## 4. Accepted and documented risk
+## 4. Development-tool findings and scope
 
-The historical full `npm audit` report, including development tools, listed advisories under **Newman** (`@faker-js/faker`, `postman-collection`, `postman-runtime` and others). The earlier suggested automatic fix was a forced downgrade to Newman 4.6.1. Recheck current full reports before changing dependencies; no forced downgrade is included in this patch. The risk is accepted because:
+The full backend audit from CI 24 reports **27 affected development-tool package entries**, including **one CRITICAL entry for Handlebars** in the Postman/Newman chain. All affected nodes are marked development-only in the backend lockfile and excluded from the production image by `npm ci --omit=dev`. The current production audit reports zero. Frontend full audit also reports zero.
 
-1. Newman is a `devDependency`. The production image is built with `npm ci --omit=dev`, so it is not present at run time.
-2. In CI it only runs our own Postman collection against a throw-away stack, with no untrusted input.
-3. The pipeline gates on production dependencies and publishes the full report (`npm-audit-full.json`) as an artifact on every run.
+The [run review](evidence/ci-24-dbde7d2/REVIEW.md#development-tool-risk-review) lists every affected package, exact severity counts, tool exposure and follow-up. Newman/Postman accounts for 19 entries, Jest for 6 low entries, and nodemon for 2 moderate entries. The nodemon chain has a compatible fix reported available. npm proposes major downgrades of Newman/Jest for other chains; these require dependency review and retesting, not a blind `npm audit fix --force`.
 
-## 5. CodeQL and Trivy results
+The existing Newman risk treatment is to exclude it from production, run only the checked-in trusted collection against an isolated stack, and publish the full audit report. The remaining advisories remain **unresolved tooling findings**. Scope isolation is a mitigation, not a fix or proof of non-exploitability. No dependency change is included in this documentation/evidence patch. The rubric's highest security-analysis band cannot be guaranteed while these findings remain.
 
-CodeQL and Trivy run inside GitHub Actions, so their results are produced by the pipeline rather than saved in this repository:
+## 5. CI scan outcomes and CodeQL limitation
 
-- **CodeQL:** open the repository's **Security → Code scanning** page after the first run. Any alert should be fixed, or dismissed with a written reason, and noted here.
-- **Trivy repository scan:** the `repo-scan` job prints a table and uploads `trivy-repo.txt`. A clean run means no fixable HIGH or CRITICAL vulnerabilities, no committed secrets and no HIGH Dockerfile misconfiguration.
-- **Trivy image scans:** the `stack` job uploads `trivy-hustlehub_backend_local-high.txt` and the frontend equivalent. HIGH findings with a published fix are listed for information; fixable CRITICAL findings fail the job.
-
-Record the outcome of the first green run here:
-
-| Check | Result | Date |
+| Check | Observed result | Evidence |
 | --- | --- | --- |
-| CodeQL alerts open | _enter number after the first run_ | |
-| Trivy repository scan | _pass / findings_ | |
-| Trivy backend image (CRITICAL) | _pass / findings_ | |
-| Trivy frontend image (CRITICAL) | _pass / findings_ | |
+| ESLint backend/frontend | Pass; 0 active errors/warnings | [Backend JSON](evidence/ci-24-dbde7d2/backend/eslint-report.json), [frontend JSON](evidence/ci-24-dbde7d2/frontend/eslint-report.json) |
+| Trivy repository | Pass; displayed counts 0 at configured filters | [Report](evidence/ci-24-dbde7d2/trivy/trivy-repo.txt) |
+| Trivy backend image | Pass; no fixable HIGH/CRITICAL findings displayed | [Report](evidence/ci-24-dbde7d2/trivy/trivy-backend-image.txt) |
+| Trivy frontend image | Pass; no fixable HIGH/CRITICAL findings displayed | [Report](evidence/ci-24-dbde7d2/trivy/trivy-frontend-image.txt) |
+| CodeQL | Not active; not a passed scan | [CI repair explanation](CI_REPAIR.md) |
+
+Trivy's commands use `--ignore-unfixed`. Repository analysis selects HIGH/CRITICAL; image reports list HIGH/CRITICAL and the image failure gate blocks fixable CRITICAL. These reports are not an all-severity, all-unfixed-vulnerabilities or Git-history scan.
+
+CodeQL upload failed in run 18 because the private Classroom repository lacked the required Code Security/Advanced Security feature. The unsupported job was explicitly removed, without changing repository visibility or weakening the other gates. ESLint with security rules is the source-analysis tool used for this submission; Trivy/npm audit have the scopes described above. There is no claim of zero CodeQL alerts or identical coverage to CodeQL.
 
 ## 6. Re-running locally
 
