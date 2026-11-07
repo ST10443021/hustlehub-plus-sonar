@@ -1,56 +1,44 @@
-# Final PoE Evidence Index
+# Final PoE evidence index
 
-This file lists every submission item required by the Part 3 brief (IIE, 2026c), where it is, and exactly what still has to be captured from systems that only you can access (GitHub, Better Stack, your screen).
+Updated 7 November 2026. Configuration and dated observations are listed separately from execution still required on the final repository commit.
 
-## Already in the repository
+## Included implementation and evidence
 
-| Submission item | File or folder |
-| --- | --- |
-| Pipeline configuration | `.github/workflows/ci.yml`, `.github/dependabot.yml` |
-| Both Dockerfiles and Compose | `backend/Dockerfile`, `frontend/Dockerfile`, `docker-compose.yml` |
-| Final README | `README.md` |
-| Static analysis result and explanation | `docs/part3/STATIC_ANALYSIS.md`, `evidence/eslint-backend.txt`, `evidence/eslint-frontend.txt`, `evidence/npm-audit.txt` |
-| Test evidence | `evidence/backend-tests.txt` (105), `evidence/frontend-tests.txt` (54), `evidence/frontend-build.txt` |
-| API test evidence (Newman) | `evidence/newman-local-run.txt`, `evidence/newman-local-summary.json` |
-| Logging evidence (structured events) | `evidence/logging-sample.jsonl` |
-| Reference list | `REFERENCES.md` |
-
-## To capture after the first pipeline run (screenshots)
-
-Save each image in `docs/part3/screenshots/` with these names so the README evidence table stays accurate.
-
-| File name | What it must show | How to get it |
+| Item | Location | Evidence boundary |
 | --- | --- | --- |
-| `01-ci-pipeline-green.png` | All jobs green: backend, frontend, codeql, repo-scan, stack, pipeline-passed | GitHub → **Actions** → latest run |
-| `02-ci-stack-containers-running.png` | The `stack` job log with `docker compose ps` (mongo, backend, frontend running/healthy) and the Newman result table | Open the `stack` job → expand "Check that all three containers are running" and "API tests" |
-| `03-codeql-code-scanning.png` | **Security → Code scanning** with no open alerts (or alerts dismissed with reasons) | GitHub → **Security** |
-| `04-trivy-image-scan.png` | The Trivy image scan step output for both images | `stack` job → "Image scan - Trivy" |
-| `05-betterstack-live-tail.png` | Better Stack live tail showing `user_login`, `booking_created`, `transaction_created` events | Better Stack → your source → **Live tail** |
-| `06-betterstack-security-events.png` | Better Stack search filtered on `category:security` showing `login_failed` / `account_locked` | Better Stack → search |
-| `07-dashboard-chart.png` | Freelancer dashboard with the bar chart, bracket table and progress bar | App → `/dashboard` |
-| `08-admin-console.png` | Admin console with totals, a locked account and security events | App → `/admin` |
-| `09-docker-compose-ps.png` | `docker compose ps` on your machine with all services up | Terminal |
+| Pipeline and dependency updates | [Workflow](../../.github/workflows/ci.yml), [Dependabot](../../.github/dependabot.yml) | Restored configuration; final GitHub run pending |
+| Containers and orchestration | [Backend Dockerfile](../../backend/Dockerfile), [frontend Dockerfile](../../frontend/Dockerfile), [Compose](../../docker-compose.yml) | Corrected configuration; final run and pipeline proof pending |
+| Final documentation and security review | [README](../../README.md), [supporting review](SECURITY_REVIEW.md) | Final README restored; pending items are marked explicitly |
+| Static analysis explanation | [STATIC_ANALYSIS.md](STATIC_ANALYSIS.md) | Local lint/audit results present; actual CodeQL/Trivy results pending |
+| Backend tests | [7 November output](evidence/review-2026-11-07/backend-tests.txt) | 127 tests / 8 suites; memory repositories and mocked cloud HTTP |
+| Frontend tests | [7 November output](evidence/review-2026-11-07/frontend-tests.txt) | 63 tests / 13 files; mocked API component tests |
+| Frontend build | [7 November output](evidence/review-2026-11-07/frontend-build.txt) | Production build succeeded in the audit workspace |
+| Lint and production audits | [Dated outputs](evidence/review-2026-11-07/) | Both linters passed; both production audits reported zero; no full-tree/image claim |
+| Azure cloud ingestion | [Logging1](screenshots/Logging1.png), [Logging2](screenshots/Logging2.png) | Original-system screenshots from 5 November: login, failure, logout, booking and transaction; final commit not recorded |
+| Account lockout | [Lockout screenshot](screenshots/SecurityTest2.png) | Original-system UI observation |
+| Server-side token revocation | [HTTP sequence](screenshots/SecurityTest.png) | Original-system 200 → 200 → 401 → 200 sequence |
+| Earlier application screenshots | [Part 2 screenshots](../part2/screenshots/) | Historical application evidence; capture the final dashboard separately |
+| Earlier Newman run | [Output](evidence/newman-local-run.txt), [summary](evidence/newman-local-summary.json) | 30 October, 67 executions / 90 assertions; not a final MongoDB-backed Docker run |
 
-Artifacts to download from the pipeline run (Actions → run → **Artifacts**): `stack-evidence` (Newman JUnit and summary, container logs, Trivy reports), `backend-static-analysis`, `frontend-static-analysis`. Add any you want to keep under `docs/part3/evidence/`.
+Older top-level backend/frontend evidence files describe earlier 105/54-test runs. They are retained as history, not presented as the latest verification. The collection has 55 saved request definitions; deliberate repeats and optional admin checks affect execution counts.
 
-## Before submitting
+## Still to record on the final version
 
-- [ ] Pipeline is green on `main` (screenshot 01).
-- [ ] CodeQL alerts reviewed (screenshot 03) and the table in `STATIC_ANALYSIS.md` section 5 filled in.
-- [ ] Better Stack connected (README section 11.4) and screenshots 05 and 06 taken.
-- [ ] Demonstration video recorded and its link pasted in README section 19.
-- [ ] Every link in `REFERENCES.md` opened and its access date confirmed.
-- [ ] Commit history has the number of commits and contributors the brief asks for (75 or more, several authors).
-- [ ] `git status` shows no `.env`, `*.pem`, `node_modules/`, logs or `.vs/` files.
-- [ ] The repository is public (or CodeQL is available) and the README renders correctly on GitHub.
+- [ ] Latest GitHub Actions run, with all jobs green and a link to the exact commit.
+- [ ] Actual CodeQL outcomes reviewed and actual Trivy repository/image results entered in STATIC_ANALYSIS.md.
+- [ ] Containers running in the pipeline, with Newman results and downloaded artifacts.
+- [ ] A real failing check shown to make the GitHub pipeline fail; distinguish this from the local Bash failure-propagation check.
+- [ ] Local Docker/MongoDB marketplace flow and final dashboard screenshot with income/chart/tax breakdown.
+- [ ] Final security/admin screenshots where needed, and a cloud ingestion recheck after deployment.
+- [ ] Final accessible demonstration video link in README section 19.
+- [ ] Final tested commit and evidence date recorded; all README links checked.
+- [ ] Contribution history reviewed against the supplied rubric without padding commits.
+- [ ] Secrets/private keys excluded from tracked files and submitted archives.
 
-## Demonstration video outline (about 8 minutes)
+Suggested new screenshots: `01-ci-pipeline-green.png`, `02-ci-stack-containers-running.png`, `03-codeql-code-scanning.png`, `04-trivy-image-scan.png`, `07-dashboard-chart.png`, `08-admin-console.png`, `09-docker-compose-ps.png`. Link the existing Azure screenshots above; changing cloud providers is unnecessary.
 
-1. **Start the stack** (30 s): `docker compose up --build -d`, then `docker compose ps` showing all three containers running.
-2. **Authentication** (1 min): register a freelancer and a client, show a failed login, then a successful login.
-3. **Gig creation** (1 min): freelancer creates a gig; show validation rejecting bad input.
-4. **Booking and transaction** (1.5 min): client books the gig and sees the confirmation; freelancer sees the received booking.
-5. **Dashboard** (1.5 min): freelancer dashboard with income, tax estimate, bar chart, bracket table and "How is this calculated?".
-6. **Security features** (1.5 min): five wrong passwords then the lockout message; log out and show that the old token is rejected; a client opening `/admin` is turned away.
-7. **Admin and logging** (1 min): admin console showing totals, the locked account and security events; Better Stack live tail showing the same events.
-8. **Pipeline** (1 min): GitHub Actions run with all jobs green, the static analysis step and the Docker/Newman job.
+Download `backend-static-analysis`, `frontend-static-analysis`, `trivy-repository-report` and `stack-evidence` from Actions. Review logs before committing any artifact. Follow [FINAL_VERIFICATION.md](FINAL_VERIFICATION.md) for isolated live testing.
+
+## Demonstration sequence
+
+Show registration/login; freelancer gig creation; client booking and booking history; freelancer received booking, transaction and income/tax chart; account lockout and token revocation; containers; actual Azure events; the pipeline and its analysis outputs. Use the completed final recording, then verify its sharing permissions.

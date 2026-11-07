@@ -6,15 +6,15 @@ HustleHub already writes structured authentication, security, gig, booking, tran
 
 The adapter uses Node's existing `fetch` support and the regional Application Insights ingestion API. No new npm dependency, SDK instrumentation, public application hosting, Azure agent, browser tracking or database change is needed. Existing local logs and the admin security view continue to work.
 
-Resource selected: `hustlehub-logs`, resource group `rg-hustlehub-poe`, South Africa North, Azure for Students. The resource has been created. **Live ingestion and the final screenshot remain pending until run on Blake's computer.**
+Resource selected: `hustlehub-logs`, resource group `rg-hustlehub-poe`, South Africa North, Azure for Students. The original-system screenshots supplied from 5 November show live ingestion: [login, booking and transaction events](screenshots/Logging1.png), and [failed login and logout events](screenshots/Logging2.png). The original backend commit was not recorded. Reverify after deploying the final repository version; no alert-delivery proof is claimed.
 
 ## Apply and configure on Windows
 
-1. Copy the `HustleHub` folder contents from this package into the project root, preserving the paths. Review or back up files first if you changed them since the supplied project snapshot. The package contains no real `.env`, certificates, database files, package lockfiles or frontend files. It does not overwrite `errorHandler.js` or `logging.test.js`, so the earlier console-redaction fix stays in place.
+1. Apply the final repository patch using its supplied instructions. Keep `backend/` and `frontend/` at the repository root. The Azure adapter and earlier console-redaction changes are already in the supplied repository; no application-source overwrite is needed. Preserve existing `.env`, certificates and database volumes.
 2. In PowerShell:
 
    ```powershell
-   cd "C:\Dev\insy7314_PoE_3_MOCK\HustleHub"
+   # Start in your actual repository root, then:
    notepad .env
    ```
 
@@ -29,7 +29,7 @@ Resource selected: `hustlehub-logs`, resource group `rg-hustlehub-poe`, South Af
 4. Run checks and recreate the backend:
 
    ```powershell
-   cd "C:\Dev\insy7314_PoE_3_MOCK\HustleHub\backend"
+   Set-Location backend
    npm.cmd run lint
    npm.cmd test
    cd ..
@@ -119,9 +119,10 @@ Use returned timestamps and IDs to match actual application actions. This adapte
 - [ ] Backend lint and automated tests pass after copying the files.
 - [ ] Docker services are healthy and the HTTPS health endpoint succeeds.
 - [ ] New startup event has `cloudLogging: true`.
-- [ ] Real login success/failure, gig, booking and transaction events appear in Azure.
+- [x] Supplied original-system screenshots show login success/failure, booking and transaction events in Azure.
+- [ ] Recheck those events on the final repository deployment.
 - [ ] Booking/transaction IDs and request IDs match local events.
-- [ ] Sanitised query-results screenshot saved as `docs/part3/screenshots/azure-logging-events.png`.
+- [x] Original evidence included as `docs/part3/screenshots/Logging1.png` and `Logging2.png`.
 - [ ] Date, final tested commit and screenshot path recorded in submission evidence.
 - [ ] README section 11 explains destinations, purpose, configuration and verification.
 

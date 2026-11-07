@@ -1,58 +1,104 @@
-# Orchestrates the three MERN components for local, one-command startup
-# (MongoDB, Inc., n.d.). Full container hardening, health checks, and CI
-# wiring are extended in Part 3 (DevSecOps) - this compose file establishes
-# the baseline container-ready shape of the stack from Part 2 onward
-# (IIE, 2026b).
+# Runs the whole HustleHub+ stack (MongoDB, API, web) with one command: docker compose up --build
+# (Docker, Inc., n.d.a). Setup values come from a .env file next to this file (see .env.example).
+#
+# Security choices (OWASP, 2024f; MongoDB, Inc., n.d.b):
+#  - MongoDB requires a username and password and is NOT published to the host;
+#  - two private networks keep the web container away from the database;
+#  - the API runs without Linux capabilities and cannot gain new privileges;
+#  - runtime HTTPS certificates are mounted read-only; build-generated demo keys are documented;
+#  - health checks decide start-up order, so the API only starts once the database is ready.
+name: hustlehub
+
 services:
   mongo:
     image: mongo:7
     restart: unless-stopped
-    ports:
-      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: hustlehub
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?Set MONGO_PASSWORD in the .env file (see .env.example)}
     volumes:
       - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --username hustlehub --password \"$$MONGO_INITDB_ROOT_PASSWORD\" --authenticationDatabase admin --eval \"db.adminCommand('ping').ok\" | grep -q 1"]
+      interval: 10s
+      timeout: 8s
+      retries: 12
+      start_period: 20s
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - db-net
 
   backend:
+    image: hustlehub/backend:local
     build: ./backend
     restart: unless-stopped
     environment:
       NODE_ENV: production
       PORT: 5443
-      JWT_SECRET: ${JWT_SECRET:?Set a strong JWT_SECRET in a .env file at the project root}
+      JWT_SECRET: ${JWT_SECRET:?Set a strong JWT_SECRET in the .env file (see .env.example)}
       JWT_EXPIRES_IN: 1h
       SSL_KEY_PATH: ./certs/key.pem
       SSL_CERT_PATH: ./certs/cert.pem
       BCRYPT_SALT_ROUNDS: 12
-      MONGODB_URI: mongodb://mongo:27017/hustlehub
+      # MONGO_PASSWORD must be URL-safe (the .env.example command makes a hex value).
+      MONGODB_URI: mongodb://hustlehub:${MONGO_PASSWORD}@mongo:27017/hustlehub?authSource=admin
       CORS_ORIGINS: https://localhost:8443
       TRUST_PROXY: 1
-    # Locally trusted certificate made by "npm run gen-cert" in backend/ (read-only).
+      LOCKOUT_MAX_ATTEMPTS: ${LOCKOUT_MAX_ATTEMPTS:-5}
+      LOCKOUT_MINUTES: ${LOCKOUT_MINUTES:-15}
+      # Optional cloud log shipping; leave empty to log to the container output and volume only.
+      LOG_CLOUD_URL: ${LOG_CLOUD_URL:-}
+      LOG_CLOUD_TOKEN: ${LOG_CLOUD_TOKEN:-}
+      APPLICATIONINSIGHTS_CONNECTION_STRING: ${APPLICATIONINSIGHTS_CONNECTION_STRING:-}
+    # Locally trusted certificate made by "node backend/scripts/generateCert.js" (read-only).
     volumes:
       - ./backend/certs/cert.pem:/app/certs/cert.pem:ro
       - ./backend/certs/key.pem:/app/certs/key.pem:ro
+      - backend-logs:/app/logs
     depends_on:
-      - mongo
-    # Only nginx reaches this trusted-proxy backend.
+      mongo:
+        condition: service_healthy
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    # Only nginx can reach the API; it is not published to the host.
     expose:
       - "5443"
+    networks:
+      - db-net
+      - app-net
 
   frontend:
+    image: hustlehub/frontend:local
     build:
       context: ./frontend
       args:
         VITE_API_BASE_URL: /api
     restart: unless-stopped
     depends_on:
-      - backend
-    # HTTPS on 8443 (port 8080 only redirects to it), so the browser shows a padlock
-    # once "npm run trust-cert" has been run (Mozilla, 2026a; nginx, n.d.).
+      backend:
+        condition: service_healthy
+    # HTTPS on 8443 (port 8080 only redirects to it), so the browser shows a padlock once
+    # "npm run trust-cert" has been run in backend/ (Mozilla, 2026a; nginx, n.d.).
     volumes:
       - ./backend/certs/cert.pem:/etc/nginx/certs/cert.pem:ro
       - ./backend/certs/key.pem:/etc/nginx/certs/key.pem:ro
       - ./backend/certs/rootCA.pem:/etc/nginx/certs/rootCA.pem:ro
     ports:
-      - "8080:80"
-      - "8443:443"
+      - "8080:8080"
+      - "8443:8443"
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - app-net
+
+networks:
+  db-net:
+    internal: true
+  app-net:
 
 volumes:
   mongo-data:
+  backend-logs:

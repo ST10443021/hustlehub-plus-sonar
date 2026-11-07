@@ -1,6 +1,6 @@
 # Pillar 7: final security review record
 
-Review date: **5 November 2026**. The required threat-to-control explanation is in [README section 18](../../README.md#18-final-security-review).
+Review date: **5 November 2026**. Repository integration/evidence update: **7 November 2026**. The final README has been restored; the required threat-to-control explanation is in [README section 18](../../README.md#18-final-security-review).
 
 ## Scope and evidence boundaries
 
@@ -39,7 +39,7 @@ The full README table also covers safe errors, data exposure, configuration, dep
 3. **Record current logging accurately.** Azure delivery is now demonstrated. It is best-effort, not immutable or exactly-once storage. No alert rule has been tested. Structured-event/error redaction is covered; the Morgan access log can still include query strings, and arbitrary secrets pasted into ordinary text are not guaranteed to be detected.
 4. **Keep browser-session risk explicit.** JWTs are stored in `localStorage` and can be read by injected same-origin script. CSP and text rendering reduce XSS exposure but do not make that storage inaccessible to JavaScript. If logout cannot reach the server, local session clearing does not revoke a stolen token. No cookie/CSRF redesign is included.
 5. **Correct image-key claims.** `.dockerignore` keeps host credentials out of the build context, but the backend Dockerfile generates a demo CA/server key set inside the image. The review therefore does not say the image contains no keys. Public deployment would require separately managed certificates and removal of build-generated fallback keys. Current Compose mounts the host's trusted server certificate/key over the runtime paths.
-6. **Fix one CI failure-propagation issue when returning to Pillar 2.** The repository Trivy step pipes its command through `tee` without explicit `pipefail` or `shell: bash`. A scanner failure can be hidden by `tee` succeeding. GitHub documents different options for the unspecified shell and explicit `bash`. Locally, `bash -e -c 'false | cat'` exited **0**, while the same pipeline with `bash -eo pipefail` exited **1**. That reproduces the shell behaviour; it is not a GitHub run or Trivy scan. Add explicit pipe-failure handling, then demonstrate that a controlled failing check makes the actual workflow fail. This package does not change the workflow because pipeline work was deliberately deferred.
+6. **CI failure-propagation finding: configuration corrected on 7 November; actual GitHub run still required.** The restored workflow now uses `defaults.run.shell: bash`. The following describes the original finding: The repository Trivy step pipes its command through `tee` without explicit `pipefail` or `shell: bash`. A scanner failure can be hidden by `tee` succeeding. GitHub documents different options for the unspecified shell and explicit `bash`. Locally, `bash -e -c 'false | cat'` exited **0**, while the same pipeline with `bash -eo pipefail` exited **1**. That reproduces the shell behaviour; it is not a GitHub run or Trivy scan. Add explicit pipe-failure handling, then demonstrate that a controlled failing check makes the actual workflow fail. The final integration patch now supplies this configuration correction. It does not claim a live Trivy scan or GitHub run.
 7. **Retain residual limits rather than claim production readiness.** The single MongoDB node has no backup proof; booking/transaction compensation is not atomic; rate-limit counters are in process memory; local certificate trust and demo image keys need production changes; log retention/access need management. These are recorded in README section 20.
 
 ## Save existing evidence in the project
@@ -58,15 +58,16 @@ Do not place connection strings, JWTs, passwords, real `.env` files or private c
 
 ## Final repository handoff
 
-- [ ] Copy the existing screenshot/output evidence into the chosen paths and link it in Pillar 8.
-- [ ] Resolve the Trivy pipeline/`tee` failure-propagation issue under Pillar 2.
+- [x] Original Azure/security screenshots restored and linked; 7 November audit-workspace outputs are stored separately.
+- [x] Configure explicit Bash/pipefail for workflow run steps.
+- [ ] Retain actual GitHub failure-gate and successful final-run evidence.
 - [ ] Run GitHub Actions, review CodeQL alerts and Trivy findings, and save the actual outcomes under Pillars 2/3.
 - [ ] Run the final live Newman collection against isolated test data on the actual final Docker version; do not overwrite coursework/demo data or present archived results as new.
 - [ ] Check tracked files and history for accidentally committed secrets. Ignore rules alone are not evidence. Record the final commit that was tested.
-- [ ] Reconcile the old README collaboration branch name `muzammil` with the agreed `muzzi` during final documentation/repository setup. Team allocation is unchanged by this review.
+- [x] Final README branch name reconciled to `muzzi`; team ownership is unchanged.
 - [ ] Update stale counts, audit/tooling exceptions, old Better Stack evidence instructions and missing links during Pillar 8. Preserve the observed results and dates rather than replacing them with predictions.
 
-Pillar 7's threat-to-control review is prepared. Final scan results and repository evidence are tracked separately so the review can remain honest while Pillar 2 is deferred.
+The original dated observations above are retained. The 7 November audit workspace additionally passed 127 backend tests, 63 frontend tests, both linters, production dependency audits and the frontend build; these are not live database/cloud/CI checks. Pillar 7's threat-to-control review is prepared. Final scan results and repository evidence are tracked separately so the review can remain honest while Pillar 2 is deferred.
 
 ## References
 

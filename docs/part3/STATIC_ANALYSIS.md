@@ -1,6 +1,6 @@
 # Static Code Analysis — HustleHub+ Final PoE
 
-Static analysis examines source code and dependency files **without running the program**, so risky patterns are found before they reach users (ESLint, n.d.). The pipeline in `.github/workflows/ci.yml` runs it on every push and pull request, and fails the build when a tool reports a problem.
+Static analysis examines source code and dependency files **without running the program**, so risky patterns are found before they reach users (ESLint, n.d.). The pipeline in `.github/workflows/ci.yml` is configured to run it on the agreed branches and pull requests. The restored workflow declares Bash/pipefail so an upstream scan failure cannot be hidden by `tee`. Actual final GitHub outcomes remain pending.
 
 ## 1. Tools and what each one covers
 
@@ -34,12 +34,12 @@ Backend warnings by rule:
 
 Frontend error: `react/no-unescaped-entities` in `LoginPage.jsx` (a raw apostrophe in JSX text).
 
-### 2.2 ESLint — final run (after fixes)
+### 2.2 ESLint — dated local review, 7 November 2026
 
 | Project | Errors | Warnings | Evidence |
 | --- | ---: | ---: | --- |
-| Backend | **0** | **0** | `evidence/eslint-backend.txt` |
-| Frontend | **0** | **0** | `evidence/eslint-frontend.txt` |
+| Backend | **0** | **0** | [Saved backend result](evidence/review-2026-11-07/eslint-backend.txt) |
+| Frontend | **0** | **0** | [Saved frontend result](evidence/review-2026-11-07/eslint-frontend.txt) |
 
 ### 2.3 npm audit
 
@@ -48,7 +48,7 @@ Frontend error: `react/no-unescaped-entities` in `LoginPage.jsx` (a raw apostrop
 | Backend, production dependencies | **3** vulnerabilities (1 high: `body-parser`, GHSA-27r3-jxmh-p828; 2 moderate: `qs` GHSA-6pq8-jhm2-2vcw, `ip-address` GHSA-rxp7-6hxx-x8q5) | **0** |
 | Frontend, production dependencies | 0 | **0** |
 
-Evidence: `evidence/npm-audit.txt`.
+Production audits were rerun in the audit workspace on 7 November 2026: [backend](evidence/review-2026-11-07/npm-audit-backend.txt), [frontend](evidence/review-2026-11-07/npm-audit-frontend.txt), both reporting zero vulnerabilities. Earlier output remains historical. This does not cover development tools or container images.
 
 ## 3. What each result indicated, and the fix
 
@@ -63,11 +63,11 @@ Evidence: `evidence/npm-audit.txt`.
 | `react/no-unescaped-entities` | A raw `'` in JSX text can hide typing mistakes and is rejected by the React rules | **Fixed** with `&apos;` |
 | `npm audit`: `body-parser` (high), `qs`, `ip-address` | Known denial-of-service weaknesses in packages that Express depends on | **Fixed.** `npm audit fix` raised them to patched versions within the allowed ranges. Lock file updated; all backend tests pass |
 
-The pipeline now rejects any new warning, so the clean result is protected from regression.
+The configured pipeline rejects warnings. A successful final GitHub execution and actual CodeQL/Trivy outcomes must still be retained.
 
 ## 4. Accepted and documented risk
 
-`npm audit` (the full report, including development tools) still lists advisories under **Newman** (`@faker-js/faker`, `postman-collection`, `postman-runtime` and others). The only automatic fix is `npm audit fix --force`, which would install Newman 4.6.1, an old release (a breaking change). The risk is accepted because:
+The historical full `npm audit` report, including development tools, listed advisories under **Newman** (`@faker-js/faker`, `postman-collection`, `postman-runtime` and others). The earlier suggested automatic fix was a forced downgrade to Newman 4.6.1. Recheck current full reports before changing dependencies; no forced downgrade is included in this patch. The risk is accepted because:
 
 1. Newman is a `devDependency`. The production image is built with `npm ci --omit=dev`, so it is not present at run time.
 2. In CI it only runs our own Postman collection against a throw-away stack, with no untrusted input.
