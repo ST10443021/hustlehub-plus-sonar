@@ -192,6 +192,38 @@ jobs:
           echo "All expected events were logged."
           ! grep -Eq 'Passw0rd123|"password"|\$2[aby]\$' backend-container.log || { echo "Sensitive data found in the log"; exit 1; }
 
+      # Newman deliberately exhausts rate limits. Restart only the disposable CI API,
+      # keeping its MongoDB data/volume, so browser checks receive a fresh IP budget.
+      - name: Reset API rate limits before browser integration tests
+        run: |
+          docker compose restart backend
+          docker compose up -d --wait --wait-timeout 180
+
+      - name: Install browser test dependencies and Chromium
+        working-directory: frontend
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Browser integration - real frontend, HTTPS API and MongoDB
+        working-directory: frontend
+        env:
+          E2E_ALLOW_TEST_DATA: '1'
+          E2E_BASE_URL: https://localhost:8443
+        run: npm run test:e2e
+
+      - name: Keep browser integration reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-browser-integration
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/browser/
+            frontend/test-results/browser-junit.xml
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Image scan - Trivy (fails on CRITICAL vulnerabilities that have a fix)
         run: |
           mkdir -p reports
