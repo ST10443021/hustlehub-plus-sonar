@@ -1,11 +1,15 @@
 # HustleHub+ CI/CD pipeline (GitHub, n.d.a).
 #
 # On every push and pull request it installs dependencies, lints (static analysis), runs the backend
-# and frontend tests, audits dependencies, runs CodeQL, builds BOTH Docker images, starts the whole
+# and frontend tests, audits dependencies, builds BOTH Docker images, starts the whole
 # stack with Docker Compose, runs the Postman collection through Newman against the running
 # containers, scans the images with Trivy, and checks that the key events reached the logs.
 # Any failing step fails the job, and the final "pipeline-passed" job fails if any job failed, so a
 # red result blocks merging when branch protection requires it (IIE, 2026c; OWASP, 2024f).
+# The private Classroom repository has no enabled GitHub Code Security entitlement.
+# Required source analysis is provided by blocking ESLint + security-rule steps below.
+# Trivy repository/image checks, npm audits, tests and final failure gating remain active.
+# CodeQL is not claimed as passed; see docs/part3/CI_REPAIR.md.
 name: CI
 
 on:
@@ -99,23 +103,6 @@ jobs:
           path: frontend/test-results/
           if-no-files-found: warn
 
-  codeql:
-    name: CodeQL security analysis
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
-    steps:
-      - uses: actions/checkout@v4
-      - uses: github/codeql-action/init@v4
-        with:
-          languages: javascript-typescript
-          queries: security-extended
-      - uses: github/codeql-action/analyze@v4
-        with:
-          category: "/language:javascript-typescript"
-
   repo-scan:
     name: Trivy - secrets, vulnerabilities and misconfiguration in the repository
     runs-on: ubuntu-latest
@@ -161,7 +148,7 @@ jobs:
           echo "ADMIN_PASSWORD=Ci-$(openssl rand -hex 12)-Aa1" >> "$GITHUB_ENV"
 
       - name: Build both images (backend and frontend)
-        run: docker compose build
+        run: docker compose build --pull
 
       - name: Start the stack and wait for every service to be healthy
         run: docker compose up -d --wait --wait-timeout 180
@@ -239,7 +226,7 @@ jobs:
   pipeline-passed:
     name: Pipeline result
     if: always()
-    needs: [backend, frontend, codeql, repo-scan, stack]
+    needs: [backend, frontend, repo-scan, stack]
     runs-on: ubuntu-latest
     steps:
       - name: Fail unless every job succeeded
