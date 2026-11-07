@@ -32,10 +32,14 @@ The full README table also covers safe errors, data exposure, configuration, dep
 | Account lockout, Pillar 6, 5 November | UI showed the account-specific temporary-lock message after the prescribed failed-login sequence and correct-password attempt. | The screenshot alone does not demonstrate expiry timing or every concurrency case; the test suite covers the configured expiry path. |
 | Token revocation, Pillar 6, 5 November | Original token profile **200**; logout **200**; same token profile **401**; fresh login token profile **200**. | Browser token removal alone would not prove revocation; the rejected reused token is the relevant evidence. |
 
+## Current verification refresh, 7 November 2026
+
+Application commit [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1) passed [CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711). The [current evidence](evidence/ci-30-7ef0cc1/REVIEW.md) records the security/injection backend suites, live RBAC/ownership/lockout/revocation cases, browser tests, scans, healthy containers, the local rebuild/login and fresh Azure authentication events. Remaining backend dev-tool entries are 12 (zero critical), with the existing scoped risk treatment retained. The original dated observations below remain historical; statements about CI 24 describe that earlier checkpoint.
+
 ## Review findings and decisions
 
 1. **Required security controls are present and covered by relevant tests.** No new application code was needed to write the four required threat explanations.
-2. **Current evidence.** CI 24 passed on `blake` at `dbde7d2`. Actual ESLint, npm audit and Trivy reports, healthy container status and a fresh live Newman summary are retained in [the CI 24 review](evidence/ci-24-dbde7d2/REVIEW.md). The old Newman output remains historical. CodeQL is not active because of the private Classroom entitlement limitation. Backend development-tool advisories remain explicitly recorded.
+2. **Current evidence.** CI 30 passed on `blake` at `7ef0cc1`. Actual ESLint, npm audit and Trivy reports, healthy container status and a fresh live Newman summary are retained in [the CI 30 review](evidence/ci-30-7ef0cc1/REVIEW.md). The old Newman output remains historical. CodeQL is not active because of the private Classroom entitlement limitation. Backend development-tool advisories remain explicitly recorded.
 3. **Record current logging accurately.** Azure delivery is now demonstrated. It is best-effort, not immutable or exactly-once storage. No alert rule has been tested. Structured-event/error redaction is covered; the Morgan access log can still include query strings, and arbitrary secrets pasted into ordinary text are not guaranteed to be detected.
 4. **Keep browser-session risk explicit.** JWTs are stored in `localStorage` and can be read by injected same-origin script. CSP and text rendering reduce XSS exposure but do not make that storage inaccessible to JavaScript. If logout cannot reach the server, local session clearing does not revoke a stolen token. No cookie/CSRF redesign is included.
 5. **Image-key repair.** The CI repair removed build-generated fallback certificate keys and the unused npm/npx runtime toolchain. Host certificates stay excluded from the build context; Compose mounts TLS credentials read-only at runtime. CI 24 image reports show no fixable HIGH/CRITICAL findings at the configured filters. Public deployment would still need separately managed trusted certificates.
@@ -58,20 +62,20 @@ Do not place connection strings, JWTs, passwords, real `.env` files or private c
 
 ## Subsequent tooling maintenance
 
-The [dependency maintenance review](TOOLING_DEPENDENCY_REVIEW.md) records locally tested scoped fixes to Newman/nodemon dependencies. The full backend audit falls from 27 to **12 development-tool package entries, with zero critical**, while production package versions remain unchanged and the production audit is zero. Tests cover all 127 backend cases, the live HTTPS/MongoDB Newman flow (67 requests / 90 assertions), an actual watcher restart and Postman template/UUID compatibility. Remaining Faker/csv-parse/deepmerge risks are recorded as residual tooling findings with controlled inputs and production exclusion; they are not labelled fixed. The new CI outcome is pending.
+The [dependency maintenance review](TOOLING_DEPENDENCY_REVIEW.md) records locally tested scoped fixes to Newman/nodemon dependencies. The full backend audit falls from 27 to **12 development-tool package entries, with zero critical**, while production package versions remain unchanged and the production audit is zero. Tests cover all 127 backend cases, the live HTTPS/MongoDB Newman flow (67 requests / 90 assertions), an actual watcher restart and Postman template/UUID compatibility. Remaining Faker/csv-parse/deepmerge risks are recorded as residual tooling findings with controlled inputs and production exclusion; they are not labelled fixed. The subsequent CI 30 result is successful, with its separate actual reports linked in the current refresh above.
 
 ## Final repository handoff
 
 - [x] Original Azure/security screenshots restored and linked; 7 November audit-workspace outputs are stored separately.
 - [x] Configure explicit Bash/pipefail for workflow run steps.
-- [ ] Retain actual GitHub failure-gate and successful final-run evidence.
+- [x] CI 30 success and earlier failed-check behaviour recorded; retain a green run for the actual submitted version.
 - [x] CI 24 analysis/Trivy outcomes and safe stack evidence reviewed and saved; CodeQL service limitation explained. Remaining backend tooling advisories are recorded for follow-up.
-- [ ] Run the final live Newman collection against isolated test data on the actual final Docker version; do not overwrite coursework/demo data or present archived results as new.
+- [x] CI 30 ran Newman against isolated real Docker/MongoDB data: 67 requests, 90 assertions, zero failures. Reports are linked separately from older runs.
 - [ ] Check tracked files and history for accidentally committed secrets. Ignore rules alone are not evidence. Record the final commit that was tested.
 - [x] Final README branch name reconciled to `muzzi`; team ownership is unchanged.
-- [ ] Update stale counts, audit/tooling exceptions, old Better Stack evidence instructions and missing links during Pillar 8. Preserve the observed results and dates rather than replacing them with predictions.
+- [x] Pillar 8 refresh records CI 30, current counts/tooling risks and fresh Azure delivery; historical outputs stay dated. Video and final repository handoff checks remain explicit.
 
-The original dated observations above are retained. The 7 November audit workspace additionally passed 127 backend tests, 63 frontend tests, both linters, production dependency audits and the frontend build; these are not live database/cloud/CI checks. Pillar 7's threat-to-control review is prepared. CI 24 now supplies actual analysis/stack results; remaining tooling advisories and final-merge evidence are tracked in the current evidence index.
+The original dated observations above are retained. The 7 November audit workspace additionally passed 127 backend tests, 63 frontend tests, both linters, production dependency audits and the frontend build; these are not live database/cloud/CI checks. Pillar 7's threat-to-control review is prepared. CI 30 now supplies the current analysis/stack results; remaining tooling advisories and final-merge evidence are tracked in the evidence index.
 
 ## References
 

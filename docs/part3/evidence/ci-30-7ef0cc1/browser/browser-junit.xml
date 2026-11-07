@@ -1,0 +1,8 @@
+<testsuites id="" name="" tests="2" failures="0" skipped="0" errors="0" time="10.320572">
+<testsuite name="marketplace.spec.js" timestamp="2026-11-07T14:10:16.180Z" hostname="chromium" tests="2" failures="0" skipped="0" time="8.375" errors="0">
+<testcase name="real marketplace flow: register, log in, create a gig, book, and verify saved income" classname="marketplace.spec.js" time="5.083">
+</testcase>
+<testcase name="real session flow: private pages require login, bad passwords fail, client routes stay restricted and logout clears access" classname="marketplace.spec.js" time="3.292">
+</testcase>
+</testsuite>
+</testsuites>

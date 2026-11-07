@@ -1,0 +1,315 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "@faker-js/faker": {
+      "name": "@faker-js/faker",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1158500,
+          "name": "@faker-js/faker",
+          "dependency": "@faker-js/faker",
+          "title": "Faker: helpers.fake exploitable into arbritary code execution",
+          "url": "https://github.com/advisories/GHSA-qxc2-j82w-r537",
+          "severity": "high",
+          "cwe": [
+            "CWE-95"
+          ],
+          "cvss": {
+            "score": 7.8,
+            "vectorString": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H"
+          },
+          "range": "<=10.4.0"
+        }
+      ],
+      "effects": [
+        "postman-collection"
+      ],
+      "range": "<=10.4.0",
+      "nodes": [
+        "node_modules/@faker-js/faker"
+      ],
+      "fixAvailable": {
+        "name": "newman",
+        "version": "4.6.1",
+        "isSemVerMajor": true
+      }
+    },
+    "@jest/core": {
+      "name": "@jest/core",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "jest-config"
+      ],
+      "effects": [
+        "jest",
+        "jest-cli"
+      ],
+      "range": ">=25.2.0-alpha.86",
+      "nodes": [
+        "node_modules/@jest/core"
+      ],
+      "fixAvailable": {
+        "name": "jest",
+        "version": "25.1.0",
+        "isSemVerMajor": true
+      }
+    },
+    "create-jest": {
+      "name": "create-jest",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "jest-config"
+      ],
+      "effects": [
+        "jest-cli"
+      ],
+      "range": ">=29.7.0",
+      "nodes": [
+        "node_modules/create-jest"
+      ],
+      "fixAvailable": {
+        "name": "jest",
+        "version": "25.1.0",
+        "isSemVerMajor": true
+      }
+    },
+    "csv-parse": {
+      "name": "csv-parse",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1193670,
+          "name": "csv-parse",
+          "dependency": "csv-parse",
+          "title": "node-csv: Prototype replacement still reachable via columns path",
+          "url": "https://github.com/advisories/GHSA-8cw4-87c7-c6xx",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 0,
+            "vectorString": null
+          },
+          "range": "<7.0.2"
+        }
+      ],
+      "effects": [
+        "newman"
+      ],
+      "range": "<7.0.2",
+      "nodes": [
+        "node_modules/csv-parse"
+      ],
+      "fixAvailable": {
+        "name": "newman",
+        "version": "4.6.1",
+        "isSemVerMajor": true
+      }
+    },
+    "deepmerge": {
+      "name": "deepmerge",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        {
+          "source": 1243505,
+          "name": "deepmerge",
+          "dependency": "deepmerge",
+          "title": "deepmerge mergeObject() allows prototype poisoning of returned objects",
+          "url": "https://github.com/advisories/GHSA-gcqx-w48m-w2h4",
+          "severity": "low",
+          "cwe": [
+            "CWE-1321"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N"
+          },
+          "range": ">=4.2.0 <=4.3.1"
+        }
+      ],
+      "effects": [
+        "jest-config"
+      ],
+      "range": ">=4.2.0",
+      "nodes": [
+        "node_modules/deepmerge"
+      ],
+      "fixAvailable": {
+        "name": "jest",
+        "version": "25.1.0",
+        "isSemVerMajor": true
+      }
+    },
+    "jest": {
+      "name": "jest",
+      "severity": "low",
+      "isDirect": true,
+      "via": [
+        "@jest/core",
+        "jest-cli"
+      ],
+      "effects": [],
+      "range": ">=25.2.0-alpha.86",
+      "nodes": [
+        "node_modules/jest"
+      ],
+      "fixAvailable": {
+        "name": "jest",
+        "version": "25.1.0",
+        "isSemVerMajor": true
+      }
+    },
+    "jest-cli": {
+      "name": "jest-cli",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "@jest/core",
+        "create-jest",
+        "jest-config"
+      ],
+      "effects": [
+        "jest"
+      ],
+      "range": ">=25.2.0-alpha.86",
+      "nodes": [
+        "node_modules/jest-cli"
+      ],
+      "fixAvailable": {
+        "name": "jest",
+        "version": "25.1.0",
+        "isSemVerMajor": true
+      }
+    },
+    "jest-config": {
+      "name": "jest-config",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "deepmerge"
+      ],
+      "effects": [
+        "@jest/core",
+        "create-jest",
+        "jest-cli"
+      ],
+      "range": ">=25.2.0-alpha.86",
+      "nodes": [
+        "node_modules/jest-config"
+      ],
+      "fixAvailable": {
+        "name": "jest",
+        "version": "25.1.0",
+        "isSemVerMajor": true
+      }
+    },
+    "newman": {
+      "name": "newman",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        "csv-parse",
+        "postman-collection",
+        "postman-runtime"
+      ],
+      "effects": [],
+      "range": "3.0.0-beta.1 - 4.5.4 || >=5.0.0",
+      "nodes": [
+        "node_modules/newman"
+      ],
+      "fixAvailable": {
+        "name": "newman",
+        "version": "4.6.1",
+        "isSemVerMajor": true
+      }
+    },
+    "postman-collection": {
+      "name": "postman-collection",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@faker-js/faker"
+      ],
+      "effects": [
+        "newman",
+        "postman-runtime",
+        "postman-sandbox"
+      ],
+      "range": ">=4.1.2",
+      "nodes": [
+        "node_modules/postman-collection"
+      ],
+      "fixAvailable": {
+        "name": "newman",
+        "version": "4.6.1",
+        "isSemVerMajor": true
+      }
+    },
+    "postman-runtime": {
+      "name": "postman-runtime",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "postman-collection",
+        "postman-sandbox"
+      ],
+      "effects": [
+        "newman"
+      ],
+      "range": "6.4.2 - 7.0.0-beta.2 || 7.4.0-beta.1 - 7.4.0 || >=7.29.1",
+      "nodes": [
+        "node_modules/postman-runtime"
+      ],
+      "fixAvailable": {
+        "name": "newman",
+        "version": "4.6.1",
+        "isSemVerMajor": true
+      }
+    },
+    "postman-sandbox": {
+      "name": "postman-sandbox",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "postman-collection"
+      ],
+      "effects": [
+        "postman-runtime"
+      ],
+      "range": ">=4.1.2",
+      "nodes": [
+        "node_modules/postman-sandbox"
+      ],
+      "fixAvailable": {
+        "name": "newman",
+        "version": "4.6.1",
+        "isSemVerMajor": true
+      }
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 6,
+      "moderate": 1,
+      "high": 5,
+      "critical": 0,
+      "total": 12
+    },
+    "dependencies": {
+      "prod": 122,
+      "dev": 483,
+      "optional": 3,
+      "peer": 0,
+      "peerOptional": 0,
+      "total": 604
+    }
+  }
+}

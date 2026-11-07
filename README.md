@@ -3,7 +3,7 @@
 **INSY7314 · Portfolio of Evidence · Part 3: DevSecOps, Monitoring and Finalisation (Final PoE)**
 Team: Quantum Coder · Last updated: 7 November 2026
 
-HustleHub+ is a secure freelance marketplace. **Freelancers** advertise gigs, **clients** browse and book them, and every booking produces a **simulated-payment transaction** that feeds the freelancer's **income and estimated-tax dashboard**. An **administrator** can watch platform totals, accounts and security events. Security is built into every layer: authentication, role-based access, validation, sanitisation, rate limiting, security headers, HTTPS, account lockout, token revocation, structured logging and a configured pipeline for testing and scanning changes. The restored workflow still requires a verified GitHub Actions run on the final commit.
+HustleHub+ is a secure freelance marketplace. **Freelancers** advertise gigs, **clients** browse and book them, and every booking produces a **simulated-payment transaction** that feeds the freelancer's **income and estimated-tax dashboard**. An **administrator** can watch platform totals, accounts and security events. Security is built into every layer: authentication, role-based access, validation, sanitisation, rate limiting, security headers, HTTPS, account lockout, token revocation, structured logging and a configured pipeline for testing and scanning changes. The latest reviewed application version is [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1) on `blake`: [CI 30 passed](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711), both local Docker images rebuilt with healthy services, and fresh Azure event delivery was confirmed on 7 November 2026. The final demo-video URL remains to be added in Section 19.
 
 This final version builds on Part 1 (secure backend) and Part 2 (full-stack application) and adds what the Part 3 brief requires (IIE, 2026c): a tax and income dashboard with charts, a GitHub Actions CI/CD pipeline, static analysis, Docker and Docker Compose, cloud-ready logging and monitoring, additional security features, a final security review and complete documentation.
 
@@ -51,14 +51,14 @@ Per-file authorship from Parts 1 and 2 is recorded in header comments in the sou
 
 ## 2. Final PoE Requirements Traceability
 
-Every requirement and rubric criterion of the Part 3 brief (IIE, 2026c) maps to an implementation or evidence location below. Configuration is distinguished from observed execution: final CI, image-scan and live Newman evidence is still required.
+Every requirement and rubric criterion of the Part 3 brief (IIE, 2026c) maps to an implementation or evidence location below. Observed results are tied to application commit [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1) and [CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711); the [evidence index](docs/part3/EVIDENCE.md) separates current results from historical checks and final submission actions.
 
 | Requirement / rubric criterion | How it is met | Where to look |
 | --- | --- | --- |
 | **Final features: tax and income dashboard** | SARS 2026/27 tax estimate with a bracket-by-bracket breakdown, effective and marginal rate, income after tax, 12-month income bar chart, progress towards the tax threshold and a plain-language explanation | [Section 8](#8-tax-estimation-and-income-dashboard); `backend/src/services/incomeService.js`; `frontend/src/pages/DashboardPage.jsx`; `frontend/src/components/IncomeChart.jsx` |
-| **CI/CD pipeline (backend and frontend)** | GitHub Actions: install, lint, test, audit, build both apps, Trivy, Docker Compose stack, Newman API tests, browser integration and logging checks; CI 24 passed on `blake` at `dbde7d2` | [Section 14](#14-cicd-pipeline); `.github/workflows/ci.yml` |
-| **Static code analysis** | ESLint with `eslint-plugin-security` (backend and frontend, zero warnings allowed), Trivy and `npm audit`; CI 24 results, fixes and remaining development-tool findings explained | [Section 15](#15-static-code-analysis); `docs/part3/STATIC_ANALYSIS.md`; `docs/part3/evidence/eslint-*.txt` |
-| **Docker (backend and frontend)** | One Dockerfile in each of `backend/` and `frontend/`, orchestrated by `docker-compose.yml` with MongoDB; CI 24 built and ran both containers, with all three services healthy | [Section 16](#16-docker-and-docker-compose); `backend/Dockerfile`; `frontend/Dockerfile`; `docker-compose.yml` |
+| **CI/CD pipeline (backend and frontend)** | GitHub Actions: install, lint, test, audit, build both apps, Trivy, Docker Compose stack, Newman API tests, browser integration and logging checks; CI 30 passed on `blake` at `7ef0cc1` | [Section 14](#14-cicd-pipeline); `.github/workflows/ci.yml` |
+| **Static code analysis** | ESLint with `eslint-plugin-security` (backend and frontend, zero warnings allowed), Trivy and `npm audit`; CI 30 results, fixes and 12 remaining development-tool package entries explained | [Section 15](#15-static-code-analysis); `docs/part3/STATIC_ANALYSIS.md`; `docs/part3/evidence/eslint-*.txt` |
+| **Docker (backend and frontend)** | One Dockerfile in each of `backend/` and `frontend/`, orchestrated by `docker-compose.yml` with MongoDB; CI 30 built and ran both application containers; all three services were healthy, with a matching local rebuild confirmed | [Section 16](#16-docker-and-docker-compose); `backend/Dockerfile`; `frontend/Dockerfile`; `docker-compose.yml` |
 | **Logging** | Structured events written to a file, container output and, when configured, Azure Application Insights or Better Stack; sensitive values are redacted | [Section 11](#11-logging-and-monitoring); `backend/src/utils/eventLogger.js`; `backend/src/utils/cloudLogger.js` |
 | **Own security features (at least two)** | Account lockout, server-side token revocation (logout), and an admin security console; plus JWT algorithm pinning, request IDs, hardened containers and database authentication | [Section 10](#10-additional-security-features) |
 | **Security review in README** | Threat-to-protection table with evidence for injection, XSS, authentication, access control and more | [Section 18](#18-final-security-review) |
@@ -76,7 +76,7 @@ Every requirement and rubric criterion of the Part 3 brief (IIE, 2026c) maps to 
 | Backend | Node.js 24 LTS (22.22.2 or later supported), Express 4, Mongoose 8, JSON Web Tokens, bcrypt |
 | Database | MongoDB 7 (authenticated, private network) |
 | Security middleware | Helmet (CSP and headers), express-rate-limit, express-validator, express-mongo-sanitize, xss-clean, CORS allow-list |
-| Testing | Jest and Supertest (backend), Vitest and React Testing Library (frontend), Postman and Newman (API) (Jest, n.d.; Testing Library, n.d.; Vitest, n.d.; Postman, n.d.) |
+| Testing | Jest and Supertest (backend), Vitest and React Testing Library (frontend), Postman and Newman (API), Playwright (real browser integration) (Jest, n.d.; Testing Library, n.d.; Vitest, n.d.; Postman, n.d.; Microsoft, n.d.c) |
 | DevSecOps | GitHub Actions, ESLint with eslint-plugin-security, Trivy, npm audit, Dependabot (GitHub, n.d.a; ESLint, n.d.) |
 | Containers | Docker and Docker Compose, nginx (unprivileged) as TLS front end (Docker, Inc., n.d.a) |
 | Logging | Structured JSON, local file, container output, optional Azure Application Insights or Better Stack Logs |
@@ -87,11 +87,11 @@ Every requirement and rubric criterion of the Part 3 brief (IIE, 2026c) maps to 
 
 ```mermaid
 flowchart LR
-    B["Browser"] -->|"HTTPS :8443"| N["nginx container<br/>React build and reverse proxy"]
-    N -->|"HTTPS, certificate verified"| A["API container<br/>Node.js and Express"]
+    B["Browser"] -->|"HTTPS :8443"| N["nginx: React build and HTTPS proxy"]
+    N -->|"HTTPS, certificate verified"| A["API: Node.js and Express"]
     A -->|"authenticated, private network"| M[("MongoDB container")]
     A -.->|"Event batches over HTTPS"| L[("Azure Application Insights or Better Stack")]
-    A --> F[("logs volume<br/>events.log")]
+    A --> F[("Log volume: events.log")]
 ```
 
 **Layered backend.** Each request passes through the same layers, so security checks cannot be skipped by one route:
@@ -410,7 +410,7 @@ Cloud delivery is implemented in `backend/src/utils/cloudLogger.js`: entries are
 
 #### Azure Application Insights (current setup)
 
-The Azure resource is `hustlehub-logs`, in `rg-hustlehub-poe`, South Africa North. Supplied screenshots from 5 November show actual Azure delivery: [booking/transaction/login events](docs/part3/screenshots/Logging1.png) and [failed login/logout events](docs/part3/screenshots/Logging2.png). These are dated original-system observations; recheck delivery after the final repository deployment using the steps below.
+The Azure resource is `hustlehub-logs`, in `rg-hustlehub-poe`, South Africa North. Supplied screenshots from 5 November show actual Azure delivery: [booking/transaction/login events](docs/part3/screenshots/Logging1.png) and [failed login/logout events](docs/part3/screenshots/Logging2.png). Fresh successful-login, failed-login and logout events were also observed after the local rebuild of `7ef0cc1` on 7 November: [current Azure verification](docs/part3/evidence/ci-30-7ef0cc1/azure-delivery-verification.md). The setup/recheck steps below apply when configuration or deployment changes.
 
 1. Copy the **full Connection string** from the resource's Overview into the **root `.env`** for Docker (or `backend/.env` for direct `npm start`):
 
@@ -586,7 +586,7 @@ npm run lint        # static analysis (see Section 15)
 | `logging.test.js` | **Events for logins, bookings, transactions and errors; redaction; request IDs; cloud shipping and retry** |
 | `azureLogging.test.js` | Azure payload mapping, configuration, batching, retry and redaction with mocked HTTP |
 
-### 13.2 API: Postman and Newman — 55 request definitions; CI 24 live run passed
+### 13.2 API: Postman and Newman — 55 request definitions; CI 30 live run passed
 
 ```bash
 cd backend
@@ -631,7 +631,14 @@ The supplied repository was checked in an isolated Linux audit workspace on **7 
 
 The older October Newman output (67 executions / 90 assertions) is historical, not a new final-stack result. The collection contains 55 request definitions and deliberately repeats lockout/rate-limit probes; execution counts can also depend on whether admin checks are enabled.
 
-The evidence directory contains the historical local-review outputs and the supplied [CI 24 results](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md) for application commit [`dbde7d2`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/dbde7d2). The successful run screenshot also confirms the browser-integration workflow passed. Keep a green run for the final submitted version. See [the evidence index](docs/part3/EVIDENCE.md).
+The earlier local-review and CI 24 outputs remain historical. Current verification is [CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711), application commit [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1); its [reports and manual confirmations](docs/part3/evidence/ci-30-7ef0cc1/REVIEW.md) are retained. Keep a green run for the actual submitted version. See [the evidence index](docs/part3/EVIDENCE.md).
+
+
+### 13.5 Current CI 30 and browser integration results
+
+The [successful run](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711) on `blake`, commit [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1), observed **127 backend tests, 63 frontend component tests, 2 Playwright browser tests, and 67 live API requests / 90 Newman assertions passing**. Both application images built, the MongoDB/API/web services were healthy, and the configured analysis/scan gates passed. Reports are linked in [Section 19](#19-demonstration-evidence) and the [CI 30 review](docs/part3/evidence/ci-30-7ef0cc1/REVIEW.md).
+
+Playwright exercises actual registration/login, freelancer gig creation, client booking/history, received bookings, the income/tax dashboard/chart, page refresh, wrong-role navigation and logout. Independent browser contexts isolate client and freelancer sessions. It runs against CI's disposable Docker/MongoDB stack, after resetting the rate limits deliberately exhausted by Newman. See [browser test instructions](docs/part3/BROWSER_TESTS.md) for isolated local use and `frontend/e2e/marketplace.spec.js` / `frontend/playwright.config.js` for the suite. Browser failures fail the pipeline. Avoid running data-creating tests against the demonstration database.
 
 ---
 
@@ -680,14 +687,14 @@ Static analysis reads the source without running it to find bugs and risky patte
 | **ESLint** + React, React Hooks and security rules (frontend) | React source | `dangerouslySetInnerHTML` (blocked by `react/no-danger`), hook mistakes, unescaped entities, the same security patterns |
 | **Trivy** and **npm audit** | Dependencies, secrets, Dockerfiles, images | Known vulnerable packages, committed secrets, insecure container configuration (npm, n.d.) |
 
-### Results (ESLint, reviewed CI 24)
+### Results (ESLint, reviewed CI 30)
 
 | | Backend | Frontend |
 | --- | --- | --- |
 | Errors | **0** | **0** |
 | Warnings | **0** (`--max-warnings 0`) | **0** |
 
-The first run found **30 warnings** in the backend and **1 error** in the frontend. CI 24 rejected new warnings and passed with zero active errors/warnings in both projects. The actual [reports and full review](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md) are retained, including the backend's targeted suppressions. `npm audit` initially found **3 vulnerable packages in the backend's production dependencies** (1 high, 2 moderate). Raw outputs are in `docs/part3/evidence/`, and the full explanation is in [`docs/part3/STATIC_ANALYSIS.md`](docs/part3/STATIC_ANALYSIS.md).
+The first run found **30 warnings** in the backend and **1 error** in the frontend. CI 30 rejected new warnings and passed with zero active errors/warnings in both projects. The actual [CI 30 reports and review](docs/part3/evidence/ci-30-7ef0cc1/REVIEW.md) are retained, including the backend's targeted suppressions. `npm audit` initially found **3 vulnerable packages in the backend's production dependencies** (1 high, 2 moderate). Raw outputs are in `docs/part3/evidence/`, and the full explanation is in [`docs/part3/STATIC_ANALYSIS.md`](docs/part3/STATIC_ANALYSIS.md).
 
 ### What the results indicate and the fixes applied
 
@@ -702,9 +709,9 @@ The first run found **30 warnings** in the backend and **1 error** in the fronte
 | `react/no-unescaped-entities` in `LoginPage.jsx` | A raw apostrophe in JSX text | Replaced with `&apos;` |
 | `npm audit`: `body-parser`, `qs`, `ip-address` (backend) | Known denial-of-service issues in transitive production dependencies | Earlier fixes updated them within allowed versions; the 7 November review passed all 127 backend tests and reported zero production dependency vulnerabilities |
 
-**Current dependency and image results.** Both production audits report **0 vulnerabilities**. The frontend full audit also reports **0**. The repository and both image reports show no findings at their configured HIGH/CRITICAL and fix-availability filters. Results and original report links are in the [CI 24 review](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md).
+**Current dependency and image results.** Both production audits report **0 vulnerabilities**. The frontend full audit also reports **0**. The repository and both image reports show no findings at their configured HIGH/CRITICAL and fix-availability filters. Results and original report links are in the [CI 30 review](docs/part3/evidence/ci-30-7ef0cc1/REVIEW.md).
 
-**Development-tool findings.** CI 24 originally reported 27 affected backend dev-tool package entries, including one critical. The subsequent scoped dependency-maintenance candidate reduces that locally to **12 entries: 6 LOW, 1 MODERATE, 5 HIGH, 0 CRITICAL**, while production audits remain zero and production package versions stay unchanged. The remaining entries derive from Faker, csv-parse and deepmerge in Newman/Jest, with controlled test inputs and exclusion from production. Their limitations and follow-up are recorded in the [tooling dependency review](docs/part3/TOOLING_DEPENDENCY_REVIEW.md). The candidate passed all 127 backend tests, 67 live API requests / 90 Newman assertions, and watcher/Postman compatibility checks. Its new GitHub run must still verify the pushed version. No clean-full-backend-audit claim is made.
+**Development-tool findings.** The scoped Newman/nodemon dependency fixes are now verified in **CI 30**. The full backend audit fell from CI 24's 27 affected package entries (including one critical) to **12 development-tool entries: 6 LOW, 1 MODERATE, 5 HIGH, 0 CRITICAL**. Both production audits and the frontend full audit report zero. Remaining entries derive from Faker, csv-parse and deepmerge in controlled test tooling, which is excluded from the production dependency tree. [Current audit evidence](docs/part3/evidence/ci-30-7ef0cc1/backend/npm-audit-full.json) and the [dependency review](docs/part3/TOOLING_DEPENDENCY_REVIEW.md) explain the fixes, compatibility checks, residual exposure and upgrade limits. A clean full backend audit is not claimed.
 
 **CodeQL status.** The earlier upload failed because the private Classroom repository did not have the required Code Security feature. It is not an active required job or a clean scan result. ESLint/security rules are the submission's source-analysis tool. The [repair note](docs/part3/CI_REPAIR.md) records the service limitation.
 
@@ -768,7 +775,7 @@ All routes are under `/api`. "JWT" means an `Authorization: Bearer <token>` head
 
 ## 18. Final Security Review
 
-Reviewed on **5 November 2026** against the supplied Part 3 code, the console-redaction and Azure logging updates, and the test output and live results supplied by Blake. The final GitHub commit is not recorded yet because the repository and pipeline work are being completed under Pillar 2. This is a review of the coursework system and available evidence, not a claim that every possible attack has been tested.
+The original threat review was written on 5 November 2026 and refreshed on **7 November 2026** for application commit [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1), the successful [CI 30 run](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711), the local Docker rebuild/login confirmation and fresh Azure authentication events. This is a review of the coursework system and available evidence, not a claim that every possible attack has been tested.
 
 ### 18.1 Threats, controls and supporting evidence
 
@@ -781,15 +788,15 @@ The first four rows address the threats explicitly named in the PoE. The remaini
 | **Authentication weaknesses** | Passwords are bcrypt-hashed (12 rounds in the Docker configuration). Registration enforces password rules and a 72-byte limit. Ordinary login failures use a generic message. Authentication has an IP rate limit and account lockout. JWT checks pin HS256, verify issuer/expiry and compare token version with the database. Logout increments the version and invalidates every earlier token for that account. | `authService.js`, `authMiddleware.js`, `rateLimiters.js`, `userRepository.js`; `security.test.js` and `securityFeatures.test.js`. Live Docker check: repeated failures produced the account-lock message. Live token check: profile **200**, logout **200**, old token **401**, fresh token **200**. |
 | **Broken access control / IDOR** | Protected routes require a valid token; role-restricted routes add `requireRole`. The current user and role are loaded from the database. Gig changes check ownership in the service. Booking history and income queries are scoped to the verified user. Booking owner and amount come from the saved gig. Public registration cannot create admins; existing admin endpoints are read-only. | `backend/src/routes/`, `authMiddleware.js`, `gigService.js`, `bookingService.js`, `incomeController.js`; `gigManagement.test.js`, `security.test.js`, `securityFeatures.test.js` cover missing authentication, wrong roles, another freelancer's gig, private lists and admin escalation. These backend suites passed using test repositories. |
 | **Sensitive data and unsafe errors** | Browser-to-nginx and nginx-to-API traffic use HTTPS; nginx verifies the backend certificate. Public user objects omit password hashes, lock counters and token versions. Unexpected errors return a generic response. Error-console and structured-event fields use redaction; the cloud sender avoids raw network-error output. | `frontend/nginx.conf`, `userRepository.js`, patched `errorHandler.js`, `eventLogger.js`, `cloudLogger.js`; `logging.test.js` checks credential masking in responses and console/structured logs in test, production and development modes. `azureLogging.test.js` checks the cloud payload and delivery-error output. These tests passed. This is not a guarantee that arbitrary secret text in any field or access-log query is detected. |
-| **Security misconfiguration and container exposure** | Helmet, nginx security headers, explicit CORS origins, request body limits and strong JWT-secret startup checks are present. Compose requires MongoDB authentication, publishes only the web ports and uses an internal database network. The application images run as non-root and runtime certificates are mounted read-only. | `backend/src/app.js`, `backend/src/config/env.js`, Dockerfiles, `.dockerignore` files, `docker-compose.yml`, `frontend/nginx.conf`. Blake observed healthy containers, working HTTPS health checks and application flows under Pillar 4. The CI 24 repository and image reports show no findings at the configured filters; see the saved analysis review. |
-| **Vulnerable components and supply chain** | CI 24: production audits report zero in both apps; the full frontend audit reports zero. The backend full audit retains 27 development-tool package findings, including one critical Handlebars entry; these packages are excluded from the runtime image. | [Actual audit and Trivy reports](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md). Remaining tool-chain findings and follow-up are recorded explicitly; no all-dependency zero-findings claim is made. |
+| **Security misconfiguration and container exposure** | Helmet, nginx security headers, explicit CORS origins, request body limits and strong JWT-secret startup checks are present. Compose requires MongoDB authentication, publishes only the web ports and uses an internal database network. The application images run as non-root and runtime certificates are mounted read-only. | `backend/src/app.js`, `backend/src/config/env.js`, Dockerfiles, `.dockerignore` files, `docker-compose.yml`, `frontend/nginx.conf`. Blake observed healthy containers, working HTTPS health checks and application flows under Pillar 4. The CI 30 repository and image reports show no findings at the configured filters; see the saved analysis review. |
+| **Vulnerable components and supply chain** | CI 30: production audits are zero in both apps; frontend full audit is zero. Backend full audit retains 12 development-tool entries (6 low, 1 moderate, 5 high, zero critical), excluded from the runtime dependency tree. | [Actual CI 30 audits/scans](docs/part3/evidence/ci-30-7ef0cc1/REVIEW.md); [scoped fixes and remaining tool-chain risks](docs/part3/TOOLING_DEPENDENCY_REVIEW.md). |
 | **Logging and monitoring failures** | Structured events cover authentication, security decisions, gigs, bookings, transactions and system errors. Timestamps, levels and request IDs help connect activity. Local files/container output remain available and configured events also reach Azure Application Insights. Redaction runs before the Azure mapping. | `eventLogger.js`, `cloudLogger.js`, `azureLogTransport.js`, `logging.test.js`, `azureLogging.test.js`. Live Azure screenshots show successful/failed logins, logout, booking and transaction events; related records share a request ID. Delivery is best-effort and no alert rule has been demonstrated. |
 | **CSRF** | Current authentication uses an explicit bearer `Authorization` header, not an authentication cookie automatically attached by the browser. Restricted CORS origins provide an additional browser boundary. CORS is not a replacement for authentication, permissions or XSS prevention. | `frontend/src/api/client.js`, `AuthContext.jsx`, `backend/src/app.js`, `authMiddleware.js`. If cookie authentication is introduced later, add suitable CSRF controls. |
 | **Brute force and denial of service** | Default limits are 300 general requests, 20 authentication requests and 10 bookings per 15 minutes per IP, plus per-account lockout after five failures for 15 minutes. Express accepts JSON up to 10 KB; nginx has a 20 KB body limit. The cloud queue is bounded. | `rateLimiters.js`, `env.js`, `frontend/nginx.conf`, `cloudLogger.js`; oversized-payload and lockout tests passed, and account lockout was shown live. This does not claim protection from a distributed or volumetric denial-of-service attack. |
 | **Mass assignment and transaction tampering** | Allow-lists reject client-supplied ownership, role and price fields. Booking records snapshot the saved gig's title and price. If the transaction write fails, the service attempts to remove the booking and logs a failed clean-up. | `validators.js`, `gigService.js`, `bookingService.js`; `security.test.js`, `injection.test.js`, `gigManagement.test.js` passed. This compensation is not an atomic multi-document database transaction. |
 | **SSRF** | No marketplace endpoint accepts a URL and fetches it on behalf of the caller. Cloud destinations come from trusted operator configuration; the Azure adapter requires an HTTPS ingestion endpoint and rejects redirects. | `env.js`, `azureLogTransport.js`, `cloudLogger.js`. Database connections and log delivery are outbound operations; they are not user-selected fetch endpoints. Operator access to environment settings remains trusted. |
 | **Log injection and leakage** | Structured events use JSON encoding so line breaks do not create separate events. Sensitive field names and URL credentials are masked, nested values omitted and strings truncated. Email/IP information is still present in some security records and needs restricted access and suitable retention. | `eventLogger.js`, patched `errorHandler.js`, logging tests and observed Azure events. Morgan's separate access log can include URL query strings; credentials must not be placed in URLs. Log handling follows the principle of excluding passwords and access tokens (OWASP, n.d.k). |
-| **Container build and scan limitations** | Host secrets/certificates are excluded from the build context. The repair removed build-generated fallback keys and the unused npm/npx runtime toolchain. Compose mounts host-generated TLS credentials read-only. | [CI repair](docs/part3/CI_REPAIR.md); [CI 24 image reports](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md). Both reports show no fixable HIGH/CRITICAL findings; tags are version-labelled rather than immutable digest pins. |
+| **Container build and scan limitations** | Host secrets/certificates are excluded from the build context. The repair removed build-generated fallback keys and the unused npm/npx runtime toolchain. Compose mounts host-generated TLS credentials read-only. | [CI repair](docs/part3/CI_REPAIR.md); [CI 30 image reports](docs/part3/evidence/ci-30-7ef0cc1/REVIEW.md). Both reports show no fixable HIGH/CRITICAL findings; tags are version-labelled rather than immutable digest pins. |
 
 ### 18.2 What has actually been verified
 
@@ -798,9 +805,9 @@ The first four rows address the threats explicitly named in the PoE. The remaini
 | Backend lint and tests after the logging updates | **127 tests / 8 suites passed in the 7 November audit workspace**, in addition to the earlier supplied 5 November result. Jest/Supertest uses in-memory repositories and mocked cloud HTTP; this does not test MongoDB persistence or live Azure ingestion. |
 | Frontend lint, tests and production build | **Passed in the 7 November audit workspace: 13 files, 63 tests, successful build.** Component tests use mocked API responses. |
 | Docker and marketplace flow | **Confirmed by Blake under Pillars 1/4.** Real MongoDB-backed bookings updated the correct freelancer; containers and HTTPS health checks worked. |
-| Account lockout and server-side logout | **Demonstrated live under Pillar 6 on 5 November.** Lockout screenshot and the 200 → 200 → 401 → 200 token sequence were reviewed. |
-| Cloud delivery | **Demonstrated live under Pillar 5 on 5 November.** Azure queried actual events; this is stronger evidence than the startup `cloudLogging` flag. |
-| GitHub Actions, Trivy, live Newman and failure gates | **CI 24 passed on `blake`, commit `dbde7d2`.** Supplied artifacts show 67 live requests / 90 assertions with zero failures, healthy containers and passing scan gates. Earlier failing runs showed that failed checks produce a failed pipeline. CodeQL was explicitly removed for the documented service limitation. |
+| Account lockout and server-side logout | Original live screenshots remain; CI 30 Newman also verified lockout (429 + Retry-After) and rejection of a token reused after logout (401). [Current JUnit](docs/part3/evidence/ci-30-7ef0cc1/stack/newman-junit.xml). |
+| Cloud delivery | Original Azure booking/transaction screenshots remain. [Fresh authentication events](docs/part3/evidence/ci-30-7ef0cc1/azure-delivery-verification.md) were observed on 7 November after the local rebuild; this is independent of CI, where cloud credentials are not supplied. |
+| GitHub Actions, Trivy, live Newman and failure gates | **[CI 30 passed](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711) on `blake`, commit `7ef0cc1`.** The retained artifacts record healthy containers, 67 live API requests / 90 assertions and two browser tests passing, plus configured scan gates. Earlier failed runs demonstrate failure gating. |
 | Current committed-secret/history check and final evidence links | **Pending final repository work.** Ignore patterns alone do not prove that secrets were never committed. |
 
 Supporting review notes, evidence filenames and follow-up items are in [SECURITY_REVIEW.md](docs/part3/SECURITY_REVIEW.md). Save the screenshots and terminal output there as described; this review does not claim the new local evidence files or final commit already exist in GitHub.
@@ -811,28 +818,34 @@ JWTs remain in `localStorage`, so successful same-origin script injection could 
 
 Other limits include development-tool advisories, in-memory IP-rate counters, best-effort cloud delivery, local certificate trust and non-atomic booking/transaction writes. They are recorded in [Section 20](#20-known-limitations-and-future-work). The restored workflow now declares `defaults.run.shell: bash`, so a failing upstream command in a `tee` pipeline propagates failure. Local failure-propagation checks do not replace demonstrating an actual failing GitHub check and retaining the final green run (GitHub, n.d.d).
 
-**Review conclusion:** the four required threat areas have specific implemented controls and supporting tests, and the two extra authentication controls and Azure delivery have live evidence. The security-review documentation is prepared for Pillar 7. Final CI results, the tested commit and evidence links must still be attached before final submission; neither this review nor a green test count certifies the system as vulnerability-free.
+**Review conclusion:** the four required threat areas have specific implemented controls and supporting tests, and the two extra authentication controls and Azure delivery have live evidence. The security-review documentation is prepared for Pillar 7. CI 30, tested application commit `7ef0cc1`, current analysis/stack/browser reports and local/Azure verification records are now linked. The final video link and repository handoff checks remain in [the final handoff guide](docs/part3/FINAL_HANDOFF.md); neither the review nor a green test count certifies the system as vulnerability-free.
 
 ---
 
 ## 19. Demonstration Evidence
 
+Current application evidence is for [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1) on `blake`, 7 November 2026. **[CI 30: all jobs succeeded](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711)**. The following relative links open files retained in the repository; the GitHub run requires repository access.
+
 | Evidence | Where it is |
 | --- | --- |
-| **Demonstration video** (login, gig creation, booking, transaction, dashboard with chart, admin console, Docker stack, pipeline, logs) | **Final video link pending:** _paste the accessible final recording URL here before submission_ |
-| Application screenshots from Part 2 (register, browse, book, bookings, dashboard) | `docs/part2/screenshots/` |
-| Part 1 Postman screenshots | `docs/part1/screenshots/` |
-| Backend test results (127 passed, audit workspace, 7 November) | [Saved output](docs/part3/evidence/review-2026-11-07/backend-tests.txt) |
-| Frontend test results (63 passed, audit workspace, 7 November) | [Saved output](docs/part3/evidence/review-2026-11-07/frontend-tests.txt) |
-| Newman results | Historical October files remain under `docs/part3/evidence/`; [CI 24 safe summary](docs/part3/evidence/ci-24-dbde7d2/stack/newman-summary.json) records a new Docker-backed run: 67 requests, 90 assertions, zero failures |
-| **Static analysis results** (ESLint, npm audit) and explanation | [Dated local outputs](docs/part3/evidence/review-2026-11-07/); [results and fixes](docs/part3/STATIC_ANALYSIS.md) |
-| **Logging evidence**: structured events from a real run | `docs/part3/evidence/logging-sample.jsonl` |
-| Frontend production build (7 November) | [Saved output](docs/part3/evidence/review-2026-11-07/frontend-build.txt) |
-| CI pipeline run, static analysis, container status and Trivy output | [Application commit and checks](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/dbde7d2/checks); [saved CI 24 analysis evidence](docs/part3/evidence/ci-24-dbde7d2/REVIEW.md); keep the run and analysis screenshots in `docs/part3/screenshots/` |
-| **Cloud logging evidence** (Azure events, 5 November) | [Login, booking and transaction](docs/part3/screenshots/Logging1.png); [failed login and logout](docs/part3/screenshots/Logging2.png) |
-| Extra security controls, original-system evidence | [Account lockout](docs/part3/screenshots/SecurityTest2.png); [token revocation: 200, 200, 401, 200](docs/part3/screenshots/SecurityTest.png) |
+| **Demonstration video** | **Final video link pending (Pillar 9):** _paste the accessible final recording URL here before submission_ |
+| Current CI run and tested application commit | [CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711); [commit `7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1) |
+| Current result overview, scope and provenance | [CI 30 review](docs/part3/evidence/ci-30-7ef0cc1/REVIEW.md); [source/report hashes](docs/part3/evidence/ci-30-7ef0cc1/PROVENANCE.json) |
+| Backend unit/API-handler tests | [127 tests / 8 suites](docs/part3/evidence/ci-30-7ef0cc1/backend/tests-summary.txt); test repositories and mocked cloud HTTP |
+| Frontend component tests | [63 tests / 13 files](docs/part3/evidence/ci-30-7ef0cc1/frontend/tests-summary.txt); mocked API components |
+| Real browser integration | [2 passing Playwright tests: JUnit](docs/part3/evidence/ci-30-7ef0cc1/browser/browser-junit.xml); [downloadable HTML report](docs/part3/evidence/ci-30-7ef0cc1/browser/index.html) |
+| Live Newman against Docker/MongoDB | [67 requests / 90 assertions / zero failures](docs/part3/evidence/ci-30-7ef0cc1/stack/newman-summary.json); [detailed JUnit](docs/part3/evidence/ci-30-7ef0cc1/stack/newman-junit.xml) |
+| Static analysis and dependency audit results | [Backend ESLint](docs/part3/evidence/ci-30-7ef0cc1/backend/eslint-report.json); [frontend ESLint](docs/part3/evidence/ci-30-7ef0cc1/frontend/eslint-report.json); [results, production/full audit links and interpretation](docs/part3/evidence/ci-30-7ef0cc1/REVIEW.md); [fixes](docs/part3/STATIC_ANALYSIS.md) |
+| Repository and image scans | [Repository](docs/part3/evidence/ci-30-7ef0cc1/trivy/trivy-repo.txt); [backend image](docs/part3/evidence/ci-30-7ef0cc1/trivy/trivy-backend-image.txt); [frontend image](docs/part3/evidence/ci-30-7ef0cc1/trivy/trivy-frontend-image.txt) |
+| Container execution and local rebuild | [Healthy services in CI](docs/part3/evidence/ci-30-7ef0cc1/stack/compose-ps.txt); [selected local build/status output and login confirmation](docs/part3/evidence/ci-30-7ef0cc1/local-docker-verification.txt) |
+| Frontend production build | [CI 30 build output](docs/part3/evidence/ci-30-7ef0cc1/frontend/frontend-build.txt) |
+| Current structured event evidence | [Required-event counts and matching booking/transaction request IDs](docs/part3/evidence/ci-30-7ef0cc1/stack/event-correlation-summary.json) |
+| Azure cloud logging | [Fresh 7 November delivery observation](docs/part3/evidence/ci-30-7ef0cc1/azure-delivery-verification.md); earlier visual evidence: [login/booking/transaction](docs/part3/screenshots/Logging1.png), [failed login/logout](docs/part3/screenshots/Logging2.png) |
+| Extra security features | [CI 30 lockout/revocation cases](docs/part3/evidence/ci-30-7ef0cc1/stack/newman-junit.xml); earlier [lockout screenshot](docs/part3/screenshots/SecurityTest2.png) and [token revocation sequence](docs/part3/screenshots/SecurityTest.png) |
+| Historical UI screenshots | [Part 2 screenshots](docs/part2/screenshots/); current dashboard/booking flow was reconfirmed under Pillar 1 and exercised by the CI browser suite |
+| Historical Part 1 API screenshots | [Part 1 screenshots](docs/part1/screenshots/) |
 
-`docs/part3/EVIDENCE.md` lists each item with exactly what to capture and which file name to use. The Newman and logging files above come from a run against the real HTTPS server with the production configuration and in-memory data; the restored pipeline is configured to repeat Newman against the Docker Compose stack with MongoDB; that final run has not been observed in this package.
+The [evidence index](docs/part3/EVIDENCE.md) distinguishes current CI/manual observations from older records. The [handoff guide](docs/part3/FINAL_HANDOFF.md) covers the final video link, repository checks and submission-version confirmation. CI 24, October and earlier local-audit outputs remain historical; the CI 30 Newman/browser tests used real HTTPS and MongoDB in a disposable container stack. Raw logs, tokens, private keys and portal account headers are not part of this selected evidence bundle. Public app hosting is optional; [Section 12](#12-running-the-project) explains local Docker execution for evaluation.
 
 ---
 
@@ -849,12 +862,12 @@ Other limits include development-tool advisories, in-memory IP-rate counters, be
 | Admin console is read-only | Smallest safe privilege | Add audited actions such as disabling an account |
 | Suggested alerts are not deployed by this code | Alert rules must be created in the selected cloud platform | Configure and test rules if needed; do not claim alerts based on log ingestion alone |
 | Trivy runs from its `latest` image | Always uses the newest vulnerability rules | Pin a version and update with Dependabot |
-| Development tools are not vulnerability-free | Local scoped-update candidate: 12 affected backend dev-tool entries (6 low, 1 moderate, 5 high, 0 critical); production audit zero; prior CI 24 reports retained | Keep trusted test inputs, review upstream fixes and retain the actual new CI outcome; see the tooling dependency review |
+| Development tools are not vulnerability-free | CI 30 verifies 12 affected backend dev-tool entries (6 low, 1 moderate, 5 high, zero critical); production audits are zero | Keep controlled test inputs, review upstream fixes and reassess after dependency changes; see the tooling review |
 | Single MongoDB node, no backups | Coursework scope | Replica set, scheduled backups |
 | Failed offline logout cannot revoke server-side tokens | The browser clears its local session even if the logout request fails | Treat revocation as confirmed only after the server accepts logout; tokens otherwise remain valid until expiry or later revocation |
 | Cloud logging uses a bounded in-memory queue | Queue overflow or forced exit can lose cloud entries; uncertain network acknowledgements can cause duplicates | Durable shipping/spooling if stronger delivery guarantees become necessary |
 | Log redaction is scoped, not a universal secret detector | Structured/error fields are redacted; access logs can contain URLs and ordinary text could contain unexpected secrets | Never pass credentials in URLs; restrict log access/retention and review new logging fields |
-| CI evidence is tied to a specific application commit | CI 24 passed on `blake` at `dbde7d2`; its artifacts are retained. Documentation commits and future dependency/code changes have their own runs | Keep a green run for the actual merged submission version and review fresh results when code or dependencies change |
+| CI evidence is tied to a specific application commit | CI 30 passed on `blake` at `7ef0cc1`; its artifacts and fresh local/Azure observations are retained | Keep a green run for the actual submitted/merged version; later documentation changes have their own runs |
 
 ---
 
@@ -982,3 +995,5 @@ Vitest, n.d. Getting Started. [online] Available at: https://vitest.dev/guide/ [
 Wiggins, A., 2017. The Twelve-Factor App: XI. Logs. [online] Available at: https://12factor.net/logs [Accessed 30 October 2026].
 
 World Wide Web Consortium (W3C), 2023. Web Content Accessibility Guidelines (WCAG) 2.2. [online] Available at: https://www.w3.org/TR/WCAG22/ [Accessed 30 October 2026].
+
+Microsoft, n.d.c. Playwright Test configuration. [online] Available at: https://playwright.dev/docs/test-configuration [Accessed 7 November 2026].

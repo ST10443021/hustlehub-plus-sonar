@@ -1,0 +1,170 @@
+{
+  "applicationCommitPrefix": "7ef0cc1",
+  "branch": "blake",
+  "runNumber": 30,
+  "runUrl": "https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711",
+  "date": "2026-11-07",
+  "association": "The supplied CI screenshot identifies the successful run and commit; the five artifacts were supplied alongside it. Artifact contents alone do not independently identify the run ID.",
+  "archives": [
+    {
+      "name": "backend-static-analysis (1).zip",
+      "sha256": "68f85493297507ffa4e9abdd5bc63a33b793eb1dbcac8731fa0fa1ad94292e47"
+    },
+    {
+      "name": "frontend-static-analysis (1).zip",
+      "sha256": "08b0f0822c4d2d14703764650882fb673cb18f208bea755872f878ccacbb31d3"
+    },
+    {
+      "name": "stack-evidence (1).zip",
+      "sha256": "1746f455757d2284e5d1cd68f1b4fa90c673d8ea8507a6dd1beaa3a668cdf95b"
+    },
+    {
+      "name": "trivy-repository-report (1).zip",
+      "sha256": "d94320e96e804efbac30ba9fc4642b01205fc8bdac4f2297094d1a06da9bb528"
+    },
+    {
+      "name": "frontend-browser-integration.zip",
+      "sha256": "20f78ea1a478749e1ad1e66e4deeacf4c9a6fd6d61c6bdc0667fcdfa6de29434"
+    }
+  ],
+  "reports": [
+    {
+      "archive": "backend-static-analysis (1).zip",
+      "entry": "eslint-report.json",
+      "savedPath": "backend/eslint-report.json",
+      "sha256": "2ce2ef7e0698254ae601fce59c6127572c31499b818f2bcac6031b90d24d36c9",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "backend-static-analysis (1).zip",
+      "entry": "npm-audit-full.json",
+      "savedPath": "backend/npm-audit-full.json",
+      "sha256": "0392846f093dcbc52bd2cc8bcc367e3026dfd46471b58ecd381684fcaa69c4df",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "backend-static-analysis (1).zip",
+      "entry": "npm-audit-production.txt",
+      "savedPath": "backend/npm-audit-production.txt",
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "frontend-static-analysis (1).zip",
+      "entry": "eslint-report.json",
+      "savedPath": "frontend/eslint-report.json",
+      "sha256": "4df58150c27dc570ee254809b9f3e326a66a083507ff0b79af03a984247868fb",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "frontend-static-analysis (1).zip",
+      "entry": "npm-audit-full.json",
+      "savedPath": "frontend/npm-audit-full.json",
+      "sha256": "047f654090ee630a299dcbc7e2905ae03e9331f900eb1d8999fcd41a74ebc85c",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "frontend-static-analysis (1).zip",
+      "entry": "npm-audit-production.txt",
+      "savedPath": "frontend/npm-audit-production.txt",
+      "sha256": "6d8c5c8f3d7684adb070417bd608d01ae90aa3dc26a65af03ffda4955f38d9a3",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "frontend-static-analysis (1).zip",
+      "entry": "frontend-build.txt",
+      "savedPath": "frontend/frontend-build.txt",
+      "sha256": "62f0c819aa2166b9fba51092d71cbe9d19b9631826883fc2beb38e6d6fe00ac9",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "stack-evidence (1).zip",
+      "entry": "compose-ps.txt",
+      "savedPath": "stack/compose-ps.txt",
+      "sha256": "de69878ac5a5f550bee39793629349254077d6ee4d64d48bd05fbb2b8afc448d",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "stack-evidence (1).zip",
+      "entry": "newman-summary.json",
+      "savedPath": "stack/newman-summary.json",
+      "sha256": "fafa748c6e43aff83b78ba31e4f8d93dfc233ee3b45e61fd5b38b3546d69a84a",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "stack-evidence (1).zip",
+      "entry": "newman-junit.xml",
+      "savedPath": "stack/newman-junit.xml",
+      "sha256": "e6674b012c8b8a2a74123ef3bb41b5dd6ebe7043674abaafaae4e6ff1c46834c",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "stack-evidence (1).zip",
+      "entry": "trivy-hustlehub_backend_local-high.txt",
+      "savedPath": "trivy/trivy-backend-image.txt",
+      "sha256": "0043b83d820527d3b3f945877afc236f80f3eb392400a86a713357abae8db309",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "stack-evidence (1).zip",
+      "entry": "trivy-hustlehub_frontend_local-high.txt",
+      "savedPath": "trivy/trivy-frontend-image.txt",
+      "sha256": "b39b952dd6362531a3c64e78c76feec5714339ef855c15a6a538580ac8e9cf19",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "trivy-repository-report (1).zip",
+      "entry": "trivy-repo.txt",
+      "savedPath": "trivy/trivy-repo.txt",
+      "sha256": "f0042205bfeda0507adcf51d3326aadddaefa8de2529295969f8cd1b6b9c5dd2",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "frontend-browser-integration.zip",
+      "entry": "test-results/browser-junit.xml",
+      "savedPath": "browser/browser-junit.xml",
+      "sha256": "21f346341190826916f5c87656880efb81f0b02bb4eaaa5e3652657cec5bf47c",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "frontend-browser-integration.zip",
+      "entry": "playwright-report/index.html",
+      "savedPath": "browser/index.html",
+      "sha256": "421e36564d296bea966eca04729aaf1be08c24325d33b6856b22b405d1d2d601",
+      "copiedUnchanged": true
+    },
+    {
+      "archive": "backend-static-analysis (1).zip",
+      "entry": "backend-tests.txt",
+      "sourceSha256": "82eef5d64a46d92fe69eb46c39756d1c8f369e0ac764d5886f625d3f2e8a716f",
+      "savedPath": "backend/tests-summary.txt",
+      "transformation": "ANSI formatting removed; only suite/test summary lines retained."
+    },
+    {
+      "archive": "frontend-static-analysis (1).zip",
+      "entry": "frontend-tests.txt",
+      "sourceSha256": "e8382cb61d3f9295d988218ff4425609a647437e6eaf4dbce87abb0ba4bfd0c5",
+      "savedPath": "frontend/tests-summary.txt",
+      "transformation": "ANSI formatting removed; only suite/test summary lines retained."
+    }
+  ],
+  "manualSources": [
+    {
+      "name": "Pasted text(9).txt",
+      "sha256": "c365ec3188a2a2cf1c02d71ee0157db8484cacf76cb177650259a4a95177306e",
+      "transformation": "Selected commit, successful image-build lines and container status; successful login is Blake's accompanying confirmation."
+    },
+    {
+      "name": "image(7).png",
+      "sha256": "974fc8ba61d2d7a71319b242a921e45f079d62032159dfff05d6900e09a0ad81",
+      "purpose": "CI run 30: success, run URL and commit prefix",
+      "originalImageIncluded": false
+    },
+    {
+      "name": "image(8).png",
+      "sha256": "15d0e0b70c742ab26bffae1ea64273fc7dac387227e41c2f6b4f242f76bc07d7",
+      "purpose": "Fresh Azure authentication event rows after the local rebuild",
+      "originalImageIncluded": false
+    }
+  ]
+}

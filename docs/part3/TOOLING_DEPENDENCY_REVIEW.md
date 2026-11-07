@@ -1,6 +1,6 @@
 # Backend development-tool dependency maintenance
 
-7 November 2026. This is a locally verified maintenance candidate following the CI 24 analysis review. Its new GitHub/Docker outcome remains pending until it is pushed and reviewed. CI 24's original reports remain unchanged as historical evidence.
+7 November 2026. This is a locally verified maintenance candidate following the CI 24 analysis review. The same changes subsequently passed [GitHub CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711) at `7ef0cc1`; the [actual CI results](evidence/ci-30-7ef0cc1/REVIEW.md) confirm 12 remaining dev-tool entries and zero critical. Local outputs below remain dated local observations. CI 24's original reports remain unchanged as historical evidence.
 
 ## Changes
 
@@ -72,6 +72,6 @@ These are reviewed residual development-tool risks, not repaired or false-positi
 - [Postman compatibility checks](evidence/tooling-maintenance-2026-11-07/compatibility-checks.txt)
 - [Dependency-tree comparison and override list](evidence/tooling-maintenance-2026-11-07/package-tree-comparison.json)
 
-After pushing, review the new run on `blake`: backend lint/tests/audits, fresh Docker builds, live Newman, browser integration and scan gates must pass. Retain that run and its artifacts for the resulting commit. Update evidence with the actual new CI result; do not relabel these local outputs as GitHub results.
+Subsequent verification: [CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711) passed backend/frontend checks, Docker builds/health, live Newman, browser integration and configured scan gates on `blake`, application commit `7ef0cc1`. Its separate reports are retained under `evidence/ci-30-7ef0cc1/`; local outputs above are not relabelled as CI results. Review fresh outcomes after future application/dependency changes.
 
 References (accessed 7 November 2026): npm overrides, https://docs.npmjs.com/cli/v11/configuring-npm/package-json/#overrides; UUID 11.1.1 security backport, https://github.com/uuidjs/uuid/releases/tag/v11.1.1; minimatch 11.0.1, https://github.com/isaacs/minimatch/releases/tag/v11.0.1; deepmerge advisory/no patched version, https://github.com/advisories/GHSA-gcqx-w48m-w2h4. Remaining advisory URLs are retained in the full audit JSON.

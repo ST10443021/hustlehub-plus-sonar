@@ -6,7 +6,7 @@ HustleHub already writes structured authentication, security, gig, booking, tran
 
 The adapter uses Node's existing `fetch` support and the regional Application Insights ingestion API. No new npm dependency, SDK instrumentation, public application hosting, Azure agent, browser tracking or database change is needed. Existing local logs and the admin security view continue to work.
 
-Resource selected: `hustlehub-logs`, resource group `rg-hustlehub-poe`, South Africa North, Azure for Students. The original-system screenshots supplied from 5 November show live ingestion: [login, booking and transaction events](screenshots/Logging1.png), and [failed login and logout events](screenshots/Logging2.png). The original backend commit was not recorded. Reverify after deploying the final repository version; no alert-delivery proof is claimed.
+Resource selected: `hustlehub-logs`, resource group `rg-hustlehub-poe`, South Africa North, Azure for Students. The original-system screenshots supplied from 5 November show live ingestion: [login, booking and transaction events](screenshots/Logging1.png), and [failed login and logout events](screenshots/Logging2.png). The original backend commit was not recorded. On 7 November, following the local rebuild of `7ef0cc1`, Blake supplied fresh Azure login success/failure and logout results and confirmed the checks worked: [current delivery observation](evidence/ci-30-7ef0cc1/azure-delivery-verification.md). Reverify if configuration/deployment changes; no alert-delivery proof is claimed.
 
 ## Apply and configure on Windows
 
@@ -116,15 +116,15 @@ Use returned timestamps and IDs to match actual application actions. This adapte
 
 ## Evidence checklist
 
-- [ ] Backend lint and automated tests pass after copying the files.
-- [ ] Docker services are healthy and the HTTPS health endpoint succeeds.
-- [ ] New startup event has `cloudLogging: true`.
+- [x] Backend lint/tests passed in CI 30 after the scoped dependency fixes.
+- [x] Docker services healthy in CI 30 and the local rebuild; HTTPS login confirmed locally.
+- [x] Blake confirmed the requested startup/delivery checks after the rebuild; fresh Azure rows provide the ingestion evidence.
 - [x] Supplied original-system screenshots show login success/failure, booking and transaction events in Azure.
-- [ ] Recheck those events on the final repository deployment.
-- [ ] Booking/transaction IDs and request IDs match local events.
+- [x] Fresh authentication event delivery checked on 7 November for the rebuilt application; earlier booking/transaction screenshots retained.
+- [x] CI 30 container event examples have matching booking/transaction IDs and request IDs; see the current event-correlation summary.
 - [x] Original evidence included as `docs/part3/screenshots/Logging1.png` and `Logging2.png`.
-- [ ] Date, final tested commit and screenshot path recorded in submission evidence.
-- [ ] README section 11 explains destinations, purpose, configuration and verification.
+- [x] Dated application commit `7ef0cc1`, current observation record and existing screenshot paths recorded in the evidence index.
+- [x] README section 11 explains destinations, purpose, configuration and current verification.
 
 Local unit tests use mocked HTTP responses and in-memory repositories; they do not prove live Azure delivery, Docker health or database persistence. Tick these separately after observing them.
 

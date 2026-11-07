@@ -1,6 +1,10 @@
 # Static Code Analysis — HustleHub+ Final PoE
 
-Static analysis examines source code and dependency files **without running the program**, so risky patterns are found before they reach users (ESLint, n.d.). The pipeline in `.github/workflows/ci.yml` is configured to run it on the agreed branches and pull requests. The restored workflow declares Bash/pipefail so an upstream scan failure cannot be hidden by `tee`. The reviewed GitHub run is **CI 24**, branch `blake`, commit [`dbde7d2`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/dbde7d2), on 7 November 2026. Its supplied artifacts are preserved in [the run review](evidence/ci-24-dbde7d2/REVIEW.md).
+Static analysis examines source code and dependency files **without running the program**, so risky patterns are found before they reach users (ESLint, n.d.). The pipeline in `.github/workflows/ci.yml` is configured to run it on the agreed branches and pull requests. The restored workflow declares Bash/pipefail so an upstream scan failure cannot be hidden by `tee`. The latest reviewed GitHub run is **CI 30**, branch `blake`, commit [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1), on 7 November 2026. Its supplied artifacts are preserved in [the current run review](evidence/ci-30-7ef0cc1/REVIEW.md).
+
+## Current application result: CI 30
+
+The scoped fixes were subsequently confirmed in **[CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711)**, application commit [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1). Both linters report zero active errors/warnings, both production audits report zero, and frontend full audit reports zero. Backend full audit is **12 dev-tool entries: 6 low, 1 moderate, 5 high, zero critical**. Repository/image reports show zero displayed findings at their configured filters. [Current raw reports and interpretation](evidence/ci-30-7ef0cc1/REVIEW.md). CI 24 and local-maintenance sections below remain historical checkpoints.
 
 ## 1. Tools and what each one covers
 
@@ -87,18 +91,18 @@ The existing Newman risk treatment is to exclude it from production, run only th
 
 ### 4.1 Subsequent scoped dependency maintenance
 
-The locally tested maintenance candidate selects patched Newman/nodemon dependencies with explicit scoped npm overrides. It reduces the full backend audit from **27 to 12 affected dev-tool package entries**, removes the critical entry and leaves **6 LOW, 1 MODERATE, 5 HIGH, 0 CRITICAL**. Production package versions are unchanged and the production audit reports zero. All 127 backend tests and the real HTTPS/MongoDB Newman collection (67 requests, 90 assertions) passed. The candidate's new GitHub run is still pending.
+The locally tested maintenance candidate selects patched Newman/nodemon dependencies with explicit scoped npm overrides. It reduces the full backend audit from **27 to 12 affected dev-tool package entries**, removes the critical entry and leaves **6 LOW, 1 MODERATE, 5 HIGH, 0 CRITICAL**. Production package versions are unchanged and the production audit reports zero. All 127 backend tests and the real HTTPS/MongoDB Newman collection (67 requests, 90 assertions) passed. Its subsequent GitHub verification is CI 30; the dated local outputs remain linked below.
 
 The remaining entries derive from Faker, csv-parse and deepmerge in trusted development/test tooling. These are reviewed residual risks with bounded input/exposure, not fixed findings. See the [tooling dependency review and actual local reports](TOOLING_DEPENDENCY_REVIEW.md) for versions, compatibility checks and the reasons a further automatic override was not used. Historical CI 24 counts/reports above remain unchanged.
 
-## 5. CI scan outcomes and CodeQL limitation
+## 5. CI 30 scan outcomes and CodeQL limitation
 
 | Check | Observed result | Evidence |
 | --- | --- | --- |
-| ESLint backend/frontend | Pass; 0 active errors/warnings | [Backend JSON](evidence/ci-24-dbde7d2/backend/eslint-report.json), [frontend JSON](evidence/ci-24-dbde7d2/frontend/eslint-report.json) |
-| Trivy repository | Pass; displayed counts 0 at configured filters | [Report](evidence/ci-24-dbde7d2/trivy/trivy-repo.txt) |
-| Trivy backend image | Pass; no fixable HIGH/CRITICAL findings displayed | [Report](evidence/ci-24-dbde7d2/trivy/trivy-backend-image.txt) |
-| Trivy frontend image | Pass; no fixable HIGH/CRITICAL findings displayed | [Report](evidence/ci-24-dbde7d2/trivy/trivy-frontend-image.txt) |
+| ESLint backend/frontend | Pass; 0 active errors/warnings | [Backend JSON](evidence/ci-30-7ef0cc1/backend/eslint-report.json), [frontend JSON](evidence/ci-30-7ef0cc1/frontend/eslint-report.json) |
+| Trivy repository | Pass; displayed counts 0 at configured filters | [Report](evidence/ci-30-7ef0cc1/trivy/trivy-repo.txt) |
+| Trivy backend image | Pass; no fixable HIGH/CRITICAL findings displayed | [Report](evidence/ci-30-7ef0cc1/trivy/trivy-backend-image.txt) |
+| Trivy frontend image | Pass; no fixable HIGH/CRITICAL findings displayed | [Report](evidence/ci-30-7ef0cc1/trivy/trivy-frontend-image.txt) |
 | CodeQL | Not active; not a passed scan | [CI repair explanation](CI_REPAIR.md) |
 
 Trivy's commands use `--ignore-unfixed`. Repository analysis selects HIGH/CRITICAL; image reports list HIGH/CRITICAL and the image failure gate blocks fixable CRITICAL. These reports are not an all-severity, all-unfixed-vulnerabilities or Git-history scan.

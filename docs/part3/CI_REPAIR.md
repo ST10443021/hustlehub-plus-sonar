@@ -39,3 +39,7 @@ Automated frontend browser-integration tests required by the assessment-preparat
 - NGINX, current stable Alpine Dockerfile: https://github.com/nginx/docker-nginx-unprivileged/blob/main/stable/alpine-slim/Dockerfile
 
 The new frontend tag was confirmed available in Docker Registry for Linux amd64/arm64 and other platforms. Tag availability does not establish a clean vulnerability scan; the next real image scan is authoritative.
+
+## Subsequent verification, 7 November 2026
+
+The follow-up work described above is now evidenced by [CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711) at application commit `7ef0cc1`: the actual Docker/API/browser/analysis gates passed, reports are retained, and the README/current evidence index reflects that result. Earlier run-18/CI-24 notes remain historical. See [the current review](evidence/ci-30-7ef0cc1/REVIEW.md).
