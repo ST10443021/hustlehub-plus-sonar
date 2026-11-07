@@ -35,6 +35,10 @@ Application commit: [`dbde7d2`](https://github.com/EMGPPT/insy7314-g1-part-2-and
 
 The [review and all report links](evidence/ci-24-dbde7d2/REVIEW.md) include the provenance/hashes. Browser integration was part of the successful run shown in the supplied screenshot; its separate artifact was not included among these four ZIPs. Download/retain it separately if needed.
 
+## Subsequent local tooling-maintenance evidence
+
+The [tooling dependency review](TOOLING_DEPENDENCY_REVIEW.md) records a scoped-update candidate: full backend audit **12 affected dev-tool entries, zero critical**, production audit zero, unchanged production package versions, 127 passing backend tests and 67 requests / 90 assertions passing against the real HTTPS API and isolated MongoDB. Its reports are under `evidence/tooling-maintenance-2026-11-07/`. The new GitHub/Docker run must be reviewed after pushing; these local results do not replace it.
+
 ## Still to record on the final version
 
 - [ ] Retain the green CI 24 screenshot and an ESLint analysis-step screenshot; keep a green run for the actual merged submission version.

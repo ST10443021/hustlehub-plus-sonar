@@ -56,6 +56,10 @@ These filenames are suggested destinations. The screenshots and terminal results
 
 Do not place connection strings, JWTs, passwords, real `.env` files or private certificates in evidence. IDs and timestamps can be retained where needed to match events; keep screenshots limited to relevant fields.
 
+## Subsequent tooling maintenance
+
+The [dependency maintenance review](TOOLING_DEPENDENCY_REVIEW.md) records locally tested scoped fixes to Newman/nodemon dependencies. The full backend audit falls from 27 to **12 development-tool package entries, with zero critical**, while production package versions remain unchanged and the production audit is zero. Tests cover all 127 backend cases, the live HTTPS/MongoDB Newman flow (67 requests / 90 assertions), an actual watcher restart and Postman template/UUID compatibility. Remaining Faker/csv-parse/deepmerge risks are recorded as residual tooling findings with controlled inputs and production exclusion; they are not labelled fixed. The new CI outcome is pending.
+
 ## Final repository handoff
 
 - [x] Original Azure/security screenshots restored and linked; 7 November audit-workspace outputs are stored separately.

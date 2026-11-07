@@ -1,0 +1,8 @@
+Observed local verification on 7 November 2026, Node 24.22.1.
+ESLint: npm run lint completed with exit 0, zero warnings allowed.
+Test Suites: 8 passed, 8 total
+Tests:       127 passed, 127 total
+Snapshots:   0 total
+Time:        5.992 s, estimated 6 s
+Live Newman: 67 requests, 90 assertions, zero failures against the real HTTPS API and isolated MongoDB 7.0.24.
+Nodemon file-change restart and Postman template/UUID compatibility checks passed.

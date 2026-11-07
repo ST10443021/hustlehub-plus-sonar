@@ -83,7 +83,13 @@ The full backend audit from CI 24 reports **27 affected development-tool package
 
 The [run review](evidence/ci-24-dbde7d2/REVIEW.md#development-tool-risk-review) lists every affected package, exact severity counts, tool exposure and follow-up. Newman/Postman accounts for 19 entries, Jest for 6 low entries, and nodemon for 2 moderate entries. The nodemon chain has a compatible fix reported available. npm proposes major downgrades of Newman/Jest for other chains; these require dependency review and retesting, not a blind `npm audit fix --force`.
 
-The existing Newman risk treatment is to exclude it from production, run only the checked-in trusted collection against an isolated stack, and publish the full audit report. The remaining advisories remain **unresolved tooling findings**. Scope isolation is a mitigation, not a fix or proof of non-exploitability. No dependency change is included in this documentation/evidence patch. The rubric's highest security-analysis band cannot be guaranteed while these findings remain.
+The existing Newman risk treatment is to exclude it from production, run only the checked-in trusted collection against an isolated stack, and publish the full audit report. The remaining advisories remain **unresolved tooling findings**. Scope isolation is a mitigation, not a fix or proof of non-exploitability. A subsequent scoped dependency-maintenance candidate applies the updates described below; CI 24 remains the earlier result. The rubric's highest security-analysis band cannot be guaranteed while these findings remain.
+
+### 4.1 Subsequent scoped dependency maintenance
+
+The locally tested maintenance candidate selects patched Newman/nodemon dependencies with explicit scoped npm overrides. It reduces the full backend audit from **27 to 12 affected dev-tool package entries**, removes the critical entry and leaves **6 LOW, 1 MODERATE, 5 HIGH, 0 CRITICAL**. Production package versions are unchanged and the production audit reports zero. All 127 backend tests and the real HTTPS/MongoDB Newman collection (67 requests, 90 assertions) passed. The candidate's new GitHub run is still pending.
+
+The remaining entries derive from Faker, csv-parse and deepmerge in trusted development/test tooling. These are reviewed residual risks with bounded input/exposure, not fixed findings. See the [tooling dependency review and actual local reports](TOOLING_DEPENDENCY_REVIEW.md) for versions, compatibility checks and the reasons a further automatic override was not used. Historical CI 24 counts/reports above remain unchanged.
 
 ## 5. CI scan outcomes and CodeQL limitation
 

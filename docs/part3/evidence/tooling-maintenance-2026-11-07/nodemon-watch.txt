@@ -1,0 +1,10 @@
+[33m[nodemon] 3.1.14[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): probe.js[39m
+[33m[nodemon] watching extensions: js[39m
+[32m[nodemon] starting `node /tmp/nodemon-probe-td43udx1/probe.js`[39m
+WATCH_PROBE_FIRST
+[32m[nodemon] clean exit - waiting for changes before restart[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node /tmp/nodemon-probe-td43udx1/probe.js`[39m
+WATCH_PROBE_SECOND
