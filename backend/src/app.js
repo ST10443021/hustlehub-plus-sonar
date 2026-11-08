@@ -3,7 +3,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
 const mongoSanitize = require('express-mongo-sanitize');
-const xssClean = require('xss-clean');
+const { sanitizeInput } = require('./middleware/sanitizeInput');
 
 const authRoutes = require('./routes/authRoutes');
 const gigRoutes = require('./routes/gigRoutes');
@@ -55,7 +55,8 @@ app.use(cors({ origin: config.corsOrigins, credentials: false }));
 
 app.use(express.json({ limit: '10kb' })); // small body limit mitigates payload-based DoS (OWASP, 2021)
 app.use(mongoSanitize()); // strips NoSQL operator injection payloads, now directly relevant with MongoDB/Mongoose live (OWASP, 2024b; MongoDB, Inc., n.d.a)
-app.use(xssClean()); // sanitises user input against reflected XSS payloads (OWASP, 2024b)
+// Escapes "<" in input strings as defence in depth. The real XSS controls are React's text rendering and the CSP (OWASP, 2024h; Mozilla, 2026b).
+app.use(sanitizeInput);
 
 // Global rate limiter (defence-in-depth on top of the stricter per-route limiters on the
 // auth and booking endpoints specifically named as "sensitive" in the POE brief) (OWASP, 2021; IIE, 2026b).
