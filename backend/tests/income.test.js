@@ -37,14 +37,14 @@ describe('getIncomeSummary', () => {
   test('R10,500 gives R0 tax with an explanation and the distance to the threshold', async () => {
     transactionRepository.findByFreelancer.mockResolvedValue([tx(3500, '2026-10-01T08:00:00Z'), tx(3500, '2026-10-02T08:00:00Z'), tx(3500, '2026-10-03T08:00:00Z')]);
     const s = await getIncomeSummary('f1', now);
-    expect(s).toMatchObject({ totalIncome: 10500, taxYearIncome: 10500, estimatedAnnualTax: 0, amountUntilTaxApplies: 88500, taxFreeThreshold: 99000, taxYear: '2026/27' });
+    expect(s).toMatchObject({ totalIncome: 10500, taxYearIncome: 10500, estimatedTaxToDate: 0, amountUntilTaxApplies: 88500, taxFreeThreshold: 99000, taxYear: '2026/27' });
     expect(s.taxNote).toMatch(/R0 is correct for now: income under R99,000/);
   });
 
   test('income above the threshold produces a non-zero estimate', async () => {
     transactionRepository.findByFreelancer.mockResolvedValue([tx(150000, '2026-09-01T08:00:00Z')]);
     const s = await getIncomeSummary('f1', now);
-    expect(s).toMatchObject({ estimatedAnnualTax: 9180, effectiveTaxRate: 6.12, amountUntilTaxApplies: 0 });
+    expect(s).toMatchObject({ estimatedTaxToDate: 9180, effectiveTaxRate: 6.12, amountUntilTaxApplies: 0 });
     expect(s.taxNote).toMatch(/Calculated on R150,000 earned in the 2026\/27 tax year/);
   });
 
@@ -53,13 +53,13 @@ describe('getIncomeSummary', () => {
     const s = await getIncomeSummary('f1', now);
     expect(s.totalIncome).toBe(230000);
     expect(s.taxYearIncome).toBe(150000);
-    expect(s.estimatedAnnualTax).toBe(9180);
+    expect(s.estimatedTaxToDate).toBe(9180);
   });
 
   test('no transactions gives a friendly note, not an error', async () => {
     transactionRepository.findByFreelancer.mockResolvedValue([]);
     const s = await getIncomeSummary('f1', now);
-    expect(s).toMatchObject({ totalIncome: 0, estimatedAnnualTax: 0, effectiveTaxRate: 0 });
+    expect(s).toMatchObject({ totalIncome: 0, estimatedTaxToDate: 0, effectiveTaxRate: 0 });
     expect(s.taxNote).toMatch(/No income recorded yet/);
   });
 });
@@ -112,5 +112,9 @@ describe('getIncomeSummary analytics fields', () => {
     expect(s.monthlyIncome).toHaveLength(12);
     expect(s.monthlyIncome.find((m) => m.key === '2026-09').income).toBe(150000);
     expect(s.methodology.length).toBeGreaterThanOrEqual(5);
+    // The figure is tax on income received so far, and the API says so: no "annual" field and an explicit step.
+    expect(s).toHaveProperty('estimatedTaxToDate', 9180);
+    expect(s).not.toHaveProperty('estimatedAnnualTax');
+    expect(s.methodology[s.methodology.length - 1]).toMatch(/not a projection of the full year/);
   });
 });
