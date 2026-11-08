@@ -43,3 +43,6 @@ yarn-error.log*
 Thumbs.db
 desktop.ini
 env
+
+env
+**/env
