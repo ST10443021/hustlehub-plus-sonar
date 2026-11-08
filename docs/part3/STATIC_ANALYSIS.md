@@ -60,4 +60,10 @@ Every check below runs in the GitHub Actions pipeline (`.github/workflows/ci.yml
 3. Push. The `static-analysis` job downloads the coverage reports from the `backend` and `frontend` jobs and runs the scan with the quality gate. **If the token or organisation is missing, the job fails and so does the whole pipeline** (only Dependabot and fork pull requests, which get no secrets, skip it), so a green run always includes the Sonar result.
 4. Screenshot the project dashboard (quality gate, bugs, vulnerabilities, hot-spots, coverage) as `sonar-dashboard.png`, and record any issue it reports with the fix in the table above.
 
+## Sonar Quality Gate Log and Incidents
+
+| Date / Commit | Issue Reported | Root Cause | Fix / Resolution | Result |
+| --- | --- | --- | --- | --- |
+| Commit `5e4a270` | Quality gate failure: 74.2% duplication on new code and a C reliability rating. | A single generated file (`docs/part3/ci-evidence/e2e/playwright-report/index.html` with 46 duplicated lines and missing `lang` attribute) was accidentally committed as CI evidence. It is machine-generated test output, not application source code. | Removed the file from version control and added its folder to `.gitignore`. The report remains available inside the CI `stack-evidence` artifact and as `playwright-report.png`. | Gate passes successfully on the next analysis run. |
+
 If the repository sits in an organisation that blocks the SonarCloud app, fork the repository, connect Sonar to the fork and link the fork in the README, as the brief allows.

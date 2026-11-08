@@ -46,3 +46,5 @@ env
 
 env
 **/env
+
+docs/part3/ci-evidence/e2e/playwright-report/
