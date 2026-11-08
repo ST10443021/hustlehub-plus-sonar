@@ -12,7 +12,7 @@ ARG VITE_API_BASE_URL=/api
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
-FROM nginxinc/nginx-unprivileged:1.28-alpine AS runner
+FROM nginxinc/nginx-unprivileged:1.30-alpine AS runner
 # The base image runs as the non-root "nginx" user, so switch to root only for the package upgrade.
 # This picks up fixed nginx, OpenSSL and brotli packages even if the base tag has not been rebuilt yet.
 USER root

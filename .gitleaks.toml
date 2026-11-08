@@ -12,4 +12,5 @@ paths = [
   '''backend/\.env\.test$''',
   '''backend/tests/''',
   '''frontend/src/tests/''',
+  '''e2e/tests/''',
 ]

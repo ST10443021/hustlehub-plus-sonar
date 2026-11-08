@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { configDefaults, defineConfig } from 'vitest/config';
 import { securityHeaders } from './securityHeaders.js';
 
 // Serve the dev/preview pages over HTTPS with the same locally trusted certificate the
@@ -43,6 +43,8 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/setupTests.js',
+    // Playwright specs belong to the root e2e/ project; Vitest must never try to run them.
+    exclude: [...configDefaults.exclude, 'e2e/**'],
     // Limit competing jsdom workers on slower development machines.
     maxWorkers: 2,
     testTimeout: 15000,
