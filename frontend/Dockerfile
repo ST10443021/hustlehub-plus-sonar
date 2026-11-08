@@ -3,7 +3,7 @@
 # The final stage uses the unprivileged nginx image, so the web server runs as a non-root user and
 # listens on ports above 1024 (8080 redirects to HTTPS on 8443). The Node.js toolchain never reaches
 # the final image, which keeps the attack surface small (OWASP, 2024f; Docker, Inc., n.d.b).
-FROM node:24-alpine AS build
+FROM node:25-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
