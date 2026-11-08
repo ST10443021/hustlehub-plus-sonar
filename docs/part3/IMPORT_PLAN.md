@@ -1,3 +1,7 @@
+# Integration update — 7 November 2026
+
+The final repository patch supplies the root README/Compose/configuration files and original screenshots left out of the member imports. It preserves the existing application files and four extra team booking tests. Final CI/scans, isolated live Docker/Newman results, final tested commit and final demo link remain to be recorded. The following is the historical import plan, not the current completion checklist.
+
 # Part 3 import and verification plan
 
 The new institutional repository starts from the preserved Part 2 Git history

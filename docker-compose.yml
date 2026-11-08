@@ -37,6 +37,7 @@ services:
       start_period: 20s
 
   backend:
+    image: hustlehub/backend:local
     build: ./backend
     restart: unless-stopped
     environment:
@@ -73,8 +74,12 @@ services:
     # Only nginx reaches this trusted-proxy backend. The Dockerfile HEALTHCHECK reports its status.
     expose:
       - "5443"
+    networks:
+      - db-net
+      - app-net
 
   frontend:
+    image: hustlehub/frontend:local
     build:
       context: ./frontend
       args:

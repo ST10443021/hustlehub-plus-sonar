@@ -1,0 +1,37 @@
+{
+  "source": "Selected safe fields and counts from the supplied CI 30 backend-container.log; this is not an Azure ingestion report.",
+  "eventCounts": {
+    "user_registered": 5,
+    "user_login": 5,
+    "login_failed": 7,
+    "account_locked": 1,
+    "booking_created": 1,
+    "transaction_created": 1,
+    "access_denied": 6,
+    "rate_limit_exceeded": 2,
+    "user_logout": 1
+  },
+  "matchingBookingTransactionExamples": [
+    {
+      "booking": {
+        "timestamp": "2026-11-07T14:09:28.884Z",
+        "event": "booking_created",
+        "level": "info",
+        "category": "booking",
+        "requestId": "6ce519f2-c42a-47ec-813b-1b0c7436303d",
+        "bookingId": "6aef31187725dce422211bfa",
+        "transactionId": "6aef31187725dce422211bfc"
+      },
+      "transaction": {
+        "timestamp": "2026-11-07T14:09:28.884Z",
+        "event": "transaction_created",
+        "level": "info",
+        "category": "transaction",
+        "requestId": "6ce519f2-c42a-47ec-813b-1b0c7436303d",
+        "bookingId": "6aef31187725dce422211bfa",
+        "transactionId": "6aef31187725dce422211bfc",
+        "amount": 1750
+      }
+    }
+  ]
+}

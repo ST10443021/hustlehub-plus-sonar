@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="HustleHub+ Part 3 - Final PoE" tests="67" time="6.011">
+  <testsuite name="1. Auth Setup / Register Freelancer" id="ed70fa96-78d4-48e4-bb2c-9638c706c939" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.462">
+    <testcase name="Status is 201" time="0.462" classname="1AuthSetupRegisterFreelancer"/>
+  </testsuite>
+  <testsuite name="1. Auth Setup / Login Freelancer" id="84124541-1eec-434d-bc03-4ad4fc248250" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.337">
+    <testcase name="Status is 200" time="0.337" classname="1AuthSetupLoginFreelancer"/>
+  </testsuite>
+  <testsuite name="1. Auth Setup / Register Second Freelancer" id="f5bdf1c4-576c-4f50-91dc-5f5ac9b7b141" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.332">
+    <testcase name="Status is 201" time="0.332" classname="1AuthSetupRegisterSecondFreelancer"/>
+  </testsuite>
+  <testsuite name="1. Auth Setup / Login Second Freelancer" id="c70234c1-4d1d-4d7d-b9a1-b83b85a021bd" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.330">
+    <testcase name="Status is 200" time="0.330" classname="1AuthSetupLoginSecondFreelancer"/>
+  </testsuite>
+  <testsuite name="1. Auth Setup / Register Client" id="a7626b51-a3dd-4b8d-8273-ec89916e8514" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.331">
+    <testcase name="Status is 201" time="0.331" classname="1AuthSetupRegisterClient"/>
+  </testsuite>
+  <testsuite name="1. Auth Setup / Login Client" id="44002904-9258-4a23-92e9-ff33fcc6a4b9" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.328">
+    <testcase name="Status is 200" time="0.328" classname="1AuthSetupLoginClient"/>
+  </testsuite>
+  <testsuite name="1. Auth Setup / Public Admin Signup Rejected" id="675ae565-33e5-4863-a970-132c9b70f814" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="Status is 400" time="0.009" classname="1AuthSetupPublicAdminSignupRejected"/>
+  </testsuite>
+  <testsuite name="1. Auth Setup / Duplicate Signup Rejected" id="b60ebd82-3a1c-4c44-90cc-d8253e624332" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.013">
+    <testcase name="Status is 409" time="0.013" classname="1AuthSetupDuplicateSignupRejected"/>
+  </testsuite>
+  <testsuite name="1. Auth Setup / Wrong Password Rejected" id="9480c90c-58fd-4089-a8bd-40026b3aad7c" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.335">
+    <testcase name="Status is 401" time="0.335" classname="1AuthSetupWrongPasswordRejected"/>
+  </testsuite>
+  <testsuite name="1. Auth Setup / Missing JWT Rejected" id="ec39d8ff-3c6f-4b5a-9b25-fe3accdf60e8" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="Status is 401" time="0.009" classname="1AuthSetupMissingJwtRejected"/>
+  </testsuite>
+  <testsuite name="1. Auth Setup / Invalid JWT Rejected" id="3b705973-229d-4032-9008-8aab9d44b13e" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.008">
+    <testcase name="Status is 401" time="0.008" classname="1AuthSetupInvalidJwtRejected"/>
+  </testsuite>
+  <testsuite name="2. Gig Management (RBAC + Ownership) / Client Cannot Create Gig (expect 403)" id="f35138bb-6f3e-4470-92e7-276dee009a82" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.011">
+    <testcase name="Status is 403" time="0.011" classname="2GigManagementRbacOwnershipClientCannotCreateGigExpect403"/>
+  </testsuite>
+  <testsuite name="2. Gig Management (RBAC + Ownership) / Freelancer Creates Gig (expect 201)" id="557734bd-c0b0-440a-999c-faf1bf233dd1" timestamp="2026-11-07T14:09:25.833Z" tests="2" failures="0" errors="0" time="0.013">
+    <testcase name="Status is 201" time="0.013" classname="2GigManagementRbacOwnershipFreelancerCreatesGigExpect201"/>
+    <testcase name="Gig id captured" time="0.013" classname="2GigManagementRbacOwnershipFreelancerCreatesGigExpect201"/>
+  </testsuite>
+  <testsuite name="2. Gig Management (RBAC + Ownership) / Create Gig - Invalid Input (expect 400)" id="a611c118-83d5-43a6-82bd-81fa854fccf6" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.011">
+    <testcase name="Status is 400" time="0.011" classname="2GigManagementRbacOwnershipCreateGigInvalidInputExpect400"/>
+  </testsuite>
+  <testsuite name="2. Gig Management (RBAC + Ownership) / Browse Gigs - Public, No Auth (expect 200)" id="76d11813-e31b-4f09-a1ff-111ccadf3e57" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.011">
+    <testcase name="Status is 200" time="0.011" classname="2GigManagementRbacOwnershipBrowseGigsPublicNoAuthExpect200"/>
+  </testsuite>
+  <testsuite name="2. Gig Management (RBAC + Ownership) / Freelancer Lists Own Gigs (expect 200)" id="3113092d-e057-4b09-9fe5-6b31894fdfc5" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.012">
+    <testcase name="Status is 200" time="0.012" classname="2GigManagementRbacOwnershipFreelancerListsOwnGigsExpect200"/>
+  </testsuite>
+  <testsuite name="2. Gig Management (RBAC + Ownership) / Second Freelancer Cannot Update First's Gig (expect 403 Ownership)" id="c1948271-97c2-4e31-99c4-b4d71370546a" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.010">
+    <testcase name="Status is 403" time="0.010" classname="2GigManagementRbacOwnershipSecondFreelancerCannotUpdateFirstsGigExpect403Ownership"/>
+  </testsuite>
+  <testsuite name="2. Gig Management (RBAC + Ownership) / Owner Updates Own Gig (expect 200)" id="c7658db6-4ff3-4f39-a788-6e6d99442ce8" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.014">
+    <testcase name="Status is 200" time="0.014" classname="2GigManagementRbacOwnershipOwnerUpdatesOwnGigExpect200"/>
+  </testsuite>
+  <testsuite name="2. Gig Management (RBAC + Ownership) / Ownership Field Cannot Be Changed" id="40d5e7d5-1ba9-47dd-bd4b-d7b554250b5d" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.008">
+    <testcase name="Status is 400" time="0.008" classname="2GigManagementRbacOwnershipOwnershipFieldCannotBeChanged"/>
+  </testsuite>
+  <testsuite name="2. Gig Management (RBAC + Ownership) / Unknown Update Field Rejected" id="7089a221-8c60-438a-ba0b-5b015e0a8c10" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="Status is 400" time="0.009" classname="2GigManagementRbacOwnershipUnknownUpdateFieldRejected"/>
+  </testsuite>
+  <testsuite name="2. Gig Management (RBAC + Ownership) / Malformed Gig ID Rejected" id="ffbab735-e0e9-4324-8df0-3535e18448cd" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="Status is 400" time="0.009" classname="2GigManagementRbacOwnershipMalformedGigIdRejected"/>
+  </testsuite>
+  <testsuite name="3. Bookings + Transactions / Freelancer Cannot Book a Gig (expect 403 RBAC)" id="ec89d4ae-97a2-4bd2-8ea8-8c056bf8d94e" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="Status is 403" time="0.009" classname="3BookingsTransactionsFreelancerCannotBookAGigExpect403Rbac"/>
+  </testsuite>
+  <testsuite name="3. Bookings + Transactions / Client Books Gig (expect 201 + Transaction Created)" id="b3ecb1c0-d2e3-45dd-8afb-02363fa4a1d3" timestamp="2026-11-07T14:09:25.833Z" tests="3" failures="0" errors="0" time="0.014">
+    <testcase name="Status is 201" time="0.014" classname="3BookingsTransactionsClientBooksGigExpect201TransactionCreated"/>
+    <testcase name="Booking and transaction present" time="0.014" classname="3BookingsTransactionsClientBooksGigExpect201TransactionCreated"/>
+    <testcase name="Transaction belongs to the booking" time="0.014" classname="3BookingsTransactionsClientBooksGigExpect201TransactionCreated"/>
+  </testsuite>
+  <testsuite name="3. Bookings + Transactions / Book Non-Existent Gig (expect 404)" id="a5050546-7f5f-41d7-92c6-d40a57c12df3" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.012">
+    <testcase name="Status is 404" time="0.012" classname="3BookingsTransactionsBookNonExistentGigExpect404"/>
+  </testsuite>
+  <testsuite name="3. Bookings + Transactions / Client Lists Own Bookings (expect 200)" id="07a7da63-909d-4201-81d8-bf6b48b02426" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.010">
+    <testcase name="Status is 200" time="0.010" classname="3BookingsTransactionsClientListsOwnBookingsExpect200"/>
+  </testsuite>
+  <testsuite name="3. Bookings + Transactions / Freelancer Lists Bookings Received (expect 200)" id="107f9fa7-e3ee-45fb-9296-2b30562e8657" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.011">
+    <testcase name="Status is 200" time="0.011" classname="3BookingsTransactionsFreelancerListsBookingsReceivedExpect200"/>
+  </testsuite>
+  <testsuite name="3. Bookings + Transactions / Client Cannot List Bookings Received (expect 403 RBAC)" id="dfba1e31-bcfc-4313-937d-85eedd0537b1" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.008">
+    <testcase name="Status is 403" time="0.008" classname="3BookingsTransactionsClientCannotListBookingsReceivedExpect403Rbac"/>
+  </testsuite>
+  <testsuite name="3. Bookings + Transactions / Booking Identity And Price Tampering Rejected" id="5684f72e-d2aa-4405-b9c6-46fb41d7fc5c" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="Status is 400" time="0.009" classname="3BookingsTransactionsBookingIdentityAndPriceTamperingRejected"/>
+  </testsuite>
+  <testsuite name="3. Bookings + Transactions / Second Freelancer Has No Received Bookings" id="f7cca17c-5367-4190-a02a-07621a4d0253" timestamp="2026-11-07T14:09:25.833Z" tests="2" failures="0" errors="0" time="0.009">
+    <testcase name="Status is 200" time="0.009" classname="3BookingsTransactionsSecondFreelancerHasNoReceivedBookings"/>
+    <testcase name="Private list is empty" time="0.009" classname="3BookingsTransactionsSecondFreelancerHasNoReceivedBookings"/>
+  </testsuite>
+  <testsuite name="4. Income Tracking (RBAC) / Freelancer Gets Income Summary (expect 200, totalIncome >= 1750)" id="1249a292-4945-4ab1-854d-7c3e60905751" timestamp="2026-11-07T14:09:25.833Z" tests="2" failures="0" errors="0" time="0.030">
+    <testcase name="Status is 200" time="0.030" classname="4IncomeTrackingRbacFreelancerGetsIncomeSummaryExpect200TotalIncome1750"/>
+    <testcase name="Income matches this isolated freelancer exactly" time="0.030" classname="4IncomeTrackingRbacFreelancerGetsIncomeSummaryExpect200TotalIncome1750"/>
+  </testsuite>
+  <testsuite name="4. Income Tracking (RBAC) / Client Cannot Access Income Summary (expect 403 RBAC)" id="439b1c7c-af79-475d-97b0-97aa6286776a" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.007">
+    <testcase name="Status is 403" time="0.007" classname="4IncomeTrackingRbacClientCannotAccessIncomeSummaryExpect403Rbac"/>
+  </testsuite>
+  <testsuite name="4. Income Tracking (RBAC) / Second Freelancer Has Zero Income" id="7822f655-0fb3-4de7-aa81-d1c54ac2bdd5" timestamp="2026-11-07T14:09:25.833Z" tests="2" failures="0" errors="0" time="0.011">
+    <testcase name="Status is 200" time="0.011" classname="4IncomeTrackingRbacSecondFreelancerHasZeroIncome"/>
+    <testcase name="Other freelancer income stays zero" time="0.011" classname="4IncomeTrackingRbacSecondFreelancerHasZeroIncome"/>
+  </testsuite>
+  <testsuite name="5. Gig Deletion (Ownership) / Second Freelancer Cannot Delete First's Gig (expect 403)" id="b2290ca0-e015-4d4b-9495-7bea3ec2a1b9" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="Status is 403" time="0.009" classname="5GigDeletionOwnershipSecondFreelancerCannotDeleteFirstsGigExpect403"/>
+  </testsuite>
+  <testsuite name="5. Gig Deletion (Ownership) / Owner Deletes Own Gig (expect 200)" id="58642495-721b-4a1b-b809-1e4f61892410" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.012">
+    <testcase name="Status is 200" time="0.012" classname="5GigDeletionOwnershipOwnerDeletesOwnGigExpect200"/>
+  </testsuite>
+  <testsuite name="5. Gig Deletion (Ownership) / Historic Booking Survives Gig Deletion" id="02b01d37-b066-496b-8c6d-91fc57669e21" timestamp="2026-11-07T14:09:25.833Z" tests="2" failures="0" errors="0" time="0.008">
+    <testcase name="Status is 200" time="0.008" classname="5GigDeletionOwnershipHistoricBookingSurvivesGigDeletion"/>
+    <testcase name="Booked price and title stay saved" time="0.008" classname="5GigDeletionOwnershipHistoricBookingSurvivesGigDeletion"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Client Cannot Read Admin Overview (expect 403 RBAC)" id="8eaf7912-1658-405a-85e6-4079415b1c32" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.008">
+    <testcase name="Status is 403" time="0.008" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsClientCannotReadAdminOverviewExpect403Rbac"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Freelancer Cannot Read Admin Users (expect 403 RBAC)" id="5ff919b4-7c8d-49f2-b962-3a1de8ec4627" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.007">
+    <testcase name="Status is 403" time="0.007" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsFreelancerCannotReadAdminUsersExpect403Rbac"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Admin Security Events Need A Token (expect 401)" id="219745c9-59be-4b82-9879-42f4013131a0" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.006">
+    <testcase name="Status is 401" time="0.006" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminSecurityEventsNeedATokenExpect401"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Income Summary Includes Dashboard Analytics" id="c0bc47e3-f8e8-4fab-ac51-cef0dfc954fe" timestamp="2026-11-07T14:09:25.833Z" tests="5" failures="0" errors="0" time="0.010">
+    <testcase name="Status is 200" time="0.010" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsIncomeSummaryIncludesDashboardAnalytics"/>
+    <testcase name="12 months of chart data" time="0.010" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsIncomeSummaryIncludesDashboardAnalytics"/>
+    <testcase name="Tax breakdown adds up to the estimate" time="0.010" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsIncomeSummaryIncludesDashboardAnalytics"/>
+    <testcase name="Calculation is explained" time="0.010" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsIncomeSummaryIncludesDashboardAnalytics"/>
+    <testcase name="Net income is income minus tax" time="0.010" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsIncomeSummaryIncludesDashboardAnalytics"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Lockout: Register Victim Account" id="77d06897-085a-455e-aecb-c7ef0e4c232d" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.331">
+    <testcase name="Status is 201" time="0.331" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLockoutRegisterVictimAccount"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Lockout: Five Wrong Passwords Are Refused (expect 401)" id="970d8990-a267-40db-a51c-dbc7f78f0bed" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.348">
+    <testcase name="Wrong password rejected (1 of 5)" time="0.346" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLockoutFiveWrongPasswordsAreRefusedExpect401"/>
+    <testcase name="Wrong password rejected (2 of 5)" time="0.346" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLockoutFiveWrongPasswordsAreRefusedExpect401"/>
+    <testcase name="Wrong password rejected (3 of 5)" time="0.346" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLockoutFiveWrongPasswordsAreRefusedExpect401"/>
+    <testcase name="Wrong password rejected (4 of 5)" time="0.346" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLockoutFiveWrongPasswordsAreRefusedExpect401"/>
+    <testcase name="Wrong password rejected (5 of 5)" time="0.346" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLockoutFiveWrongPasswordsAreRefusedExpect401"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Lockout: Correct Password Is Now Blocked (expect 429 + Retry-After)" id="35b01405-feaa-4dd2-8743-9c06dec21f48" timestamp="2026-11-07T14:09:25.833Z" tests="3" failures="0" errors="0" time="0.009">
+    <testcase name="Status is 429" time="0.009" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLockoutCorrectPasswordIsNowBlockedExpect429RetryAfter"/>
+    <testcase name="Retry-After header is set" time="0.009" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLockoutCorrectPasswordIsNowBlockedExpect429RetryAfter"/>
+    <testcase name="Message says the account is locked" time="0.009" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLockoutCorrectPasswordIsNowBlockedExpect429RetryAfter"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Logout: Register Throwaway User" id="9befbef1-78ec-4e4b-ae75-b1ea111bbb2a" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.327">
+    <testcase name="Status is 201" time="0.327" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLogoutRegisterThrowawayUser"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Logout: Login Throwaway User" id="44efc88f-1081-408e-be51-3aeb57f86ad5" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.325">
+    <testcase name="Status is 200" time="0.325" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLogoutLoginThrowawayUser"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Logout: Token Works Before Logout (expect 200)" id="0af9babf-0408-40d3-8c28-e44b6f2285cd" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.008">
+    <testcase name="Status is 200" time="0.008" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLogoutTokenWorksBeforeLogoutExpect200"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Logout: Server Ends The Session (expect 200)" id="c9f35f60-18a7-46a8-9bd2-f4d34b7ee5c4" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="Status is 200" time="0.009" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLogoutServerEndsTheSessionExpect200"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Logout: Old Token Is Rejected (expect 401)" id="783a0d6d-e17f-4dd2-91e4-d388d5bd4b67" timestamp="2026-11-07T14:09:25.833Z" tests="2" failures="0" errors="0" time="0.006">
+    <testcase name="Status is 401" time="0.006" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLogoutOldTokenIsRejectedExpect401"/>
+    <testcase name="Generic message" time="0.006" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsLogoutOldTokenIsRejectedExpect401"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Admin: Login (skipped without ADMIN_EMAIL/ADMIN_PASSWORD)" id="75f3c9a9-8fa0-4db3-bca6-21f2dbd7ec86" timestamp="2026-11-07T14:09:25.833Z" tests="2" failures="0" errors="0" time="0.323">
+    <testcase name="Status is 200" time="0.323" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminLoginSkippedWithoutAdminEmailAdminPassword"/>
+    <testcase name="Role is admin" time="0.323" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminLoginSkippedWithoutAdminEmailAdminPassword"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Admin: Platform Overview (expect 200)" id="82eac644-f96c-45aa-b802-92be75a956e9" timestamp="2026-11-07T14:09:25.833Z" tests="2" failures="0" errors="0" time="0.018">
+    <testcase name="Status is 200" time="0.018" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminPlatformOverviewExpect200"/>
+    <testcase name="Counts present" time="0.018" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminPlatformOverviewExpect200"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Admin: Users List Hides Secrets (expect 200)" id="61321c25-2855-4dbf-9b6a-808c01577b7a" timestamp="2026-11-07T14:09:25.833Z" tests="3" failures="0" errors="0" time="0.012">
+    <testcase name="Status is 200" time="0.012" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminUsersListHidesSecretsExpect200"/>
+    <testcase name="No password hashes or security counters" time="0.012" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminUsersListHidesSecretsExpect200"/>
+    <testcase name="Locked victim is flagged" time="0.012" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminUsersListHidesSecretsExpect200"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Admin: Security Events Show The Lockout (expect 200)" id="d9c13ab8-d38b-4664-a8bb-328794d7b95a" timestamp="2026-11-07T14:09:25.833Z" tests="3" failures="0" errors="0" time="0.008">
+    <testcase name="Status is 200" time="0.008" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminSecurityEventsShowTheLockoutExpect200"/>
+    <testcase name="account_locked event was logged" time="0.008" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminSecurityEventsShowTheLockoutExpect200"/>
+    <testcase name="login_failed events were logged" time="0.008" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminSecurityEventsShowTheLockoutExpect200"/>
+  </testsuite>
+  <testsuite name="6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics) / Admin: Invalid limit Rejected (expect 400)" id="d727cae0-633b-4087-a801-cf6a969650a6" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="Status is 400" time="0.009" classname="6Part3SecurityFeaturesLockoutLogoutAdminRbacAnalyticsAdminInvalidLimitRejectedExpect400"/>
+  </testsuite>
+  <testsuite name="7. Rate Limiting / Repeated Booking Calls Must Reach 429" id="05347497-211e-4d49-9306-816664e97268" timestamp="2026-11-07T14:09:25.833Z" tests="2" failures="0" errors="0" time="0.009">
+    <testcase name="Unavailable probe gig is rejected" time="0.008" classname="7RateLimitingRepeatedBookingCallsMustReach429"/>
+    <testcase name="Booking limiter returns 429" time="0.008" classname="7RateLimitingRepeatedBookingCallsMustReach429"/>
+    <testcase name="Clear limit message" time="0.008" classname="7RateLimitingRepeatedBookingCallsMustReach429"/>
+  </testsuite>
+  <testsuite name="7. Rate Limiting / Repeated Login Calls Must Reach 429" id="28003a69-f7b3-484e-9eec-b0f052b78647" timestamp="2026-11-07T14:09:25.833Z" tests="1" failures="0" errors="0" time="0.009">
+    <testcase name="Wrong password rejected" time="0.010" classname="7RateLimitingRepeatedLoginCallsMustReach429"/>
+    <testcase name="Auth limiter returns 429" time="0.010" classname="7RateLimitingRepeatedLoginCallsMustReach429"/>
+  </testsuite>
+  <testsuite name="8. API Headers / API Security Headers Present" id="8c05f59f-b345-471d-aa90-1565f20a5190" timestamp="2026-11-07T14:09:25.833Z" tests="3" failures="0" errors="0" time="0.005">
+    <testcase name="Status is 200" time="0.005" classname="8ApiHeadersApiSecurityHeadersPresent"/>
+    <testcase name="CSP and nosniff exist" time="0.005" classname="8ApiHeadersApiSecurityHeadersPresent"/>
+    <testcase name="Every response carries a request ID" time="0.005" classname="8ApiHeadersApiSecurityHeadersPresent"/>
+  </testsuite>
+</testsuites>

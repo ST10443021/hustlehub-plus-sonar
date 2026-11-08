@@ -1,0 +1,1622 @@
+# Observed 7 November 2026 (South Africa)
+# Scope: npm test; 127 tests in 8 suites; supplied test environment and dependency snapshot; memory repositories / mocked cloud HTTP
+# Exit code: 0. These are audit-workspace results, not a final GitHub commit or live Docker run.
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> hustlehub-backend@3.0.0 test
+> cross-env NODE_ENV=test jest --runInBand
+
+POST /api/auth/register 201 59.185 ms - 225
+POST /api/auth/login 200 7.631 ms - 505
+POST /api/auth/login 401 16.595 ms - 57
+POST /api/auth/login 401 4.587 ms - 57
+POST /api/auth/login 401 6.344 ms - 57
+POST /api/auth/login 401 6.803 ms - 57
+POST /api/auth/login 401 3.412 ms - 57
+POST /api/auth/login 429 1.535 ms - 124
+POST /api/auth/register 201 5.227 ms - 225
+POST /api/auth/login 200 4.150 ms - 505
+POST /api/auth/register 201 4.729 ms - 225
+POST /api/auth/login 200 2.409 ms - 505
+POST /api/auth/login 401 2.837 ms - 57
+POST /api/auth/login 401 3.294 ms - 57
+POST /api/auth/login 401 8.309 ms - 57
+POST /api/auth/login 401 3.825 ms - 57
+POST /api/auth/login 401 2.989 ms - 57
+POST /api/auth/login 200 3.538 ms - 505
+POST /api/auth/register 201 4.710 ms - 225
+POST /api/auth/login 200 3.006 ms - 505
+POST /api/auth/login 401 5.778 ms - 57
+POST /api/auth/login 401 2.739 ms - 57
+POST /api/auth/login 401 2.495 ms - 57
+POST /api/auth/login 401 3.289 ms - 57
+POST /api/auth/login 200 2.869 ms - 505
+POST /api/auth/login 401 2.953 ms - 57
+POST /api/auth/login 401 2.321 ms - 57
+POST /api/auth/login 401 2.457 ms - 57
+POST /api/auth/login 401 2.395 ms - 57
+POST /api/auth/login 200 2.230 ms - 505
+POST /api/auth/register 201 7.635 ms - 225
+POST /api/auth/login 200 7.984 ms - 505
+POST /api/auth/login 401 4.176 ms - 57
+POST /api/auth/login 401 4.011 ms - 57
+POST /api/auth/login 401 2.408 ms - 57
+POST /api/auth/login 401 2.739 ms - 57
+POST /api/auth/login 401 3.265 ms - 57
+POST /api/auth/login 429 2.007 ms - 124
+POST /api/auth/login 200 3.705 ms - 505
+POST /api/auth/register 201 3.348 ms - 225
+POST /api/auth/login 200 4.981 ms - 505
+POST /api/auth/login 401 3.898 ms - 57
+GET /api/auth/profile 200 1.287 ms - 267
+POST /api/auth/register 201 2.594 ms - 225
+POST /api/auth/login 200 2.249 ms - 505
+GET /api/auth/profile 200 0.500 ms - 267
+POST /api/auth/logout 200 0.657 ms - 81
+GET /api/auth/profile 401 0.880 ms - 56
+POST /api/auth/login 200 2.240 ms - 505
+GET /api/auth/profile 200 0.328 ms - 267
+POST /api/auth/logout 401 0.235 ms - 73
+POST /api/auth/register 201 2.380 ms - 225
+POST /api/auth/login 200 4.414 ms - 505
+POST /api/auth/register 201 2.105 ms - 229
+POST /api/auth/login 200 3.521 ms - 514
+POST /api/auth/logout 200 0.440 ms - 81
+GET /api/auth/profile 200 0.392 ms - 271
+GET /api/admin/overview 401 1.340 ms - 73
+GET /api/admin/users 401 0.153 ms - 73
+GET /api/admin/security-events 401 0.162 ms - 73
+POST /api/auth/register 201 5.891 ms - 225
+POST /api/auth/login 200 2.025 ms - 505
+GET /api/admin/overview 403 0.522 ms - 81
+GET /api/admin/users 403 1.029 ms - 81
+GET /api/admin/security-events 403 0.458 ms - 81
+POST /api/auth/register 201 2.540 ms - 230
+POST /api/auth/login 200 2.191 ms - 515
+GET /api/admin/overview 403 0.406 ms - 81
+GET /api/admin/users 403 0.331 ms - 81
+GET /api/admin/security-events 403 0.468 ms - 81
+POST /api/auth/register 400 1.387 ms - 118
+POST /api/auth/register 201 2.817 ms - 226
+POST /api/auth/login 200 2.857 ms - 506
+POST /api/auth/register 201 5.359 ms - 230
+POST /api/auth/login 200 3.295 ms - 515
+POST /api/auth/login 200 5.488 ms - 501
+GET /api/admin/overview 200 2.863 ms - 266
+POST /api/auth/register 201 1.948 ms - 226
+POST /api/auth/login 200 4.096 ms - 506
+POST /api/auth/login 401 4.021 ms - 57
+POST /api/auth/login 401 4.035 ms - 57
+POST /api/auth/login 401 4.702 ms - 57
+POST /api/auth/login 401 4.151 ms - 57
+POST /api/auth/login 401 2.935 ms - 57
+POST /api/auth/login 200 4.766 ms - 501
+GET /api/admin/users?limit=200 200 1.707 ms - 2669
+PASS tests/securityFeatures.test.js
+  ● Console
+
+    console.error
+      [2026-11-07T04:21:01.245Z] Request failed {
+        requestId: 'ee7a134b-e5e9-43ec-8bc6-04ea82136f84',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.262Z] Request failed {
+        requestId: '2b4d49d6-9028-4d61-8eea-f0d9f1df432a',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.273Z] Request failed {
+        requestId: '15c3d506-9ea9-4549-93f2-2e6a53b5fc45',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.285Z] Request failed {
+        requestId: 'f641a3ca-826e-497f-8a89-e08a549d34bb',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.291Z] Request failed {
+        requestId: 'ad3c25ae-ea3a-4ce7-8616-7f3c196bcf9a',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.295Z] Request failed {
+        requestId: 'a0e38ed2-203e-4849-886d-d5ea1db58cb0',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 429,
+        message: 'Too many failed sign-in attempts. This account is temporarily locked. Please try again later.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.332Z] Request failed {
+        requestId: '59d51bc7-1dc8-40e6-98db-e02c197f9063',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.337Z] Request failed {
+        requestId: '8a1b447f-dcb9-46ac-bf38-5239ad30413f',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.349Z] Request failed {
+        requestId: 'af5093a8-dbd6-428a-9634-fc811fdf4e15',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.354Z] Request failed {
+        requestId: 'edc3e620-dba2-40a3-9e8a-fae6a3b950bc',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.361Z] Request failed {
+        requestId: '364ca3a5-d62d-434c-8937-970d11b3d30d',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.386Z] Request failed {
+        requestId: 'fa6f2fd6-a166-4f59-abb2-c7787c9c98bf',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.393Z] Request failed {
+        requestId: 'd8d1f69e-4c26-4763-ba36-4afda53cecc3',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.399Z] Request failed {
+        requestId: 'dfa869dd-1ba9-4b7d-9744-c87729d2bdb5',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.405Z] Request failed {
+        requestId: '439c32c4-c2f4-49ff-bda4-32f5ef50d478',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.416Z] Request failed {
+        requestId: 'b4b07fea-ad39-4d8d-bfef-6d7744ab22da',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.421Z] Request failed {
+        requestId: '3cb4f2e3-49c5-4721-87bc-49f7301411fc',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.427Z] Request failed {
+        requestId: '0e0534ca-1132-49db-9bc7-72ce4624ebaa',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.431Z] Request failed {
+        requestId: '84d60b98-6094-4be9-b095-a041be89f079',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.461Z] Request failed {
+        requestId: '8c1906c6-adf6-4181-8a5c-05c0d55daf99',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.469Z] Request failed {
+        requestId: '818d64bd-f79f-4228-9d52-efe902ecac16',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.473Z] Request failed {
+        requestId: '31c0f8e0-d862-4cf7-b022-6a5291671c40',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.478Z] Request failed {
+        requestId: '6e497f8a-bac8-463f-9c3e-627496650d58',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.483Z] Request failed {
+        requestId: 'f9196816-6417-4e81-ae2c-c976287d0c3d',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.487Z] Request failed {
+        requestId: '9a28b600-44e4-4e50-a82f-d543aa659522',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 429,
+        message: 'Too many failed sign-in attempts. This account is temporarily locked. Please try again later.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.516Z] Request failed {
+        requestId: '81d6677e-5b97-421a-af92-e4a37c13f735',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.689Z] Request failed {
+        requestId: '0f2ddbe7-d52d-4d2a-ac52-d8e03069bc8e',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.698Z] Request failed {
+        requestId: '5ecf53b9-81a7-4e34-8798-6ea6c7ef86fd',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.704Z] Request failed {
+        requestId: 'a3d8a33f-035c-4675-bea6-9cae3a93ba71',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.711Z] Request failed {
+        requestId: '26eec986-2dbc-48a3-a0c6-7aa5fec38843',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:01.718Z] Request failed {
+        requestId: 'ff4f9c85-9a4e-4135-98ab-fee3f13be679',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+POST /api/auth/login 200 2.578 ms - 501
+GET /api/admin/security-events?limit=5 200 1.195 ms - 80
+GET /api/admin/security-events?limit=9999 400 0.437 ms - 134
+GET /api/admin/users?limit=abc 400 0.718 ms - 134
+POST /api/auth/register 201 2.317 ms - 226
+POST /api/auth/login 200 3.455 ms - 506
+GET /api/auth/profile 401 0.880 ms - 56
+POST /api/auth/register 201 3.249 ms - 226
+POST /api/auth/login 200 2.544 ms - 506
+GET /api/admin/overview 401 0.448 ms - 56
+POST /api/auth/register 201 3.722 ms - 226
+POST /api/auth/login 200 2.209 ms - 506
+GET /api/auth/profile 200 0.385 ms - 268
+POST /api/auth/register 400 2.748 ms - 118
+POST /api/auth/register 201 17.193 ms - 230
+POST /api/auth/login 200 9.084 ms - 515
+POST /api/auth/register 201 4.776 ms - 230
+POST /api/auth/login 200 5.632 ms - 515
+POST /api/gigs 201 3.219 ms - 357
+PUT /api/gigs/3d4c74a0-42e1-40ff-9e79-e0743e970a5e 400 0.810 ms - 83
+GET /api/gigs/mine 200 0.735 ms - 368
+POST /api/auth/register 201 2.755 ms - 230
+POST /api/auth/login 200 3.044 ms - 515
+POST /api/auth/register 201 2.783 ms - 226
+POST /api/auth/login 200 2.912 ms - 506
+POST /api/gigs 201 0.803 ms - 357
+POST /api/bookings 400 0.680 ms - 83
+POST /api/auth/register 201 3.395 ms - 230
+POST /api/auth/login 200 2.309 ms - 515
+POST /api/auth/register 201 2.585 ms - 226
+POST /api/auth/login 200 2.794 ms - 506
+POST /api/gigs 201 0.767 ms - 357
+POST /api/auth/register 201 2.286 ms - 230
+POST /api/auth/login 200 3.016 ms - 515
+POST /api/auth/register 201 3.557 ms - 230
+POST /api/auth/login 200 3.338 ms - 515
+POST /api/auth/register 201 3.141 ms - 226
+POST /api/auth/login 200 2.727 ms - 506
+POST /api/auth/register 201 2.960 ms - 226
+POST /api/auth/login 200 4.374 ms - 506
+POST /api/gigs 201 0.636 ms - 357
+POST /api/bookings 201 1.044 ms - 792
+GET /api/bookings/received 200 0.899 ms - 390
+GET /api/bookings/received 200 0.434 ms - 84
+GET /api/bookings/mine 200 1.058 ms - 80
+GET /api/income/summary 200 20.880 ms - 1680
+PASS tests/security.test.js
+POST /api/auth/register 201 3.489 ms - 231
+POST /api/auth/login 200 2.873 ms - 516
+POST /api/auth/register 201 3.060 ms - 227
+POST /api/auth/login 200 2.535 ms - 507
+POST /api/gigs 201 0.820 ms - 357
+POST /api/bookings 201 0.784 ms - 792
+PUT /api/gigs/13928a90-f2ae-4b56-b656-f03f125277b9 200 1.613 ms - 354
+DELETE /api/gigs/13928a90-f2ae-4b56-b656-f03f125277b9 200 0.732 ms - 57
+GET /api/income/summary 200 1.219 ms - 2067
+GET /api/auth/profile 401 0.328 ms - 56
+GET /api/auth/profile 401 0.550 ms - 56
+GET /api/auth/profile 401 0.777 ms - 56
+POST /api/auth/register 201 4.249 ms - 227
+POST /api/auth/login 200 4.676 ms - 507
+GET /api/auth/profile 200 0.756 ms - 269
+POST /api/auth/register 201 18.685 ms - 225
+POST /api/auth/register 201 4.794 ms - 225
+POST /api/auth/register 409 1.882 ms - 73
+POST /api/auth/register 400 0.615 ms - 335
+POST /api/auth/register 201 2.911 ms - 228
+POST /api/auth/login 401 7.093 ms - 57
+GET /api/auth/profile 401 0.206 ms - 73
+POST /api/auth/register 201 2.793 ms - 227
+POST /api/auth/login 200 2.687 ms - 507
+GET /api/auth/profile 200 0.632 ms - 269
+POST /api/auth/register 201 3.004 ms - 228
+POST /api/auth/login 200 2.200 ms - 508
+POST /api/gigs 403 0.440 ms - 81
+POST /api/auth/register 201 2.832 ms - 236
+POST /api/auth/login 200 3.222 ms - 521
+POST /api/gigs 201 2.894 ms - 360
+POST /api/auth/register 201 2.205 ms - 236
+POST /api/auth/login 200 4.909 ms - 521
+POST /api/gigs 400 1.059 ms - 372
+PASS tests/api.test.js
+  ● Console
+
+    console.error
+      [2026-11-07T04:21:02.729Z] Request failed {
+        requestId: '904fda9d-fdbe-48f5-bf7c-b511ae59205d',
+        method: 'POST',
+        path: '/api/auth/register',
+        statusCode: 409,
+        message: 'An account with this email already exists.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:02.747Z] Request failed {
+        requestId: 'f2f2ef9a-6af2-4f40-89e3-8507e418e466',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:02.833Z] Request failed {
+        requestId: '03fbda36-2919-418d-be03-ce85f61bca68',
+        method: 'PUT',
+        path: '/api/gigs/23cefbf1-69c0-4282-8d75-30343fd0d1a4',
+        statusCode: 403,
+        message: 'You do not have permission to modify this gig.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+POST /api/auth/register 201 4.864 ms - 236
+POST /api/auth/login 200 3.485 ms - 521
+POST /api/auth/register 201 2.087 ms - 234
+POST /api/auth/login 200 2.502 ms - 519
+POST /api/gigs 201 0.888 ms - 363
+PUT /api/gigs/23cefbf1-69c0-4282-8d75-30343fd0d1a4 403 1.473 ms - 77
+GET /api/gigs 200 0.442 ms - 669
+POST /api/auth/register 201 2.347 ms - 236
+POST /api/auth/login 200 2.350 ms - 521
+POST /api/auth/register 201 1.983 ms - 227
+POST /api/auth/login 200 2.518 ms - 507
+POST /api/gigs 201 0.820 ms - 367
+POST /api/bookings 201 0.916 ms - 784
+GET /api/income/summary 200 1.546 ms - 2048
+POST /api/auth/register 201 3.178 ms - 236
+POST /api/auth/login 200 2.264 ms - 521
+POST /api/gigs 201 0.613 ms - 356
+POST /api/bookings 403 0.510 ms - 81
+POST /api/auth/register 201 3.088 ms - 228
+POST /api/auth/login 200 2.724 ms - 508
+GET /api/income/summary 403 0.404 ms - 81
+POST /api/auth/register 201 19.712 ms - 236
+POST /api/auth/login 200 3.878 ms - 521
+POST /api/gigs 201 1.922 ms - 356
+PUT /api/gigs/8fc22c03-e244-4cad-93dd-68b0c891a11c 200 1.340 ms - 361
+GET /api/gigs 200 0.281 ms - 367
+POST /api/auth/register 201 3.426 ms - 236
+POST /api/auth/login 200 5.415 ms - 521
+POST /api/gigs 201 0.919 ms - 356
+PUT /api/gigs/5f72fd00-244e-47c3-922e-81fae0381183 400 1.285 ms - 205
+POST /api/auth/register 201 4.136 ms - 236
+POST /api/auth/login 200 2.241 ms - 521
+POST /api/gigs 201 0.882 ms - 356
+POST /api/auth/register 201 4.191 ms - 236
+POST /api/auth/login 200 3.613 ms - 521
+POST /api/auth/register 201 3.493 ms - 232
+POST /api/auth/login 200 4.442 ms - 512
+PUT /api/gigs/b1c0d467-78a4-4006-a22f-43107a81b5c3 403 1.523 ms - 77
+PUT /api/gigs/b1c0d467-78a4-4006-a22f-43107a81b5c3 403 0.429 ms - 81
+PUT /api/gigs/b1c0d467-78a4-4006-a22f-43107a81b5c3 401 0.227 ms - 73
+DELETE /api/gigs/b1c0d467-78a4-4006-a22f-43107a81b5c3 403 1.304 ms - 77
+DELETE /api/gigs/b1c0d467-78a4-4006-a22f-43107a81b5c3 403 0.551 ms - 81
+DELETE /api/gigs/b1c0d467-78a4-4006-a22f-43107a81b5c3 401 0.395 ms - 73
+PASS tests/gigManagement.test.js
+  ● Console
+
+    console.error
+      [2026-11-07T04:21:03.304Z] Request failed {
+        requestId: 'ba72f319-ef1a-43cd-a2dc-b11e235ffeaf',
+        method: 'PUT',
+        path: '/api/gigs/b1c0d467-78a4-4006-a22f-43107a81b5c3',
+        statusCode: 403,
+        message: 'You do not have permission to modify this gig.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:03.313Z] Request failed {
+        requestId: '7a9548d6-ad86-4f91-bd75-74e2a494f775',
+        method: 'DELETE',
+        path: '/api/gigs/b1c0d467-78a4-4006-a22f-43107a81b5c3',
+        statusCode: 403,
+        message: 'You do not have permission to modify this gig.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at Immediate.next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Immediate._onImmediate (../../dependencies/backend/node_modules/express/lib/router/index.js:646:15)
+
+    console.error
+      [2026-11-07T04:21:03.359Z] Request failed {
+        requestId: 'a0ba20f2-ea45-4b8e-84f9-0a507168e379',
+        method: 'POST',
+        path: '/api/bookings',
+        statusCode: 404,
+        message: 'Gig not found or no longer available.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.error
+      [2026-11-07T04:21:03.367Z] Request failed {
+        requestId: '6423b535-9065-4d39-adac-fa7c2fb0af63',
+        method: 'DELETE',
+        path: '/api/gigs/ee7afdcc-d62b-4898-bbd8-cdf3b3c5e5a8',
+        statusCode: 404,
+        message: 'Gig not found.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at Immediate.next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Immediate._onImmediate (../../dependencies/backend/node_modules/express/lib/router/index.js:646:15)
+
+POST /api/auth/register 201 2.328 ms - 236
+POST /api/auth/login 200 3.014 ms - 521
+POST /api/auth/register 201 3.346 ms - 232
+POST /api/auth/login 200 2.790 ms - 512
+POST /api/gigs 201 0.557 ms - 356
+POST /api/bookings 201 0.594 ms - 785
+PUT /api/gigs/ee7afdcc-d62b-4898-bbd8-cdf3b3c5e5a8 200 0.774 ms - 355
+DELETE /api/gigs/ee7afdcc-d62b-4898-bbd8-cdf3b3c5e5a8 200 0.499 ms - 57
+GET /api/gigs/mine 200 0.465 ms - 72
+GET /api/gigs 200 0.411 ms - 959
+POST /api/bookings 404 1.234 ms - 68
+GET /api/bookings/mine 200 0.932 ms - 384
+GET /api/income/summary 200 1.133 ms - 2040
+DELETE /api/gigs/ee7afdcc-d62b-4898-bbd8-cdf3b3c5e5a8 404 0.999 ms - 45
+POST /api/auth/register 201 2.249 ms - 236
+POST /api/auth/login 200 3.986 ms - 521
+POST /api/gigs 201 0.681 ms - 356
+POST /api/auth/register 201 2.308 ms - 236
+POST /api/auth/login 200 3.102 ms - 521
+POST /api/gigs 201 2.056 ms - 356
+POST /api/auth/register 201 10.336 ms - 224
+POST /api/auth/login 200 6.204 ms - 504
+POST /api/auth/login 400 0.907 ms - 151
+POST /api/auth/register 201 2.326 ms - 224
+POST /api/auth/login 200 3.304 ms - 504
+POST /api/auth/login 400 0.618 ms - 104
+POST /api/auth/register 201 3.221 ms - 228
+POST /api/auth/login 200 4.376 ms - 513
+POST /api/gigs 201 0.932 ms - 355
+GET /api/gigs?category%5B%24ne%5D=nothing 400 0.271 ms - 107
+POST /api/auth/register 201 3.430 ms - 228
+POST /api/auth/login 200 3.978 ms - 513
+POST /api/gigs 400 0.879 ms - 111
+POST /api/auth/register 201 6.999 ms - 228
+POST /api/auth/login 200 3.486 ms - 513
+POST /api/gigs 201 1.470 ms - 410
+GET /api/gigs 200 0.233 ms - 711
+POST /api/auth/register 400 0.436 ms - 119
+POST /api/auth/register 201 2.070 ms - 228
+POST /api/auth/login 200 2.762 ms - 513
+PASS tests/injection.test.js
+  ● Console
+
+    console.error
+      [2026-11-07T04:21:03.766Z] Request failed {
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 413,
+        message: 'Request is too large.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at onfinished (../../dependencies/backend/node_modules/body-parser/lib/read.js:103:9)
+      at listener (../../dependencies/backend/node_modules/on-finished/index.js:170:15)
+      at onFinish (../../dependencies/backend/node_modules/on-finished/index.js:101:5)
+      at callback (../../dependencies/backend/node_modules/ee-first/index.js:55:10)
+      at IncomingMessage.onevent (../../dependencies/backend/node_modules/ee-first/index.js:93:5)
+
+POST /api/gigs 400 0.323 ms - 83
+POST /api/auth/register 201 2.790 ms - 228
+POST /api/auth/login 200 5.050 ms - 513
+POST /api/gigs 400 0.433 ms - 83
+POST /api/auth/register 400 0.520 ms - 118
+POST /api/auth/register 400 0.734 ms - 194
+PASS tests/logging.test.js
+  ● Console
+
+    console.error
+      [2026-11-07T04:21:04.059Z] Request failed {
+        requestId: 'c7b1828d-98da-423e-a880-18bd9f35cbfa',
+        method: 'POST',
+        path: '/api/auth/login',
+        statusCode: 401,
+        message: 'Invalid email or password.'
+      }
+
+      65 |     ...(config.nodeEnv === 'development' ? { stack: err.stack } : {}),
+      66 |   });
+    > 67 |   console.error(`[${new Date().toISOString()}] Request failed`, consoleDetails);
+         |           ^
+      68 |
+      69 |   // Unexpected failures (HTTP 5xx) are recorded as structured events so they can be alerted on.
+      70 |   // The log entry carries the request ID that is also sent back to the client in X-Request-Id.
+
+      at error (src/middleware/errorHandler.js:67:11)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:71:5)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at Layer.handle_error (../../dependencies/backend/node_modules/express/lib/router/layer.js:67:12)
+      at trim_prefix (../../dependencies/backend/node_modules/express/lib/router/index.js:326:13)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:286:9
+      at router.process_params (../../dependencies/backend/node_modules/express/lib/router/index.js:346:12)
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:280:10)
+      at ../../dependencies/backend/node_modules/express/lib/router/index.js:646:15
+      at next (../../dependencies/backend/node_modules/express/lib/router/index.js:265:14)
+      at next (../../dependencies/backend/node_modules/express/lib/router/route.js:141:14)
+
+    console.log
+      [event] server_error {
+        requestId: '01912176-764b-4802-bc75-586e0d3161b3',
+        method: 'GET',
+        path: '/api/gigs',
+        statusCode: 500,
+        message: 'driver exploded mongodb://[REDACTED]@db/x',
+        ip: '127.0.0.1'
+      }
+
+      at log (src/utils/eventLogger.js:108:15)
+
+POST /api/auth/register 201 11.858 ms - 225
+POST /api/auth/login 200 3.082 ms - 510
+POST /api/auth/register 201 4.621 ms - 221
+POST /api/auth/login 200 2.721 ms - 501
+POST /api/auth/login 401 3.492 ms - 57
+POST /api/gigs 201 2.009 ms - 355
+POST /api/bookings 201 0.845 ms - 781
+POST /api/auth/register 201 3.214 ms - 221
+POST /api/auth/login 200 4.468 ms - 501
+GET /api/income/summary 403 0.610 ms - 81
+GET /api/auth/profile 401 0.507 ms - 56
+GET /api/gigs?trace=private-query-fixture 500 0.762 ms - 84
+{"timestamp":"2026-11-07T04:21:04.095Z","level":"error","category":"system","event":"server_error","requestId":"2c8e1817-f1ee-4625-ab79-3d9a776a072a","method":"GET","path":"/api/gigs","statusCode":500,"message":"driver exploded mongodb://[REDACTED]@db/x","ip":"127.0.0.1"}
+GET /api/gigs?trace=private-query-fixture 500 0.507 ms - 84
+GET /api/gigs?trace=private-query-fixture 500 8.595 ms - 84
+PASS tests/azureLogging.test.js
+PASS tests/income.test.js
+
+Test Suites: 8 passed, 8 total
+Tests:       127 passed, 127 total
+Snapshots:   0 total
+Time:        4.392 s
+Ran all test suites.

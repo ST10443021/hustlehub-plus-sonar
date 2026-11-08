@@ -1,6 +1,6 @@
 # Pillar 7: final security review record
 
-Review date: **5 November 2026**. The required threat-to-control explanation is in [README section 18](../../README.md#18-final-security-review).
+Review date: **5 November 2026**. Repository integration/evidence update: **7 November 2026**. The final README has been restored; the required threat-to-control explanation is in [README section 18](../../README.md#18-final-security-review).
 
 ## Scope and evidence boundaries
 
@@ -26,21 +26,25 @@ The full README table also covers safe errors, data exposure, configuration, dep
 | Backend checks, 5 November | Lint passed; **8 suites / 127 tests passed** after the Azure update. Includes injection, ownership, JWT, lockout, revocation, safe error, redaction and cloud delivery cases. | Test repositories are in-memory and cloud HTTP is mocked. These checks alone do not prove persistence or live Azure delivery. |
 | Frontend checks, 4 November | Lint, **9 test files / 54 tests**, production build and production audit passed. | Mocked component tests do not prove all live browser attacks are blocked. |
 | Production dependency audits, 4 November | Backend and frontend reported **0 vulnerabilities** for `--omit=dev`. Frontend showed `follow-redirects@1.16.2` after the repair. | Does not cover development dependencies, future advisories or container OS packages. |
-| Frontend full audit, 4 November | **Six moderate affected packages** remained in the ESLint/minimatch toolchain; the proposed forced fix was a breaking plugin downgrade. ESLint also printed an unsupported-version warning. | Do not describe the full dependency tree as clean. A compatible tooling update and fresh reports remain work for Pillars 2/3/8. |
+| Frontend full audit, 4 November (historical) | Six moderate affected tool packages were reported at that time. | Superseded for the frontend by the supplied CI 24 full audit: zero reported vulnerabilities. Backend tool findings remain recorded separately. |
 | Docker/marketplace, Pillars 1/4 | Blake confirmed healthy containers, HTTPS health endpoint and real MongoDB-backed application actions. Bookings updated the correct freelancer's income and persisted. | This does not replace a final-commit CI/Newman run. |
 | Azure, Pillar 5, 5 November | Actual login success/failure, logout, booking and transaction events were queried in Application Insights. Related events shared request IDs. | Startup `cloudLogging: true` alone would not prove this. No Azure alert delivery was demonstrated. |
 | Account lockout, Pillar 6, 5 November | UI showed the account-specific temporary-lock message after the prescribed failed-login sequence and correct-password attempt. | The screenshot alone does not demonstrate expiry timing or every concurrency case; the test suite covers the configured expiry path. |
 | Token revocation, Pillar 6, 5 November | Original token profile **200**; logout **200**; same token profile **401**; fresh login token profile **200**. | Browser token removal alone would not prove revocation; the rejected reused token is the relevant evidence. |
 
+## Current verification refresh, 7 November 2026
+
+Application commit [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1) passed [CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711). The [current evidence](evidence/ci-30-7ef0cc1/REVIEW.md) records the security/injection backend suites, live RBAC/ownership/lockout/revocation cases, browser tests, scans, healthy containers, the local rebuild/login and fresh Azure authentication events. Remaining backend dev-tool entries are 12 (zero critical), with the existing scoped risk treatment retained. The original dated observations below remain historical; statements about CI 24 describe that earlier checkpoint.
+
 ## Review findings and decisions
 
 1. **Required security controls are present and covered by relevant tests.** No new application code was needed to write the four required threat explanations.
-2. **Update evidence claims.** CodeQL, Trivy and final GitHub Actions results remain pending. Old Newman output is historical evidence and is not relabelled as a run against the final MongoDB-backed Docker version. This README update separates implemented controls, observed checks and finalisation work.
+2. **Current evidence.** CI 30 passed on `blake` at `7ef0cc1`. Actual ESLint, npm audit and Trivy reports, healthy container status and a fresh live Newman summary are retained in [the CI 30 review](evidence/ci-30-7ef0cc1/REVIEW.md). The old Newman output remains historical. CodeQL is not active because of the private Classroom entitlement limitation. Backend development-tool advisories remain explicitly recorded.
 3. **Record current logging accurately.** Azure delivery is now demonstrated. It is best-effort, not immutable or exactly-once storage. No alert rule has been tested. Structured-event/error redaction is covered; the Morgan access log can still include query strings, and arbitrary secrets pasted into ordinary text are not guaranteed to be detected.
 4. **Keep browser-session risk explicit.** JWTs are stored in `localStorage` and can be read by injected same-origin script. CSP and text rendering reduce XSS exposure but do not make that storage inaccessible to JavaScript. If logout cannot reach the server, local session clearing does not revoke a stolen token. No cookie/CSRF redesign is included.
-5. **Correct image-key claims.** `.dockerignore` keeps host credentials out of the build context, but the backend Dockerfile generates a demo CA/server key set inside the image. The review therefore does not say the image contains no keys. Public deployment would require separately managed certificates and removal of build-generated fallback keys. Current Compose mounts the host's trusted server certificate/key over the runtime paths.
-6. **Fix one CI failure-propagation issue when returning to Pillar 2.** The repository Trivy step pipes its command through `tee` without explicit `pipefail` or `shell: bash`. A scanner failure can be hidden by `tee` succeeding. GitHub documents different options for the unspecified shell and explicit `bash`. Locally, `bash -e -c 'false | cat'` exited **0**, while the same pipeline with `bash -eo pipefail` exited **1**. That reproduces the shell behaviour; it is not a GitHub run or Trivy scan. Add explicit pipe-failure handling, then demonstrate that a controlled failing check makes the actual workflow fail. This package does not change the workflow because pipeline work was deliberately deferred.
-7. **Retain residual limits rather than claim production readiness.** The single MongoDB node has no backup proof; booking/transaction compensation is not atomic; rate-limit counters are in process memory; local certificate trust and demo image keys need production changes; log retention/access need management. These are recorded in README section 20.
+5. **Image-key repair.** The CI repair removed build-generated fallback certificate keys and the unused npm/npx runtime toolchain. Host certificates stay excluded from the build context; Compose mounts TLS credentials read-only at runtime. CI 24 image reports show no fixable HIGH/CRITICAL findings at the configured filters. Public deployment would still need separately managed trusted certificates.
+6. **CI failure-propagation finding: configuration corrected on 7 November; subsequent actual CI 24 run passed.** The restored workflow now uses `defaults.run.shell: bash`. The following describes the original finding: The repository Trivy step pipes its command through `tee` without explicit `pipefail` or `shell: bash`. A scanner failure can be hidden by `tee` succeeding. GitHub documents different options for the unspecified shell and explicit `bash`. Locally, `bash -e -c 'false | cat'` exited **0**, while the same pipeline with `bash -eo pipefail` exited **1**. That reproduces the shell behaviour; it is not a GitHub run or Trivy scan. Add explicit pipe-failure handling, then demonstrate that a controlled failing check makes the actual workflow fail. The correction is present in the later CI 24 workflow, which passed. Its supplied artifacts now provide actual Trivy and stack evidence; earlier failed GitHub runs demonstrate failure gating.
+7. **Retain residual limits rather than claim production readiness.** The single MongoDB node has no backup proof; booking/transaction compensation is not atomic; rate-limit counters are in process memory; local certificate trust needs production changes; log retention/access need management. These are recorded in README section 20.
 
 ## Save existing evidence in the project
 
@@ -56,17 +60,22 @@ These filenames are suggested destinations. The screenshots and terminal results
 
 Do not place connection strings, JWTs, passwords, real `.env` files or private certificates in evidence. IDs and timestamps can be retained where needed to match events; keep screenshots limited to relevant fields.
 
+## Subsequent tooling maintenance
+
+The [dependency maintenance review](TOOLING_DEPENDENCY_REVIEW.md) records locally tested scoped fixes to Newman/nodemon dependencies. The full backend audit falls from 27 to **12 development-tool package entries, with zero critical**, while production package versions remain unchanged and the production audit is zero. Tests cover all 127 backend cases, the live HTTPS/MongoDB Newman flow (67 requests / 90 assertions), an actual watcher restart and Postman template/UUID compatibility. Remaining Faker/csv-parse/deepmerge risks are recorded as residual tooling findings with controlled inputs and production exclusion; they are not labelled fixed. The subsequent CI 30 result is successful, with its separate actual reports linked in the current refresh above.
+
 ## Final repository handoff
 
-- [ ] Copy the existing screenshot/output evidence into the chosen paths and link it in Pillar 8.
-- [ ] Resolve the Trivy pipeline/`tee` failure-propagation issue under Pillar 2.
-- [ ] Run GitHub Actions, review CodeQL alerts and Trivy findings, and save the actual outcomes under Pillars 2/3.
-- [ ] Run the final live Newman collection against isolated test data on the actual final Docker version; do not overwrite coursework/demo data or present archived results as new.
+- [x] Original Azure/security screenshots restored and linked; 7 November audit-workspace outputs are stored separately.
+- [x] Configure explicit Bash/pipefail for workflow run steps.
+- [x] CI 30 success and earlier failed-check behaviour recorded; retain a green run for the actual submitted version.
+- [x] CI 24 analysis/Trivy outcomes and safe stack evidence reviewed and saved; CodeQL service limitation explained. Remaining backend tooling advisories are recorded for follow-up.
+- [x] CI 30 ran Newman against isolated real Docker/MongoDB data: 67 requests, 90 assertions, zero failures. Reports are linked separately from older runs.
 - [ ] Check tracked files and history for accidentally committed secrets. Ignore rules alone are not evidence. Record the final commit that was tested.
-- [ ] Reconcile the old README collaboration branch name `muzammil` with the agreed `muzzi` during final documentation/repository setup. Team allocation is unchanged by this review.
-- [ ] Update stale counts, audit/tooling exceptions, old Better Stack evidence instructions and missing links during Pillar 8. Preserve the observed results and dates rather than replacing them with predictions.
+- [x] Final README branch name reconciled to `muzzi`; team ownership is unchanged.
+- [x] Pillar 8 refresh records CI 30, current counts/tooling risks and fresh Azure delivery; historical outputs stay dated. Video and final repository handoff checks remain explicit.
 
-Pillar 7's threat-to-control review is prepared. Final scan results and repository evidence are tracked separately so the review can remain honest while Pillar 2 is deferred.
+The original dated observations above are retained. The 7 November audit workspace additionally passed 127 backend tests, 63 frontend tests, both linters, production dependency audits and the frontend build; these are not live database/cloud/CI checks. Pillar 7's threat-to-control review is prepared. CI 30 now supplies the current analysis/stack results; remaining tooling advisories and final-merge evidence are tracked in the evidence index.
 
 ## References
 

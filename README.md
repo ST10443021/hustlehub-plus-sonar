@@ -49,7 +49,26 @@ HustleHub+ is a secure freelance marketplace. **Freelancers** advertise gigs, **
 | Connor Albertyn | ST10437293 | Frontend: `BrowseGigsPage.jsx` and `MyBookingsPage.jsx` (client browsing, booking confirmation, own bookings) |
 | Muzammil Cassim | ST10259792 | Frontend: `MyGigsPage.jsx` and `ReceivedBookingsPage.jsx` (gig management, received bookings); backend error handling, HTTPS server and proxy configuration |
 
-Per-file authorship is also recorded in header comments in the source. The shared component `frontend/src/components/BookingsPage.jsx` is used by both booking pages, so changes to it must be coordinated.
+Per-file authorship from Parts 1 and 2 is recorded in header comments in the source. The shared component `frontend/src/components/BookingsPage.jsx` is used by both booking pages, so changes to it must be coordinated.
+
+---
+
+## 2. Final PoE Requirements Traceability
+
+Every requirement and rubric criterion of the Part 3 brief (IIE, 2026c) maps to an implementation or evidence location below. Observed results are tied to application commit [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1) and [CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711); the [evidence index](docs/part3/EVIDENCE.md) separates current results from historical checks and final submission actions.
+
+| Requirement / rubric criterion | How it is met | Where to look |
+| --- | --- | --- |
+| **Final features: tax and income dashboard** | SARS 2026/27 tax estimate with a bracket-by-bracket breakdown, effective and marginal rate, income after tax, 12-month income bar chart, progress towards the tax threshold and a plain-language explanation | [Section 8](#8-tax-estimation-and-income-dashboard); `backend/src/services/incomeService.js`; `frontend/src/pages/DashboardPage.jsx`; `frontend/src/components/IncomeChart.jsx` |
+| **CI/CD pipeline (backend and frontend)** | GitHub Actions: install, lint, test, audit, build both apps, Trivy, Docker Compose stack, Newman API tests, browser integration and logging checks; CI 30 passed on `blake` at `7ef0cc1` | [Section 14](#14-cicd-pipeline); `.github/workflows/ci.yml` |
+| **Static code analysis** | ESLint with `eslint-plugin-security` (backend and frontend, zero warnings allowed), Trivy and `npm audit`; CI 30 results, fixes and 12 remaining development-tool package entries explained | [Section 15](#15-static-code-analysis); `docs/part3/STATIC_ANALYSIS.md`; `docs/part3/evidence/eslint-*.txt` |
+| **Docker (backend and frontend)** | One Dockerfile in each of `backend/` and `frontend/`, orchestrated by `docker-compose.yml` with MongoDB; CI 30 built and ran both application containers; all three services were healthy, with a matching local rebuild confirmed | [Section 16](#16-docker-and-docker-compose); `backend/Dockerfile`; `frontend/Dockerfile`; `docker-compose.yml` |
+| **Logging** | Structured events written to a file, container output and, when configured, Azure Application Insights or Better Stack; sensitive values are redacted | [Section 11](#11-logging-and-monitoring); `backend/src/utils/eventLogger.js`; `backend/src/utils/cloudLogger.js` |
+| **Own security features (at least two)** | Account lockout, server-side token revocation (logout), and an admin security console; plus JWT algorithm pinning, request IDs, hardened containers and database authentication | [Section 10](#10-additional-security-features) |
+| **Security review in README** | Threat-to-protection table with evidence for injection, XSS, authentication, access control and more | [Section 18](#18-final-security-review) |
+| **README update** | This document: setup, features, security, testing, pipeline, logging, code structure, evidence | You are here |
+| **GitHub** | Repository with branch-per-member workflow, pull requests and descriptive commits | [Section 21](#21-git-workflow-and-collaboration) |
+| **Demonstration video** | Full flow: authentication, gig creation, booking, transaction, dashboard, admin | [Section 19](#19-demonstration-evidence) |
 
 ---
 
@@ -110,7 +129,11 @@ Controllers stay thin (HTTP to service translation). Services hold every busines
 
 ### 4.2 Repository layout
 
-```
+---
+
+## 5. Code Structure
+
+```text
 HustleHub/
 ├── README.md                      # This document
 ├── REFERENCES.md                  # Full IIE Harvard reference list
@@ -167,7 +190,7 @@ HustleHub/
 
 ## 5. Application features
 
-| Area | What it does |
+| Area | What users can do |
 | --- | --- |
 | Authentication | Client/freelancer registration, login, verified profile, logout that ends the session on the server, automatic logout at token expiry |
 | Gig management | Freelancers create, view, edit and delete **only their own** gigs |
@@ -435,7 +458,7 @@ cd frontend && npm ci && npm run lint && npm run audit && npm run test:coverage 
 
 ![A pipeline run that correctly fails when a test fails](docs/part3/screenshots/pipeline-run-failing.png)
 
----
+The Azure resource is `hustlehub-logs`, in `rg-hustlehub-poe`, South Africa North. Supplied screenshots from 5 November show actual Azure delivery: [booking/transaction/login events](docs/part3/screenshots/Logging1.png) and [failed login/logout events](docs/part3/screenshots/Logging2.png). Fresh successful-login, failed-login and logout events were also observed after the local rebuild of `7ef0cc1` on 7 November: [current Azure verification](docs/part3/evidence/ci-30-7ef0cc1/azure-delivery-verification.md). The setup/recheck steps below apply when configuration or deployment changes.
 
 ## 12. Static code analysis
 
@@ -471,7 +494,15 @@ Static analysis runs inside the pipeline on every push (see [Section 11](#11-cic
 
 ![SonarQube dashboard](docs/part3/screenshots/sonar-dashboard.png)
 
----
+6. Allow a few minutes for initial ingestion. Save a screenshot of actual returned events in `docs/part3/screenshots/` and record the tested commit/date. Do not claim live delivery based only on unit tests or the startup flag.
+
+The adapter sends only the existing redacted events as **customEvents** with details in **customDimensions**. It does not enable automatic request tracing or Live Metrics. See [Azure logging setup and verification](docs/part3/AZURE_LOGGING.md) for the workspace-table query, failure checks, limitations and evidence checklist. The regional ingestion endpoint and connection-string format follow Microsoft's documentation (Microsoft, n.d.a; Microsoft, n.d.b).
+
+#### Better Stack (alternative, not required for Azure)
+
+1. Create a free account at Better Stack and add a **Logs source** of type **HTTP**.
+2. Copy the source's **ingesting host** URL and **source token**.
+3. Put them in the root `.env` (never commit this file):
 
 ## 13. Docker and Docker Compose
 
@@ -557,17 +588,17 @@ Optionally create an administrator with `ADMIN_EMAIL=you@example.com ADMIN_PASSW
 
 See [Section 13.1](#131-run-the-stack).
 
-### Environment variables (`backend/.env`)
+### Environment variables
 
 | Variable | Purpose | Default / example |
 | --- | --- | --- |
-| `PORT` | HTTPS port | `5443` |
+| `PORT` | API HTTPS port | `5443` |
 | `NODE_ENV` | `development`, `production` or `test` | `development` |
-| `JWT_SECRET` | Token signing secret (≥ 32 chars, required) | none |
+| `JWT_SECRET` | Token signing secret (at least 32 characters, required) | none |
 | `JWT_EXPIRES_IN` | Token lifetime | `1h` |
 | `SSL_KEY_PATH`, `SSL_CERT_PATH` | HTTPS key and certificate | `./certs/key.pem`, `./certs/cert.pem` |
 | `BCRYPT_SALT_ROUNDS` | bcrypt work factor | `12` |
-| `MONGODB_URI` | MongoDB connection (required) | `mongodb://localhost:27017/hustlehub` |
+| `MONGODB_URI` | MongoDB connection (required outside tests) | `mongodb://localhost:27017/hustlehub` |
 | `CORS_ORIGINS` | Comma-separated allowed origins | `https://localhost:5173,https://localhost:5443` |
 | `BOOKING_RATE_LIMIT_WINDOW_MS` / `_MAX` | Booking limiter | `900000` / `10` |
 | `TRUST_PROXY` | `1` only behind the controlled proxy | `false` |

@@ -1,0 +1,15 @@
+
+> hustlehub-frontend@3.0.0 build
+> vite build
+
+No HTTPS certificate found in backend/certs - run "npm run gen-cert" there. Falling back to HTTP, which browsers label "Not secure".
+[36mvite v8.3.5 [32mbuilding client environment for production...[36m[39m
+transforming...
+✓ 97 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.46 kB │ gzip:   0.29 kB
+dist/assets/index-B4fJFHx_.css    5.55 kB │ gzip:   1.65 kB
+dist/assets/index-C-XfestM.js   336.21 kB │ gzip: 107.40 kB
+
+[32m✓ built in 161ms[39m

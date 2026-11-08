@@ -1,0 +1,3 @@
+PASS: patched Handlebars remains usable by Postman visualizer with HTML escaping.
+PASS: Newman error decoration generates UUIDs with the updated CommonJS package.
+PASS: Postman SDK generates collection item IDs with the updated UUID package.

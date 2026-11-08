@@ -1,0 +1,16 @@
+{
+  "checkedAt": "2026-11-07T14:09:32.916Z",
+  "baseUrl": "https://localhost:8443",
+  "note": "Self-signed local certificate accepted for this check. No request tokens or response bodies are saved.",
+  "requests": {
+    "total": 67,
+    "pending": 0,
+    "failed": 0
+  },
+  "assertions": {
+    "total": 90,
+    "pending": 0,
+    "failed": 0
+  },
+  "failures": []
+}
