@@ -1,16 +1,40 @@
-# Orchestrates the three MERN components for local, one-command startup
-# (MongoDB, Inc., n.d.). Full container hardening, health checks, and CI
-# wiring are extended in Part 3 (DevSecOps) - this compose file establishes
-# the baseline container-ready shape of the stack from Part 2 onward
-# (IIE, 2026b).
+# HustleHub+ container stack: MongoDB, the Express API and the nginx-served React app.
+#
+#   cp .env.example .env        # then fill in JWT_SECRET and MONGO_PASSWORD
+#   (cd backend && npm ci && npm run gen-cert)
+#   docker compose up --build -d --wait
+#   docker compose ps           # every service must report "healthy"
+#
+# Design notes (Docker, Inc., n.d.c; OWASP, 2024f):
+#  - Start-up order is enforced with health checks (service_healthy), not just container start,
+#    so the API never starts before MongoDB accepts authenticated connections and nginx never
+#    starts before the API answers.
+#  - MongoDB runs with authentication and is NOT published to the host: only the backend, on the
+#    private Compose network, can reach it (MongoDB, Inc., n.d.b).
+#  - The backend is not published either. nginx is the single public entry point (HTTPS on 8443),
+#    which is why the backend can safely trust the proxy's forwarded client address (TRUST_PROXY=1).
+#  - Secrets come from the root .env file (git-ignored) or, in the CI pipeline, from repository
+#    secrets. Nothing secret is written in this file (GitHub, n.d.a).
+name: hustlehub
+
 services:
   mongo:
     image: mongo:7
     restart: unless-stopped
-    ports:
-      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: hustlehub_admin
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:?Set MONGO_PASSWORD in the root .env file (openssl rand -hex 24)}
     volumes:
       - mongo-data:/data/db
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      # "$$" stops Compose expanding the variable, so the container shell reads its own environment.
+      test: ["CMD-SHELL", "mongosh --quiet -u hustlehub_admin -p \"$$MONGO_INITDB_ROOT_PASSWORD\" --authenticationDatabase admin --eval \"db.adminCommand('ping').ok\" | grep -q 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
 
   backend:
     build: ./backend
@@ -18,21 +42,35 @@ services:
     environment:
       NODE_ENV: production
       PORT: 5443
-      JWT_SECRET: ${JWT_SECRET:?Set a strong JWT_SECRET in a .env file at the project root}
+      JWT_SECRET: ${JWT_SECRET:?Set a strong JWT_SECRET in the root .env file (openssl rand -hex 32)}
       JWT_EXPIRES_IN: 1h
       SSL_KEY_PATH: ./certs/key.pem
       SSL_CERT_PATH: ./certs/cert.pem
       BCRYPT_SALT_ROUNDS: 12
-      MONGODB_URI: mongodb://mongo:27017/hustlehub
+      # authSource=admin because the root user is created in the admin database.
+      MONGODB_URI: mongodb://hustlehub_admin:${MONGO_PASSWORD:?Set MONGO_PASSWORD in the root .env file}@mongo:27017/hustlehub?authSource=admin
       CORS_ORIGINS: https://localhost:8443
       TRUST_PROXY: 1
+      # Own security feature: account lockout (see README "Own security features").
+      LOCKOUT_MAX_ATTEMPTS: ${LOCKOUT_MAX_ATTEMPTS:-5}
+      LOCKOUT_MINUTES: ${LOCKOUT_MINUTES:-15}
+      # Cloud logging: Azure Application Insights is the submitted provider. Leave empty to log to the
+      # local file and container output only (Microsoft, n.d.b).
+      APPLICATIONINSIGHTS_CONNECTION_STRING: ${APPLICATIONINSIGHTS_CONNECTION_STRING:-}
+      # Generic HTTPS JSON ingest, not used by the submitted deployment; both must be set to enable it.
+      LOG_CLOUD_URL: ${LOG_CLOUD_URL:-}
+      LOG_CLOUD_TOKEN: ${LOG_CLOUD_TOKEN:-}
     # Locally trusted certificate made by "npm run gen-cert" in backend/ (read-only).
     volumes:
       - ./backend/certs/cert.pem:/app/certs/cert.pem:ro
       - ./backend/certs/key.pem:/app/certs/key.pem:ro
+      - backend-logs:/app/logs
     depends_on:
-      - mongo
-    # Only nginx reaches this trusted-proxy backend.
+      mongo:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    # Only nginx reaches this trusted-proxy backend. The Dockerfile HEALTHCHECK reports its status.
     expose:
       - "5443"
 
@@ -43,16 +81,20 @@ services:
         VITE_API_BASE_URL: /api
     restart: unless-stopped
     depends_on:
-      - backend
-    # HTTPS on 8443 (port 8080 only redirects to it), so the browser shows a padlock
-    # once "npm run trust-cert" has been run (Mozilla, 2026a; nginx, n.d.).
+      backend:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    # The unprivileged nginx image listens on 8080 (redirects to HTTPS) and 8443 (the application), so the
+    # host ports map straight through (Mozilla, 2026a; nginx, n.d.).
     volumes:
       - ./backend/certs/cert.pem:/etc/nginx/certs/cert.pem:ro
       - ./backend/certs/key.pem:/etc/nginx/certs/key.pem:ro
       - ./backend/certs/rootCA.pem:/etc/nginx/certs/rootCA.pem:ro
     ports:
-      - "8080:80"
-      - "8443:443"
+      - "8080:8080"
+      - "8443:8443"
 
 volumes:
   mongo-data:
+  backend-logs:
