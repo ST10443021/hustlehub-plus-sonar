@@ -9,7 +9,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import security from 'eslint-plugin-security';
 
 export default [
-  { ignores: ['dist/**', 'node_modules/**', 'coverage/**', 'playwright-report/**', 'test-results/**'] },
+  { ignores: ['dist/**', 'node_modules/**', 'coverage/**'] },
   js.configs.recommended,
   security.configs.recommended,
   {
@@ -39,7 +39,7 @@ export default [
   },
   {
     // Node-side config files (Vite config, header helper).
-    files: ['vite.config.js', 'securityHeaders.js', 'eslint.config.js', 'playwright.config.js', 'e2e/**/*.js'],
+    files: ['vite.config.js', 'securityHeaders.js', 'eslint.config.js'],
     languageOptions: { globals: { ...globals.node } },
   },
 ];

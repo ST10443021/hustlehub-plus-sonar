@@ -40,8 +40,6 @@ export default defineConfig({
   server: { https, proxy, headers: securityHeaders(true) },
   preview: { https, proxy, headers: securityHeaders(false) },
   test: {
-    // Browser integration specs run separately with Playwright against a live stack.
-    include: ['src/tests/**/*.test.{js,jsx}'],
     environment: 'jsdom',
     globals: true,
     setupFiles: './src/setupTests.js',
