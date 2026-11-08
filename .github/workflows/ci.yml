@@ -61,7 +61,7 @@ jobs:
           mkdir -p test-results
           npm run lint:report || true
           npm audit --json > test-results/npm-audit-full.json || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: backend-reports
@@ -99,7 +99,7 @@ jobs:
           mkdir -p test-results
           npm run lint:report || true
           npm audit --json > test-results/npm-audit-full.json || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: frontend-reports
@@ -207,7 +207,7 @@ jobs:
           docker run --rm -v "$PWD:/src" aquasec/trivy:0.76.2 fs \
             --scanners vuln,secret,misconfig --severity HIGH,CRITICAL --ignore-unfixed \
             --skip-dirs '**/node_modules' --skip-dirs '**/dist' --exit-code 1 --format table /src | tee evidence/trivy-repo.txt
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: repo-scan-reports
@@ -315,7 +315,7 @@ jobs:
           docker compose exec -T backend cat logs/events.log > evidence/events.log || true
           docker compose logs --no-color --tail=300 > evidence/container-logs.txt || true
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: stack-evidence
