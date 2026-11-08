@@ -1,0 +1,2 @@
+Backend  : 83.8% lines, 82.07% statements, 71.45% branches, 86.69% functions (146 tests)
+Frontend : 88.85% lines, 84.7% statements, 76.08% branches, 92.47% functions (64 tests)

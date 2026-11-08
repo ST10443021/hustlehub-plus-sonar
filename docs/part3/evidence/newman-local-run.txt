@@ -1,174 +1,185 @@
+Connected to a MongoDB-compatible database (FerretDB 1.24 with SQLite storage).
+Connected to MongoDB.
+HustleHub+ API listening securely on https://localhost:5443
+Environment: production
+Browser says "Not secure"? Run "npm run gen-cert" then "npm run trust-cert" once, then fully restart the browser (Mozilla, 2026a).
+{"timestamp":"2026-11-08T08:57:08.239Z","level":"info","category":"auth","event":"user_registered","userId":"6af039642d0091fb29280258","role":"admin","via":"seedAdmin"}
+Admin account created for ci-admin@example.com.
+
+> hustlehub-backend@3.0.0 test:api
+> node scripts/runNewman.js
+
 newman
 
 HustleHub+ Part 3 - Final PoE
 
 ❏ 1. Auth Setup
 ↳ Register Freelancer
-  POST https://localhost:5543/api/auth/register [201 Created, 1.27kB, 83ms]
+  POST https://localhost:5443/api/auth/register [201 Created, 1.27kB, 171ms]
   ✓  Status is 201
 
 ↳ Login Freelancer
-  POST https://localhost:5543/api/auth/login [200 OK, 1.54kB, 12ms]
+  POST https://localhost:5443/api/auth/login [200 OK, 1.54kB, 108ms]
   ✓  Status is 200
 
 ↳ Register Second Freelancer
-  POST https://localhost:5543/api/auth/register [201 Created, 1.27kB, 8ms]
+  POST https://localhost:5443/api/auth/register [201 Created, 1.27kB, 154ms]
   ✓  Status is 201
 
 ↳ Login Second Freelancer
-  POST https://localhost:5543/api/auth/login [200 OK, 1.54kB, 11ms]
+  POST https://localhost:5443/api/auth/login [200 OK, 1.54kB, 111ms]
   ✓  Status is 200
 
 ↳ Register Client
-  POST https://localhost:5543/api/auth/register [201 Created, 1.26kB, 8ms]
+  POST https://localhost:5443/api/auth/register [201 Created, 1.26kB, 104ms]
   ✓  Status is 201
 
 ↳ Login Client
-  POST https://localhost:5543/api/auth/login [200 OK, 1.52kB, 8ms]
+  POST https://localhost:5443/api/auth/login [200 OK, 1.52kB, 99ms]
   ✓  Status is 200
 
 ↳ Public Admin Signup Rejected
-  POST https://localhost:5543/api/auth/register [400 Bad Request, 1.18kB, 6ms]
+  POST https://localhost:5443/api/auth/register [400 Bad Request, 1.18kB, 6ms]
   ✓  Status is 400
 
 ↳ Duplicate Signup Rejected
-  POST https://localhost:5543/api/auth/register [409 Conflict, 1.13kB, 7ms]
+  POST https://localhost:5443/api/auth/register [409 Conflict, 1.13kB, 13ms]
   ✓  Status is 409
 
 ↳ Wrong Password Rejected
-  POST https://localhost:5543/api/auth/login [401 Unauthorized, 1.11kB, 10ms]
+  POST https://localhost:5443/api/auth/login [401 Unauthorized, 1.11kB, 117ms]
   ✓  Status is 401
 
 ↳ Missing JWT Rejected
-  GET https://localhost:5543/api/auth/profile [401 Unauthorized, 1.13kB, 8ms]
+  GET https://localhost:5443/api/auth/profile [401 Unauthorized, 1.13kB, 5ms]
   ✓  Status is 401
 
 ↳ Invalid JWT Rejected
-  GET https://localhost:5543/api/auth/profile [401 Unauthorized, 1.12kB, 5ms]
+  GET https://localhost:5443/api/auth/profile [401 Unauthorized, 1.12kB, 5ms]
   ✓  Status is 401
 
 ❏ 2. Gig Management (RBAC + Ownership)
 ↳ Client Cannot Create Gig (expect 403)
-  POST https://localhost:5543/api/gigs [403 Forbidden, 1.14kB, 6ms]
+  POST https://localhost:5443/api/gigs [403 Forbidden, 1.14kB, 9ms]
   ✓  Status is 403
 
 ↳ Freelancer Creates Gig (expect 201)
-  POST https://localhost:5543/api/gigs [201 Created, 1.43kB, 9ms]
+  POST https://localhost:5443/api/gigs [201 Created, 1.47kB, 13ms]
   ✓  Status is 201
   ✓  Gig id captured
 
 ↳ Create Gig - Invalid Input (expect 400)
-  POST https://localhost:5543/api/gigs [400 Bad Request, 1.43kB, 8ms]
+  POST https://localhost:5443/api/gigs [400 Bad Request, 1.43kB, 6ms]
   ✓  Status is 400
 
 ↳ Browse Gigs - Public, No Auth (expect 200)
-  GET https://localhost:5543/api/gigs [200 OK, 1.43kB, 6ms]
+  GET https://localhost:5443/api/gigs [200 OK, 1.47kB, 7ms]
   ✓  Status is 200
 
 ↳ Freelancer Lists Own Gigs (expect 200)
-  GET https://localhost:5543/api/gigs/mine [200 OK, 1.43kB, 5ms]
+  GET https://localhost:5443/api/gigs/mine [200 OK, 1.47kB, 9ms]
   ✓  Status is 200
 
 ↳ Second Freelancer Cannot Update First's Gig (expect 403 Ownership)
-  PUT https://localhost:5543/api/gigs/97f26b32d02ed4a069cc9ed3 [403 Forbidden, 1.13kB, 14ms]
+  PUT https://localhost:5443/api/gigs/6af0396701e31f0ffe404fc2 [403 Forbidden, 1.13kB, 18ms]
   ✓  Status is 403
 
 ↳ Owner Updates Own Gig (expect 200)
-  PUT https://localhost:5543/api/gigs/97f26b32d02ed4a069cc9ed3 [200 OK, 1.42kB, 6ms]
+  PUT https://localhost:5443/api/gigs/6af0396701e31f0ffe404fc2 [200 OK, 1.46kB, 13ms]
   ✓  Status is 200
 
 ↳ Ownership Field Cannot Be Changed
-  PUT https://localhost:5543/api/gigs/97f26b32d02ed4a069cc9ed3 [400 Bad Request, 1.14kB, 6ms]
+  PUT https://localhost:5443/api/gigs/6af0396701e31f0ffe404fc2 [400 Bad Request, 1.14kB, 6ms]
   ✓  Status is 400
 
 ↳ Unknown Update Field Rejected
-  PUT https://localhost:5543/api/gigs/97f26b32d02ed4a069cc9ed3 [400 Bad Request, 1.14kB, 4ms]
+  PUT https://localhost:5443/api/gigs/6af0396701e31f0ffe404fc2 [400 Bad Request, 1.14kB, 5ms]
   ✓  Status is 400
 
 ↳ Malformed Gig ID Rejected
-  DELETE https://localhost:5543/api/gigs/not-an-id [400 Bad Request, 1.16kB, 4ms]
+  DELETE https://localhost:5443/api/gigs/not-an-id [400 Bad Request, 1.16kB, 5ms]
   ✓  Status is 400
 
 ❏ 3. Bookings + Transactions
 ↳ Freelancer Cannot Book a Gig (expect 403 RBAC)
-  POST https://localhost:5543/api/bookings [403 Forbidden, 1.14kB, 4ms]
+  POST https://localhost:5443/api/bookings [403 Forbidden, 1.14kB, 5ms]
   ✓  Status is 403
 
 ↳ Client Books Gig (expect 201 + Transaction Created)
-  POST https://localhost:5543/api/bookings [201 Created, 1.73kB, 9ms]
+  POST https://localhost:5443/api/bookings [201 Created, 1.89kB, 14ms]
   ✓  Status is 201
   ✓  Booking and transaction present
   ✓  Transaction belongs to the booking
 
 ↳ Book Non-Existent Gig (expect 404)
-  POST https://localhost:5543/api/bookings [404 Not Found, 1.12kB, 7ms]
+  POST https://localhost:5443/api/bookings [404 Not Found, 1.12kB, 6ms]
   ✓  Status is 404
 
 ↳ Client Lists Own Bookings (expect 200)
-  GET https://localhost:5543/api/bookings/mine [200 OK, 1.39kB, 4ms]
+  GET https://localhost:5443/api/bookings/mine [200 OK, 1.47kB, 7ms]
   ✓  Status is 200
 
 ↳ Freelancer Lists Bookings Received (expect 200)
-  GET https://localhost:5543/api/bookings/received [200 OK, 1.39kB, 4ms]
+  GET https://localhost:5443/api/bookings/received [200 OK, 1.47kB, 8ms]
   ✓  Status is 200
 
 ↳ Client Cannot List Bookings Received (expect 403 RBAC)
-  GET https://localhost:5543/api/bookings/received [403 Forbidden, 1.14kB, 4ms]
+  GET https://localhost:5443/api/bookings/received [403 Forbidden, 1.14kB, 6ms]
   ✓  Status is 403
 
 ↳ Booking Identity And Price Tampering Rejected
-  POST https://localhost:5543/api/bookings [400 Bad Request, 1.14kB, 7ms]
+  POST https://localhost:5443/api/bookings [400 Bad Request, 1.14kB, 9ms]
   ✓  Status is 400
 
 ↳ Second Freelancer Has No Received Bookings
-  GET https://localhost:5543/api/bookings/received [200 OK, 1.13kB, 3ms]
+  GET https://localhost:5443/api/bookings/received [200 OK, 1.13kB, 9ms]
   ✓  Status is 200
   ✓  Private list is empty
 
 ❏ 4. Income Tracking (RBAC)
 ↳ Freelancer Gets Income Summary (expect 200, totalIncome >= 1750)
-  GET https://localhost:5543/api/income/summary [200 OK, 3.05kB, 345ms]
+  GET https://localhost:5443/api/income/summary [200 OK, 3.24kB, 34ms]
   ✓  Status is 200
   ✓  Income matches this isolated freelancer exactly
 
 ↳ Client Cannot Access Income Summary (expect 403 RBAC)
-  GET https://localhost:5543/api/income/summary [403 Forbidden, 1.14kB, 4ms]
+  GET https://localhost:5443/api/income/summary [403 Forbidden, 1.14kB, 6ms]
   ✓  Status is 403
 
 ↳ Second Freelancer Has Zero Income
-  GET https://localhost:5543/api/income/summary [200 OK, 2.73kB, 6ms]
+  GET https://localhost:5443/api/income/summary [200 OK, 2.84kB, 9ms]
   ✓  Status is 200
   ✓  Other freelancer income stays zero
 
 ❏ 5. Gig Deletion (Ownership)
 ↳ Second Freelancer Cannot Delete First's Gig (expect 403)
-  DELETE https://localhost:5543/api/gigs/97f26b32d02ed4a069cc9ed3 [403 Forbidden, 1.13kB, 4ms]
+  DELETE https://localhost:5443/api/gigs/6af0396701e31f0ffe404fc2 [403 Forbidden, 1.13kB, 9ms]
   ✓  Status is 403
 
 ↳ Owner Deletes Own Gig (expect 200)
-  DELETE https://localhost:5543/api/gigs/97f26b32d02ed4a069cc9ed3 [200 OK, 1.11kB, 4ms]
+  DELETE https://localhost:5443/api/gigs/6af0396701e31f0ffe404fc2 [200 OK, 1.11kB, 13ms]
   ✓  Status is 200
 
 ↳ Historic Booking Survives Gig Deletion
-  GET https://localhost:5543/api/bookings/mine [200 OK, 1.39kB, 6ms]
+  GET https://localhost:5443/api/bookings/mine [200 OK, 1.47kB, 12ms]
   ✓  Status is 200
   ✓  Booked price and title stay saved
 
 ❏ 6. Part 3 Security Features (Lockout, Logout, Admin RBAC, Analytics)
 ↳ Client Cannot Read Admin Overview (expect 403 RBAC)
-  GET https://localhost:5543/api/admin/overview [403 Forbidden, 1.14kB, 12ms]
+  GET https://localhost:5443/api/admin/overview [403 Forbidden, 1.14kB, 14ms]
   ✓  Status is 403
 
 ↳ Freelancer Cannot Read Admin Users (expect 403 RBAC)
-  GET https://localhost:5543/api/admin/users [403 Forbidden, 1.14kB, 4ms]
+  GET https://localhost:5443/api/admin/users [403 Forbidden, 1.14kB, 6ms]
   ✓  Status is 403
 
 ↳ Admin Security Events Need A Token (expect 401)
-  GET https://localhost:5543/api/admin/security-events [401 Unauthorized, 1.13kB, 5ms]
+  GET https://localhost:5443/api/admin/security-events [401 Unauthorized, 1.13kB, 5ms]
   ✓  Status is 401
 
 ↳ Income Summary Includes Dashboard Analytics
-  GET https://localhost:5543/api/income/summary [200 OK, 3.05kB, 5ms]
+  GET https://localhost:5443/api/income/summary [200 OK, 3.24kB, 10ms]
   ✓  Status is 200
   ✓  12 months of chart data
   ✓  Tax breakdown adds up to the estimate
@@ -176,151 +187,151 @@ HustleHub+ Part 3 - Final PoE
   ✓  Net income is income minus tax
 
 ↳ Lockout: Register Victim Account
-  POST https://localhost:5543/api/auth/register [201 Created, 1.26kB, 9ms]
+  POST https://localhost:5443/api/auth/register [201 Created, 1.26kB, 130ms]
   ✓  Status is 201
 
 ↳ Lockout: Five Wrong Passwords Are Refused (expect 401)
-  POST https://localhost:5543/api/auth/login [401 Unauthorized, 1.11kB, 8ms]
+  POST https://localhost:5443/api/auth/login [401 Unauthorized, 1.11kB, 109ms]
   ✓  Wrong password rejected (1 of 5)
 
 Attempting to set next request to Lockout: Five Wrong Passwords Are Refused (expect 401)
 
 ↳ Lockout: Five Wrong Passwords Are Refused (expect 401)
-  POST https://localhost:5543/api/auth/login [401 Unauthorized, 1.11kB, 6ms]
+  POST https://localhost:5443/api/auth/login [401 Unauthorized, 1.11kB, 104ms]
   ✓  Wrong password rejected (2 of 5)
 
 Attempting to set next request to Lockout: Five Wrong Passwords Are Refused (expect 401)
 
 ↳ Lockout: Five Wrong Passwords Are Refused (expect 401)
-  POST https://localhost:5543/api/auth/login [401 Unauthorized, 1.11kB, 7ms]
+  POST https://localhost:5443/api/auth/login [401 Unauthorized, 1.11kB, 111ms]
   ✓  Wrong password rejected (3 of 5)
 
 Attempting to set next request to Lockout: Five Wrong Passwords Are Refused (expect 401)
 
 ↳ Lockout: Five Wrong Passwords Are Refused (expect 401)
-  POST https://localhost:5543/api/auth/login [401 Unauthorized, 1.11kB, 6ms]
+  POST https://localhost:5443/api/auth/login [401 Unauthorized, 1.11kB, 113ms]
   ✓  Wrong password rejected (4 of 5)
 
 Attempting to set next request to Lockout: Five Wrong Passwords Are Refused (expect 401)
 
 ↳ Lockout: Five Wrong Passwords Are Refused (expect 401)
-  POST https://localhost:5543/api/auth/login [401 Unauthorized, 1.11kB, 6ms]
+  POST https://localhost:5443/api/auth/login [401 Unauthorized, 1.11kB, 116ms]
   ✓  Wrong password rejected (5 of 5)
 
 ↳ Lockout: Correct Password Is Now Blocked (expect 429 + Retry-After)
-  POST https://localhost:5543/api/auth/login [429 Too Many Requests, 1.2kB, 5ms]
+  POST https://localhost:5443/api/auth/login [429 Too Many Requests, 1.2kB, 7ms]
   ✓  Status is 429
   ✓  Retry-After header is set
   ✓  Message says the account is locked
 
 ↳ Logout: Register Throwaway User
-  POST https://localhost:5543/api/auth/register [201 Created, 1.26kB, 8ms]
+  POST https://localhost:5443/api/auth/register [201 Created, 1.26kB, 112ms]
   ✓  Status is 201
 
 ↳ Logout: Login Throwaway User
-  POST https://localhost:5543/api/auth/login [200 OK, 1.52kB, 12ms]
+  POST https://localhost:5443/api/auth/login [200 OK, 1.52kB, 121ms]
   ✓  Status is 200
 
 ↳ Logout: Token Works Before Logout (expect 200)
-  GET https://localhost:5543/api/auth/profile [200 OK, 1.3kB, 4ms]
+  GET https://localhost:5443/api/auth/profile [200 OK, 1.3kB, 9ms]
   ✓  Status is 200
 
 ↳ Logout: Server Ends The Session (expect 200)
-  POST https://localhost:5543/api/auth/logout [200 OK, 1.13kB, 4ms]
+  POST https://localhost:5443/api/auth/logout [200 OK, 1.13kB, 10ms]
   ✓  Status is 200
 
 ↳ Logout: Old Token Is Rejected (expect 401)
-  GET https://localhost:5543/api/auth/profile [401 Unauthorized, 1.12kB, 5ms]
+  GET https://localhost:5443/api/auth/profile [401 Unauthorized, 1.12kB, 5ms]
   ✓  Status is 401
   ✓  Generic message
 
 ↳ Admin: Login (skipped without ADMIN_EMAIL/ADMIN_PASSWORD)
-  POST https://localhost:5543/api/auth/login [200 OK, 1.5kB, 8ms]
+  POST https://localhost:5443/api/auth/login [200 OK, 1.51kB, 420ms]
   ✓  Status is 200
   ✓  Role is admin
 
 ↳ Admin: Platform Overview (expect 200)
-  GET https://localhost:5543/api/admin/overview [200 OK, 1.32kB, 4ms]
+  GET https://localhost:5443/api/admin/overview [200 OK, 1.32kB, 15ms]
   ✓  Status is 200
   ✓  Counts present
 
 ↳ Admin: Users List Hides Secrets (expect 200)
-  GET https://localhost:5543/api/admin/users?limit=50 [200 OK, 2kB, 7ms]
+  GET https://localhost:5443/api/admin/users?limit=50 [200 OK, 2.01kB, 15ms]
   ✓  Status is 200
   ✓  No password hashes or security counters
   ✓  Locked victim is flagged
 
 ↳ Admin: Security Events Show The Lockout (expect 200)
-  GET https://localhost:5543/api/admin/security-events?limit=200 [200 OK, 8.38kB, 5ms]
+  GET https://localhost:5443/api/admin/security-events?limit=200 [200 OK, 8.49kB, 6ms]
   ✓  Status is 200
   ✓  account_locked event was logged
   ✓  login_failed events were logged
 
 ↳ Admin: Invalid limit Rejected (expect 400)
-  GET https://localhost:5543/api/admin/users?limit=9999 [400 Bad Request, 1.19kB, 4ms]
+  GET https://localhost:5443/api/admin/users?limit=9999 [400 Bad Request, 1.19kB, 6ms]
   ✓  Status is 400
 
 ❏ 7. Rate Limiting
 ↳ Repeated Booking Calls Must Reach 429
-  POST https://localhost:5543/api/bookings [404 Not Found, 1.12kB, 5ms]
+  POST https://localhost:5443/api/bookings [404 Not Found, 1.12kB, 7ms]
   ✓  Unavailable probe gig is rejected
 
 Attempting to set next request to Repeated Booking Calls Must Reach 429
 
 ↳ Repeated Booking Calls Must Reach 429
-  POST https://localhost:5543/api/bookings [404 Not Found, 1.12kB, 5ms]
+  POST https://localhost:5443/api/bookings [404 Not Found, 1.12kB, 9ms]
   ✓  Unavailable probe gig is rejected
 
 Attempting to set next request to Repeated Booking Calls Must Reach 429
 
 ↳ Repeated Booking Calls Must Reach 429
-  POST https://localhost:5543/api/bookings [404 Not Found, 1.12kB, 4ms]
+  POST https://localhost:5443/api/bookings [404 Not Found, 1.12kB, 8ms]
   ✓  Unavailable probe gig is rejected
 
 Attempting to set next request to Repeated Booking Calls Must Reach 429
 
 ↳ Repeated Booking Calls Must Reach 429
-  POST https://localhost:5543/api/bookings [404 Not Found, 1.12kB, 4ms]
+  POST https://localhost:5443/api/bookings [404 Not Found, 1.12kB, 6ms]
   ✓  Unavailable probe gig is rejected
 
 Attempting to set next request to Repeated Booking Calls Must Reach 429
 
 ↳ Repeated Booking Calls Must Reach 429
-  POST https://localhost:5543/api/bookings [404 Not Found, 1.12kB, 5ms]
+  POST https://localhost:5443/api/bookings [404 Not Found, 1.12kB, 6ms]
   ✓  Unavailable probe gig is rejected
 
 Attempting to set next request to Repeated Booking Calls Must Reach 429
 
 ↳ Repeated Booking Calls Must Reach 429
-  POST https://localhost:5543/api/bookings [404 Not Found, 1.12kB, 4ms]
+  POST https://localhost:5443/api/bookings [404 Not Found, 1.12kB, 9ms]
   ✓  Unavailable probe gig is rejected
 
 Attempting to set next request to Repeated Booking Calls Must Reach 429
 
 ↳ Repeated Booking Calls Must Reach 429
-  POST https://localhost:5543/api/bookings [404 Not Found, 1.12kB, 4ms]
+  POST https://localhost:5443/api/bookings [404 Not Found, 1.12kB, 8ms]
   ✓  Unavailable probe gig is rejected
 
 Attempting to set next request to Repeated Booking Calls Must Reach 429
 
 ↳ Repeated Booking Calls Must Reach 429
-  POST https://localhost:5543/api/bookings [429 Too Many Requests, 1.16kB, 4ms]
+  POST https://localhost:5443/api/bookings [429 Too Many Requests, 1.16kB, 6ms]
   ✓  Booking limiter returns 429
   ✓  Clear limit message
 
 ↳ Repeated Login Calls Must Reach 429
-  POST https://localhost:5543/api/auth/login [401 Unauthorized, 1.11kB, 5ms]
+  POST https://localhost:5443/api/auth/login [401 Unauthorized, 1.11kB, 99ms]
   ✓  Wrong password rejected
 
 Attempting to set next request to Repeated Login Calls Must Reach 429
 
 ↳ Repeated Login Calls Must Reach 429
-  POST https://localhost:5543/api/auth/login [429 Too Many Requests, 1.15kB, 4ms]
+  POST https://localhost:5443/api/auth/login [429 Too Many Requests, 1.15kB, 4ms]
   ✓  Auth limiter returns 429
 
 ❏ 8. API Headers
 ↳ API Security Headers Present
-  GET https://localhost:5543/api/health [200 OK, 1.11kB, 8ms]
+  GET https://localhost:5443/api/health [200 OK, 1.11kB, 5ms]
   ✓  Status is 200
   ✓  CSP and nosniff exist
   ✓  Every response carries a request ID
@@ -338,10 +349,10 @@ Attempting to set next request to Repeated Login Calls Must Reach 429
 ├─────────────────────────┼───────────────────┼──────────────────┤
 │              assertions │                90 │                0 │
 ├─────────────────────────┴───────────────────┴──────────────────┤
-│ total run duration: 2.3s                                       │
+│ total run duration: 4.2s                                       │
 ├────────────────────────────────────────────────────────────────┤
-│ total data received: 24.54kB (approx)                          │
+│ total data received: 25.69kB (approx)                          │
 ├────────────────────────────────────────────────────────────────┤
-│ average response time: 12ms [min: 3ms, max: 345ms, s.d.: 42ms] │
+│ average response time: 40ms [min: 4ms, max: 420ms, s.d.: 66ms] │
 └────────────────────────────────────────────────────────────────┘
 Safe summary saved to test-results/newman-summary.json

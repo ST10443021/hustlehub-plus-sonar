@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-10-30T12:51:21.790Z",
-  "baseUrl": "https://localhost:5543",
+  "checkedAt": "2026-11-08T08:57:14.228Z",
+  "baseUrl": "https://localhost:5443",
   "note": "Self-signed local certificate accepted for this check. No request tokens or response bodies are saved.",
   "requests": {
     "total": 67,

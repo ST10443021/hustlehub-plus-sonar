@@ -1,5 +1,10 @@
-# npm audit --omit=dev --audit-level=high (production dependencies)
-## backend
+
+> hustlehub-backend@3.0.0 audit
+> npm audit --omit=dev --audit-level=high
+
 found 0 vulnerabilities
-## frontend
+
+> hustlehub-frontend@3.0.0 audit
+> npm audit --omit=dev --audit-level=high
+
 found 0 vulnerabilities

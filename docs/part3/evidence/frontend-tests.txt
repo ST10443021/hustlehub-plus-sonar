@@ -1,38 +1,60 @@
-# npm test (Vitest + React Testing Library) - frontend
- ✓ src/tests/Marketplace.test.jsx (7 tests) 3035ms
+
+> hustlehub-frontend@3.0.0 test
+> vitest run
+
+
+ RUN  v5.0.3 /home/claude/HustleHub-Final/frontend
+
+ ✓ src/tests/Marketplace.test.jsx (7 tests) 2920ms
    ✓ Marketplace interactions (7)
-     ✓ does not turn a blank price into a free gig 1607ms
-     ✓ keeps entered values and shows a field error after a failed save 808ms
- ✓ src/tests/GigManagement.test.jsx (8 tests) 3868ms
-   ✓ prefills the edit form and displays the updated server values without another list request 1555ms
-   ✓ cancelling editing restores the create form without saving 362ms
-   ✓ invalid edits do not reach the API 380ms
-   ✓ failed editing preserves changes and allows a successful retry 399ms
-   ✓ confirmed deletion removes the listing and resets its edit form 359ms
-   ✓ blocks duplicate deletion and other actions while the request is pending 384ms
- ✓ src/tests/Dashboard.test.jsx (8 tests) 1725ms
-   ✓ Income dashboard analytics (6)
-     ✓ shows income after tax, the marginal rate and the bar chart 701ms
-     ✓ lists each tax bracket and the rebate so the estimate can be checked 327ms
- ✓ src/tests/LoginPage.test.jsx (3 tests) 1816ms
+     ✓ does not turn a blank price into a free gig 1569ms
+     ✓ keeps entered values and shows a field error after a failed save 762ms
+ ✓ src/tests/GigManagement.test.jsx (8 tests) 3616ms
+   ✓ prefills the edit form and displays the updated server values without another list request 1467ms
+   ✓ cancelling editing restores the create form without saving 312ms
+   ✓ invalid edits do not reach the API 315ms
+   ✓ failed editing preserves changes and allows a successful retry 391ms
+   ✓ confirmed deletion removes the listing and resets its edit form 303ms
+   ✓ failed deletion retains the listing and confirmation for retry 327ms
+   ✓ blocks duplicate deletion and other actions while the request is pending 350ms
+ ✓ src/tests/Dashboard.test.jsx (9 tests) 1520ms
+   ✓ Income dashboard analytics (7)
+     ✓ shows income after tax, the marginal rate and the bar chart 509ms
+     ✓ lists each tax bracket and the rebate so the estimate can be checked 343ms
+ ✓ src/tests/LoginPage.test.jsx (3 tests) 1431ms
    ✓ LoginPage (3)
-     ✓ renders email and password fields and a submit button 721ms
-     ✓ lets the user type into the email and password fields 478ms
-     ✓ shows a safe error message when login fails, without crashing 611ms
- ✓ src/tests/IncomeChart.test.jsx (12 tests) 962ms
+     ✓ renders email and password fields and a submit button 533ms
+     ✓ lets the user type into the email and password fields 472ms
+     ✓ shows a safe error message when login fails, without crashing 419ms
+ ✓ src/tests/IncomeChart.test.jsx (12 tests) 994ms
    ✓ IncomeChart (5)
-     ✓ draws one bar per month with an accessible description 533ms
-     ✓ the data table gives screen-reader and keyboard users the same numbers 360ms
- ✓ src/tests/Admin.test.jsx (8 tests) 1448ms
+     ✓ draws one bar per month with an accessible description 488ms
+     ✓ the data table gives screen-reader and keyboard users the same numbers 411ms
+ ✓ src/tests/Admin.test.jsx (8 tests) 1549ms
    ✓ Admin console (6)
-     ✓ an admin sees totals, accounts (with locked ones flagged) and security events 656ms
- ✓ src/tests/GigCard.test.jsx (2 tests) 508ms
+     ✓ an admin sees totals, accounts (with locked ones flagged) and security events 733ms
+ ✓ src/tests/MyBookingsRecovery.test.jsx (2 tests) 688ms
+   ✓ a failed history request does not pretend the client has no bookings 514ms
+ ✓ src/tests/MyBookingsDisplay.test.jsx (3 tests) 661ms
+   ✓ client history shows loading until the request completes 463ms
+ ✓ src/tests/ReceivedBookingsRecovery.test.jsx (2 tests) 785ms
+   ✓ a failed received-bookings request stays an error until a successful retry 699ms
+ ✓ src/tests/ReceivedBookingsDisplay.test.jsx (2 tests) 749ms
+   ✓ an empty freelancer history uses the received-bookings route and message 609ms
+ ✓ src/tests/GigCard.test.jsx (2 tests) 562ms
    ✓ GigCard (2)
-     ✓ renders an optional action element, such as a Book button 400ms
- ✓ src/tests/RegisterPage.test.jsx (3 tests) 763ms
+     ✓ renders an optional action element, such as a Book button 456ms
+ ✓ src/tests/RegisterPage.test.jsx (3 tests) 846ms
    ✓ RegisterPage (3)
-     ✓ defaults the role selector to "client" and allows switching to "freelancer" 557ms
- ✓ src/tests/Session.test.jsx (3 tests) 88ms
- Test Files  9 passed (9)
-      Tests  54 passed (54)
-   Duration  24.23s (environment 48%, tests 33%, setup 8%, import 7%, transform 3%, worker 1%)
+     ✓ defaults the role selector to "client" and allows switching to "freelancer" 636ms
+ ✓ src/tests/Session.test.jsx (3 tests) 65ms
+
+ Test Files  13 passed (13)
+      Tests  64 passed (64)
+   Start at  08:55:21
+   Duration  28.90s (environment 49%, tests 32%, setup 9%, import 7%, transform 2%, worker 1%)
+
+Environment  jsdom was created 13 times · 25.52s total, 49% of tracked time
+             create it once per worker with pool: 'vmThreads' (keeps per-file isolation) or isolate: false (shares it across files)
+             learn more: https://vitest.dev/guide/improving-performance#test-environments
+
