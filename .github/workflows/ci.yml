@@ -249,9 +249,11 @@ jobs:
             echo "ADMIN_PASSWORD=$ADMIN_PASSWORD"
           } >> "$GITHUB_ENV"
 
-      - name: Build and start the stack (MongoDB, backend, frontend) and wait until every container is healthy
+      - name: Build (pulling fresh base images) and start the stack (MongoDB, backend, frontend) and wait until every container is healthy
         shell: bash
-        run: docker compose up --build -d --wait --wait-timeout 300
+        run: |
+          docker compose build --pull
+          docker compose up -d --wait --wait-timeout 300
 
       - name: Proof - all three containers are running and healthy
         shell: bash
