@@ -6,7 +6,8 @@
 // marketplace - it applies SARS's published 2026/27 individual marginal
 // tax brackets and primary rebate (SARS, 2026) to the freelancer's
 // *marketplace* income alone, which is not the same as their real total
-// annual taxable income, and the API/UI must label it accordingly.
+// annual taxable income, and the API/UI must label it accordingly. The figure is the tax on income
+// received SO FAR in the current tax year (field estimatedTaxToDate); it is not projected to a full year.
 //
 // Two rules make the estimate correct rather than merely plausible:
 //  1. Only income earned inside the current SARS tax year (1 March to the end
@@ -116,14 +117,15 @@ function buildMethodology(taxYearLabel) {
     `3. Subtract the primary rebate of ${formatRand(config.taxPrimaryRebate)}; tax can never go below R0.`,
     `4. Income up to ${formatRand(config.taxFreeThreshold)} therefore results in R0 tax.`,
     '5. The effective rate is the estimated tax divided by that tax-year income.',
+    '6. This is the tax on income received so far this tax year. It is not a projection of the full year.',
   ];
 }
 
 /** Plain-language explanation shown next to the estimate (SARS, 2026). */
-function buildTaxNote({ taxYearLabel, taxYearIncome, estimatedAnnualTax }) {
+function buildTaxNote({ taxYearLabel, taxYearIncome, estimatedTaxToDate }) {
   const threshold = formatRand(config.taxFreeThreshold);
   if (taxYearIncome <= 0) return `No income recorded yet in the ${taxYearLabel} tax year. Tax only applies once income passes ${threshold}.`;
-  if (estimatedAnnualTax === 0) return `R0 is correct for now: income under ${threshold} is covered by the SARS primary rebate.`;
+  if (estimatedTaxToDate === 0) return `R0 is correct for now: income under ${threshold} is covered by the SARS primary rebate.`;
   return `Calculated on ${formatRand(taxYearIncome)} earned in the ${taxYearLabel} tax year, after the SARS primary rebate.`;
 }
 
@@ -139,8 +141,8 @@ async function getIncomeSummary(freelancerId, now = new Date()) {
 
   const totalIncome = round2(transactions.reduce((sum, t) => sum + t.amount, 0));
   const taxYearIncome = round2(transactions.filter(inTaxYear).reduce((sum, t) => sum + t.amount, 0));
-  const estimatedAnnualTax = estimateAnnualTax(taxYearIncome);
-  const effectiveTaxRate = taxYearIncome > 0 ? round2((estimatedAnnualTax / taxYearIncome) * 100) : 0;
+  const estimatedTaxToDate = estimateAnnualTax(taxYearIncome);
+  const effectiveTaxRate = taxYearIncome > 0 ? round2((estimatedTaxToDate / taxYearIncome) * 100) : 0;
 
   return {
     totalIncome,
@@ -149,14 +151,14 @@ async function getIncomeSummary(freelancerId, now = new Date()) {
     taxYearIncome,
     taxFreeThreshold: config.taxFreeThreshold,
     amountUntilTaxApplies: round2(Math.max(0, config.taxFreeThreshold - taxYearIncome)),
-    estimatedAnnualTax,
+    estimatedTaxToDate,
     effectiveTaxRate, // percentage
     marginalTaxRate: round2(getMarginalRate(taxYearIncome) * 100), // percentage
-    netIncomeAfterTax: round2(taxYearIncome - estimatedAnnualTax),
+    netIncomeAfterTax: round2(taxYearIncome - estimatedTaxToDate),
     taxBreakdown: buildTaxBreakdown(taxYearIncome),
     monthlyIncome: buildMonthlyIncome(transactions, now),
     methodology: buildMethodology(taxYear.label),
-    taxNote: buildTaxNote({ taxYearLabel: taxYear.label, taxYearIncome, estimatedAnnualTax }),
+    taxNote: buildTaxNote({ taxYearLabel: taxYear.label, taxYearIncome, estimatedTaxToDate }),
     currency: 'ZAR',
     disclaimer: 'Estimated figure based on marketplace income only, using SARS 2026/27 individual tax brackets. Not professional tax advice.',
     transactions,
