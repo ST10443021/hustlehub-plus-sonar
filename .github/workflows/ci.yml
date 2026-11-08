@@ -153,7 +153,7 @@ jobs:
           echo "run=true" >> "$GITHUB_OUTPUT"
       - name: SonarQube / SonarCloud scan with quality gate
         if: ${{ steps.sonar-config.outputs.run == 'true' }}
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@v8
         env:
           SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL || 'https://sonarcloud.io' }}
         with:
