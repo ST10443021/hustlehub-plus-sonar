@@ -25,12 +25,13 @@ async function requireAuth(req, res, next) {
   try {
     const payload = authService.verifyToken(token);
     const user = await userRepository.findById(payload.sub);
-    // Deliberately generic: do not reveal whether the token was expired,
-    // malformed, or had a bad signature - all are treated as "unauthorised",
-    // avoiding information leakage that could assist an attacker (OWASP, 2021).
+    // Deliberately generic: do not reveal whether the token was expired, malformed, had a bad
+    // signature, or belonged to an account that no longer exists - all are treated as "unauthorised",
+    // avoiding information leakage that could assist an attacker (OWASP, 2021; OWASP, 2024k).
+    // The real reason is kept in the log only.
     if (!user) {
       logEvent('token_rejected', { reason: 'unknown_user', ip: req.ip, requestId: req.id });
-      return res.status(401).json({ status: 'error', message: 'User for this token no longer exists.' });
+      return res.status(401).json({ status: 'error', message: 'Invalid or expired token.' });
     }
 
     // Token revocation (additional security feature 2): a token whose version is older than the
