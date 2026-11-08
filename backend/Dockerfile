@@ -12,12 +12,12 @@
 #    machines trust). Certificates now come from the host (mounted read-only by Docker Compose, or a
 #    CA-issued certificate in production) and the entrypoint only makes a throw-away certificate at
 #    start-up when none is mounted (Mozilla, 2026a; Let's Encrypt, n.d.; Docker, Inc., n.d.d).
-FROM node:24-alpine AS deps
+FROM node:25-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
-FROM node:24-alpine AS runner
+FROM node:25-alpine AS runner
 ENV NODE_ENV=production
 # openssl is needed only by scripts/generateCert.js, which the entrypoint runs when no certificate is mounted.
 RUN apk add --no-cache openssl
