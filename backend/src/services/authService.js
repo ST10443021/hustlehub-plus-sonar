@@ -1,8 +1,15 @@
+const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config/env');
 const userRepository = require('../repositories/userRepository');
+const identifierThrottle = require('../utils/identifierThrottle');
 const { logEvent } = require('../utils/eventLogger');
+
+// A real bcrypt hash of a random value, made once at start-up. When an e-mail address has no account the
+// password is still compared against this hash, so "unknown address" and "wrong password" take the same
+// time and the response time cannot be used to find out which addresses are registered (OWASP, 2024a; OWASP, 2024k).
+const DUMMY_PASSWORD_HASH = bcrypt.hashSync(crypto.randomBytes(16).toString('hex'), config.bcryptSaltRounds);
 
 /**
  * Hash a plain-text password with bcrypt, an adaptive hashing algorithm
@@ -67,10 +74,19 @@ async function registerUser({ email, password, role }) {
   return userRepository.toPublicUser(user);
 }
 
+/** The one 429 answer used for locked real accounts AND locked unknown addresses, so the two cannot be told apart. */
+function lockedError(retryAfterSeconds) {
+  const err = new Error('Too many failed sign-in attempts. This account is temporarily locked. Please try again later.');
+  err.statusCode = 429;
+  err.expose = true;
+  err.retryAfterSeconds = retryAfterSeconds;
+  return err;
+}
+
 async function loginUser({ email, password }, context = {}) {
   // Generic failure message used for both "no such user" and "wrong password"
   // so the API never confirms or denies whether an email is registered
-  // (this prevents user-enumeration attacks) (OWASP, 2021; OWASP, 2024a).
+  // (this prevents user-enumeration attacks) (OWASP, 2021; OWASP, 2024a; OWASP, 2024k).
   const genericError = () => {
     const err = new Error('Invalid email or password.');
     err.statusCode = 401;
@@ -78,9 +94,24 @@ async function loginUser({ email, password }, context = {}) {
     return err;
   };
 
+  // Log details may contain the e-mail address; eventLogger replaces it with a keyed hash (emailHash)
+  // before anything is written, so the raw address never reaches the log (OWASP, 2024d).
   const user = await userRepository.findByEmail(email);
   if (!user) {
-    logEvent('login_failed', { email: String(email).toLowerCase(), reason: 'no_such_account', ip: context.ip, requestId: context.requestId });
+    // Unknown addresses follow exactly the same rules as real accounts: the same lockout after the
+    // same number of failures (so a locked unknown address answers 429 like a locked real one), and
+    // the same amount of password-hashing work (so the response time does not give the answer away).
+    const retryAfterSeconds = identifierThrottle.lockedFor(email);
+    if (retryAfterSeconds > 0) {
+      logEvent('login_blocked', { email, reason: 'account_locked', ip: context.ip, requestId: context.requestId });
+      throw lockedError(retryAfterSeconds);
+    }
+    await verifyPassword(password, DUMMY_PASSWORD_HASH);
+    const state = identifierThrottle.recordFailure(email);
+    logEvent('login_failed', { email, reason: 'no_such_account', ip: context.ip, requestId: context.requestId });
+    if (state.locked) {
+      logEvent('account_locked', { email, knownAccount: false, lockMinutes: config.lockoutMinutes, ip: context.ip, requestId: context.requestId });
+    }
     throw genericError();
   }
 
@@ -89,11 +120,7 @@ async function loginUser({ email, password }, context = {}) {
   if (userRepository.isLocked(user)) {
     const retryAfterSeconds = Math.max(1, Math.ceil((new Date(user.lockUntil) - Date.now()) / 1000));
     logEvent('login_blocked', { userId: user.id, reason: 'account_locked', ip: context.ip, requestId: context.requestId });
-    const err = new Error('Too many failed sign-in attempts. This account is temporarily locked. Please try again later.');
-    err.statusCode = 429;
-    err.expose = true;
-    err.retryAfterSeconds = retryAfterSeconds;
-    throw err;
+    throw lockedError(retryAfterSeconds);
   }
 
   const passwordMatches = await verifyPassword(password, user.passwordHash);
@@ -104,7 +131,7 @@ async function loginUser({ email, password }, context = {}) {
       lockMs: config.lockoutMinutes * 60 * 1000,
     });
     if (state.locked) {
-      logEvent('account_locked', { userId: user.id, lockMinutes: config.lockoutMinutes, ip: context.ip, requestId: context.requestId });
+      logEvent('account_locked', { userId: user.id, knownAccount: true, lockMinutes: config.lockoutMinutes, ip: context.ip, requestId: context.requestId });
     }
     throw genericError();
   }
