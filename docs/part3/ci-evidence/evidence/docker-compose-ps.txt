@@ -1,0 +1,4 @@
+NAME                   IMAGE                COMMAND                  SERVICE    CREATED          STATUS                    PORTS
+hustlehub-backend-1    hustlehub-backend    "sh /app/docker-entr…"   backend    17 seconds ago   Up 11 seconds (healthy)   5443/tcp
+hustlehub-frontend-1   hustlehub-frontend   "/docker-entrypoint.…"   frontend   17 seconds ago   Up 5 seconds (healthy)    0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp, 0.0.0.0:8443->8443/tcp, [::]:8443->8443/tcp
+hustlehub-mongo-1      mongo:7              "docker-entrypoint.s…"   mongo      18 seconds ago   Up 16 seconds (healthy)   27017/tcp
