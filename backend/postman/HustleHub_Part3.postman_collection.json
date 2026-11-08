@@ -1175,9 +1175,9 @@
                   "pm.test('Status is 200', () => pm.response.to.have.status(200));",
                   "const s = pm.response.json().data;",
                   "pm.test('12 months of chart data', () => pm.expect(s.monthlyIncome).to.have.lengthOf(12));",
-                  "pm.test('Tax breakdown adds up to the estimate', () => pm.expect(s.taxBreakdown.netTax).to.eql(s.estimatedAnnualTax));",
+                  "pm.test('Tax breakdown adds up to the estimate', () => pm.expect(s.taxBreakdown.netTax).to.eql(s.estimatedTaxToDate));",
                   "pm.test('Calculation is explained', () => pm.expect(s.methodology).to.be.an('array').that.is.not.empty);",
-                  "pm.test('Net income is income minus tax', () => pm.expect(s.netIncomeAfterTax).to.eql(Math.round((s.taxYearIncome - s.estimatedAnnualTax) * 100) / 100));"
+                  "pm.test('Net income is income minus tax', () => pm.expect(s.netIncomeAfterTax).to.eql(Math.round((s.taxYearIncome - s.estimatedTaxToDate) * 100) / 100));"
                 ],
                 "type": "text/javascript"
               }

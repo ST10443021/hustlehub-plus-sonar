@@ -15,7 +15,7 @@ describe('Income dashboard', () => {
   test('explains why R0 tax is correct for income under the threshold', async () => {
     respond({
       totalIncome: 10500, transactionCount: 3, taxYearIncome: 10500, amountUntilTaxApplies: 88500,
-      estimatedAnnualTax: 0, effectiveTaxRate: 0,
+      estimatedTaxToDate: 0, effectiveTaxRate: 0,
       taxNote: 'R0 is correct for now: income under R99,000 is covered by the SARS primary rebate.',
     });
     render(<DashboardPage />);
@@ -28,7 +28,7 @@ describe('Income dashboard', () => {
   test('shows a non-zero tax estimate once income passes the threshold', async () => {
     respond({
       totalIncome: 150000, transactionCount: 1, taxYearIncome: 150000, amountUntilTaxApplies: 0,
-      estimatedAnnualTax: 9180, effectiveTaxRate: 6.12,
+      estimatedTaxToDate: 9180, effectiveTaxRate: 6.12,
       taxNote: 'Calculated on R150,000 earned in the 2026/27 tax year, after the SARS primary rebate.',
     });
     render(<DashboardPage />);
@@ -43,7 +43,7 @@ import { within } from '@testing-library/react';
 const months = Array.from({ length: 12 }, (_, i) => ({ key: `2026-${String(i + 1).padStart(2, '0')}`, label: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][i]} 2026`, income: i === 8 ? 150000 : 0 }));
 const full = {
   totalIncome: 150000, transactionCount: 1, taxYearIncome: 150000, amountUntilTaxApplies: 0,
-  estimatedAnnualTax: 9180, effectiveTaxRate: 6.12, marginalTaxRate: 18, netIncomeAfterTax: 140820,
+  estimatedTaxToDate: 9180, effectiveTaxRate: 6.12, marginalTaxRate: 18, netIncomeAfterTax: 140820,
   taxNote: 'Calculated on R150,000 earned in the 2026/27 tax year, after the SARS primary rebate.',
   taxBreakdown: { brackets: [{ from: 0, to: 245100, rate: 0.18, amountInBracket: 150000, taxInBracket: 27000 }], grossTax: 27000, primaryRebate: 17820, netTax: 9180 },
   monthlyIncome: months,
@@ -61,6 +61,16 @@ describe('Income dashboard analytics', () => {
     expect(screen.getByRole('img', { name: /bar chart of income/i })).toBeInTheDocument();
   });
 
+  test('labels the tax figure as tax so far this tax year, not as an annual projection', async () => {
+    respond(full);
+    render(<DashboardPage />);
+    const card = await screen.findByLabelText('Estimated tax so far this tax year');
+    expect(within(card).getByRole('heading', { name: 'Tax So Far This Tax Year' })).toBeInTheDocument();
+    expect(within(card).getByText('R9180.00')).toBeInTheDocument();
+    expect(within(card).getByText(/not a full-year projection/)).toBeInTheDocument();
+    expect(screen.queryByText(/Estimated Annual Tax/i)).not.toBeInTheDocument();
+  });
+
   test('lists each tax bracket and the rebate so the estimate can be checked', async () => {
     respond(full);
     render(<DashboardPage />);
@@ -74,7 +84,7 @@ describe('Income dashboard analytics', () => {
   });
 
   test('shows progress towards the threshold when income is below it', async () => {
-    respond({ ...full, taxYearIncome: 49500, amountUntilTaxApplies: 49500, estimatedAnnualTax: 0 });
+    respond({ ...full, taxYearIncome: 49500, amountUntilTaxApplies: 49500, estimatedTaxToDate: 0 });
     render(<DashboardPage />);
     const bar = await screen.findByRole('progressbar');
     expect(bar).toHaveAttribute('aria-valuenow', '50');

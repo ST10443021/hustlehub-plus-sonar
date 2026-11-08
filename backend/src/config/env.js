@@ -74,8 +74,9 @@ module.exports = {
   // African tax year (1 March 2026 - 28 February 2027 - the tax year
   // current as at the time of writing), reproducing SARS's published
   // individual marginal tax brackets and primary rebate (SARS, 2026). Used
-  // only to produce an *estimated* annualised tax figure for a simulated
-  // marketplace dashboard - clearly labelled as an estimate, not
+  // only to produce an *estimated* tax figure, on the income received so far in
+  // the current tax year (it is not annualised or projected forward), for a
+  // simulated marketplace dashboard - clearly labelled as an estimate, not
   // professional tax advice, wherever it is surfaced in the API/UI.
   taxBrackets: [
     { upTo: 245100, rate: 0.18, base: 0 },

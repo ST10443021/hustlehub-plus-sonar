@@ -33,6 +33,14 @@ describe('sanitise (log redaction)', () => {
     expect(safe).toMatchObject({ password: '[REDACTED]', passwordHash: '[REDACTED]', Authorization: '[REDACTED]', jwtToken: '[REDACTED]', ok: 'fine' });
     expect(safe.uri).toBe('mongodb://[REDACTED]@db/app');
   });
+  test('replaces e-mail addresses with a keyed hash so the raw address is never logged', () => {
+    const safe = sanitise({ email: 'Jane.Doe@Example.com', reason: 'bad_password' });
+    expect(safe).not.toHaveProperty('email');
+    expect(safe.emailHash).toMatch(/^[0-9a-f]{16}$/);
+    expect(JSON.stringify(safe)).not.toMatch(/jane/i);
+    expect(sanitise({ email: 'jane.doe@example.com' }).emailHash).toBe(safe.emailHash); // case-insensitive, stable
+    expect(sanitise({ email: 'someone.else@example.com' }).emailHash).not.toBe(safe.emailHash);
+  });
   test('truncates very long values and does not log nested objects', () => {
     const safe = sanitise({ big: 'a'.repeat(900), nested: { password: 'secret' } });
     expect(safe.big.length).toBeLessThan(510);
@@ -75,6 +83,24 @@ describe('key events produced by the API', () => {
     expect(events('login_failed').some((e) => e.userId === client.id && e.reason === 'bad_password')).toBe(true);
     expect(events('booking_created').some((e) => e.bookingId === booking.body.data.booking.id)).toBe(true);
     expect(events('transaction_created').some((e) => e.transactionId === booking.body.data.transaction.id && e.amount === 500)).toBe(true);
+  });
+
+  test('failed sign-ins for real and unknown addresses never write the e-mail address to the log', async () => {
+    const client = await account('client');
+    const unknown = `nobody-${Date.now()}@example.com`;
+    // A user who types a password into the e-mail box must not leak it either; the validator rejects
+    // that request, so it never reaches the log at all.
+    await request(app).post('/api/auth/login').send({ email: client.email, password: 'WrongPass123' });
+    await request(app).post('/api/auth/login').send({ email: unknown, password: 'WrongPass123' });
+    await request(app).post('/api/auth/login').send({ email: 'MyS3cretPassw0rd!', password: 'WrongPass123' });
+    const raw = fs.readFileSync(path.join(logDir, 'events.log'), 'utf8');
+    expect(raw).not.toContain(client.email);
+    expect(raw).not.toContain(unknown);
+    expect(raw).not.toContain('MyS3cretPassw0rd');
+    const real = events('login_failed').find((e) => e.userId === client.id);
+    const ghost = events('login_failed').find((e) => e.reason === 'no_such_account');
+    expect(real.emailHash).toMatch(/^[0-9a-f]{16}$/);
+    expect(ghost.emailHash).toMatch(/^[0-9a-f]{16}$/);
   });
 
   test('a role violation is logged as access_denied and a bad token as token_rejected', async () => {

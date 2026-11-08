@@ -1,129 +1,63 @@
-# Static Code Analysis — HustleHub+ Final PoE
+# Static analysis, dependency and secret scanning
 
-Static analysis examines source code and dependency files **without running the program**, so risky patterns are found before they reach users (ESLint, n.d.). The pipeline in `.github/workflows/ci.yml` is configured to run it on the agreed branches and pull requests. The restored workflow declares Bash/pipefail so an upstream scan failure cannot be hidden by `tee`. The latest reviewed GitHub run is **CI 30**, branch `blake`, commit [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1), on 7 November 2026. Its supplied artifacts are preserved in [the current run review](evidence/ci-30-7ef0cc1/REVIEW.md).
+Every check below runs in the GitHub Actions pipeline (`.github/workflows/ci.yml`) on each push and pull request. A finding in any required check fails the job, and the `pipeline-passed` job then fails the whole workflow (IIE, 2026c; GitHub, n.d.d).
 
-## Current application result: CI 30
+## What runs where
 
-The scoped fixes were subsequently confirmed in **[CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711)**, application commit [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1). Both linters report zero active errors/warnings, both production audits report zero, and frontend full audit reports zero. Backend full audit is **12 dev-tool entries: 6 low, 1 moderate, 5 high, zero critical**. Repository/image reports show zero displayed findings at their configured filters. [Current raw reports and interpretation](evidence/ci-30-7ef0cc1/REVIEW.md). CI 24 and local-maintenance sections below remain historical checkpoints.
-
-## 1. Tools and what each one covers
-
-| Tool | Runs on | Command | Gate |
+| Tool | Looks for | Pipeline job | Fails the build when |
 | --- | --- | --- | --- |
-| ESLint 9 with `eslint-plugin-security` | Backend source, scripts and tests | `cd backend && npm run lint` | Any error **or warning** fails (`--max-warnings 0`) |
-| ESLint 9 with React, React Hooks and `eslint-plugin-security` | Frontend source | `cd frontend && npm run lint` | Any error or warning fails |
-| Trivy | Repository files (vulnerabilities, secrets, Dockerfile misconfiguration) and both Docker images | `repo-scan` and `stack` jobs in CI | Fixable HIGH/CRITICAL in the repository; fixable CRITICAL in images |
-| `npm audit` | Production dependencies of both apps | `npm run audit` | HIGH or CRITICAL fails |
+| ESLint with `eslint-plugin-security` (backend and frontend) | Unsafe patterns: object-injection sinks, non-literal file paths, unsafe regular expressions, `eval`; React and hooks mistakes (frontend) | `backend`, `frontend` | Any warning or error (`--max-warnings 0`) (ESLint, n.d.) |
+| `npm audit --omit=dev --audit-level=high` | Known vulnerabilities in production dependencies | `backend`, `frontend` | A HIGH or CRITICAL advisory exists |
+| SonarQube / SonarCloud | Bugs, vulnerabilities, security hot-spots, code smells, duplication, coverage | `static-analysis` | The quality gate fails (`sonar.qualitygate.wait=true`) (SonarSource, n.d.) |
+| CodeQL (`security-extended` queries) | Injection, XSS, path traversal, insecure randomness and similar | `codeql` (public repositories) | A code-scanning alert is raised (GitHub, n.d.c) |
+| Gitleaks | Secrets committed anywhere in the git history | `repo-scan` | A secret is found (Gitleaks, n.d.) |
+| Trivy, repository scan | Vulnerable packages, committed secrets, Dockerfile misconfiguration | `repo-scan` | A fixable HIGH or CRITICAL finding exists (Aqua Security, n.d.) |
+| Trivy, image scan | Vulnerabilities in the built backend and frontend images | `stack` | A fixable CRITICAL finding exists |
+| Dependabot | Outdated dependencies, GitHub Actions and base images | Weekly pull requests | Not a gate: updates arrive as pull requests that run this same pipeline (GitHub, n.d.b) |
 
-Rule sets: ESLint `recommended`; `eslint-plugin-security` `recommended` (unsafe regular expressions, `eval`, non-literal file paths, object-injection sinks, child-process use, timing-attack comparisons) (eslint-community, n.d.); React `recommended` including `react/no-danger`; React Hooks rules.
+## Results (ESLint, audit and coverage: 8 November 2026; Gitleaks and Trivy: 7 November 2026)
 
-## 2. Results
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Backend ESLint (`--max-warnings 0`) | 0 problems | `docs/part3/evidence/backend-lint.txt` |
+| Frontend ESLint (`--max-warnings 0`) | 0 problems | `docs/part3/evidence/frontend-lint.txt` |
+| `npm audit`, backend and frontend, production | 0 vulnerabilities | `docs/part3/evidence/npm-audit.txt` |
+| Gitleaks over the whole git history | No leaks found | `docs/part3/evidence/gitleaks-local.txt` |
+| Trivy secrets and misconfiguration scan | 0 findings; both Dockerfiles clean | `docs/part3/evidence/trivy-repo-local.txt` |
+| Coverage (feeds SonarQube) | Backend 84% of lines, frontend 89% of lines | `docs/part3/evidence/coverage-summary.txt` |
+| SonarQube / SonarCloud quality gate | Required: the pipeline fails if Sonar is not configured (below). The gate result is shown in the dashboard screenshot | Pipeline run log and `sonar-dashboard.png` |
+| CodeQL | Runs on public repositories | Repository Security tab |
 
-### 2.1 ESLint — first run on the Part 3 code base
+### What the results mean
 
-| Project | Errors | Warnings |
-| --- | ---: | ---: |
-| Backend | 0 | **30** |
-| Frontend | **1** | 0 |
+- **ESLint is clean with the security plugin enabled**, so the code contains none of the patterns the plugin treats as dangerous. Four suppressions exist in total, each with a written reason in the source: three `detect-non-literal-fs-filename` suppressions (`server.js`, `eventLogger.js`, `generateCert.js`) where every path is built from operator-set environment values and a fixed file name, never from request data, and one `detect-object-injection` suppression in `env.js` where keys come from a fixed list. None can be reached with user input.
+- **`npm audit` reports 0 production vulnerabilities**, so no known-vulnerable package ships in either application. Development-only packages are excluded on purpose because they never reach the containers.
+- **Gitleaks and Trivy found no secrets.** The `.env` files, private keys and certificates are git-ignored, and the pipeline generates throw-away secrets for each run.
+- **Trivy found no Dockerfile problems.** Both images build in stages, run as a non-root user and define health checks.
 
-Backend warnings by rule:
+## Fixes and hardening applied (analysis and review findings)
 
-| Rule | Count | Where |
-| --- | ---: | --- |
-| `security/detect-non-literal-fs-filename` | 12 | `server.js` (5), `eventLogger.js` (5), `generateCert.js` (1), one test |
-| `security/detect-object-injection` | 7 | `eventLogger.js` (5), `env.js` (1), one test |
-| `security/detect-unsafe-regex` | 1 | `validators.js` |
-| Unused `eslint-disable` directives | 10 | `server.js`, `eventLogger.js`, `errorHandler.js`, `cloudLogger.js`, `env.js` |
-
-Frontend error: `react/no-unescaped-entities` in `LoginPage.jsx` (a raw apostrophe in JSX text).
-
-### 2.2 ESLint — dated local review, 7 November 2026
-
-| Project | Errors | Warnings | Evidence |
-| --- | ---: | ---: | --- |
-| Backend | **0** | **0** | [Saved backend result](evidence/review-2026-11-07/eslint-backend.txt) |
-| Frontend | **0** | **0** | [Saved frontend result](evidence/review-2026-11-07/eslint-frontend.txt) |
-
-### 2.3 GitHub CI 24 results, 7 November 2026
-
-| Check | Observed result |
+| Finding | Fix |
 | --- | --- |
-| Backend ESLint | **0 errors, 0 warnings**, 47 file entries; 12 targeted suppressed messages retained for review |
-| Frontend ESLint | **0 errors, 0 warnings**, 40 file entries; no suppressed messages |
-| Production npm audits | **0 reported vulnerabilities** in both apps |
-| Frontend full npm audit | **0 reported vulnerabilities**, including development tools |
-| Backend full npm audit | **27 affected dev-tool package entries:** 6 low, 8 moderate, 12 high, 1 critical |
-| Trivy repository and both images | **0 displayed findings at the configured severity/fix filters** |
+| Non-literal file paths flagged by `eslint-plugin-security` | Paths come only from environment settings and fixed names; the suppression comments state this, and no request data reaches a file path. |
+| Child-process arguments in `trustCert.js` | `execFileSync` with an argument array and no shell, so values cannot be injected as commands. |
+| Missing HIGH-severity audit gate | `npm run audit` now fails the build on HIGH or CRITICAL advisories. |
+| Secrets could reach the repository by accident | Gitleaks scans history on every run, and `.gitignore` excludes `.env`, `*.pem` and logs. |
+| Docker Compose published MongoDB and ran it without authentication | MongoDB now requires a password and is no longer published to the host (see README, Docker). |
+| Reported findings could be hidden by a pipe in a CI step | Scan steps run with `shell: bash` (which enables `pipefail`), so a failing scanner always fails the step. |
+| The local CA private key was written into the API image at build time | No key is created at build time. `docker-entrypoint.sh` generates a throw-away certificate at start-up only when none is mounted, and deletes the CA key straight after signing. `hardening.test.js` fails if a build step creates keys again, and the Trivy secret scan covers the image. |
+| Sonar was skipped silently when its token was missing, so the pipeline could be green without static analysis | The `static-analysis` job now fails unless `SONAR_TOKEN` and `SONAR_ORGANIZATION` are set. Only Dependabot and fork pull requests, which GitHub gives no secrets, skip it. |
+| User enumeration (429 for locked real accounts but 401 for unknown emails; unknown emails skipped bcrypt; the token middleware revealed deleted accounts) | Unknown emails follow the same lockout, a dummy bcrypt comparison equalises timing, and every token failure returns "Invalid or expired token." Tested in `hardening.test.js`. |
+| Raw email addresses in the event log (POPIA) | Any email field is stored as `emailHash`, a keyed HMAC-SHA-256 truncated to 16 hex characters. |
+| Unmaintained `xss-clean` package, which also altered passwords containing `<` | Replaced by `sanitizeInput.js`; React's text rendering and the CSP are documented as the real XSS controls. |
+| Tax card labelled "Estimated Annual Tax" although it covers income received so far | Renamed "Tax So Far This Tax Year" (`estimatedTaxToDate`) with an explanatory hint and method step. |
 
-See the [actual reports and interpretation](evidence/ci-24-dbde7d2/REVIEW.md). These results belong to application commit `dbde7d2`; earlier local output below remains historical.
+## Enabling SonarQube or SonarCloud
 
-### 2.4 Earlier npm audit results
+1. Create a free project at SonarCloud (or use a SonarQube server) and note the project key `hustlehub-plus` (set in `sonar-project.properties`).
+   SonarCloud project keys are unique across all of SonarCloud, so `hustlehub-plus` may be refused. Use the key SonarCloud generates and set it as the repository variable `SONAR_PROJECT_KEY`; it overrides `sonar-project.properties`. In SonarCloud turn **Automatic Analysis off** for the project, because it cannot be combined with the pipeline scan.
+2. In the GitHub repository open **Settings, Secrets and variables, Actions** and add the secret `SONAR_TOKEN` and the variable `SONAR_ORGANIZATION`. For a self-hosted server also add `SONAR_HOST_URL`.
+3. Push. The `static-analysis` job downloads the coverage reports from the `backend` and `frontend` jobs and runs the scan with the quality gate. **If the token or organisation is missing, the job fails and so does the whole pipeline** (only Dependabot and fork pull requests, which get no secrets, skip it), so a green run always includes the Sonar result.
+4. Screenshot the project dashboard (quality gate, bugs, vulnerabilities, hot-spots, coverage) as `sonar-dashboard.png`, and record any issue it reports with the fix in the table above.
 
-| Scope | Before | After |
-| --- | --- | --- |
-| Backend, production dependencies | **3** vulnerabilities (1 high: `body-parser`, GHSA-27r3-jxmh-p828; 2 moderate: `qs` GHSA-6pq8-jhm2-2vcw, `ip-address` GHSA-rxp7-6hxx-x8q5) | **0** |
-| Frontend, production dependencies | 0 | **0** |
-
-Production audits were rerun in the audit workspace on 7 November 2026: [backend](evidence/review-2026-11-07/npm-audit-backend.txt), [frontend](evidence/review-2026-11-07/npm-audit-frontend.txt), both reporting zero vulnerabilities. Earlier output remains historical. This does not cover development tools or container images.
-
-## 3. What each result indicated, and the fix
-
-| Finding | What it indicated | Resolution |
-| --- | --- | --- |
-| `detect-unsafe-regex` (`validators.js`) | The ID check `/^[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}$/i` repeats a group. Some such patterns cause catastrophic backtracking, which lets one crafted string stall the server (ReDoS) | **Fixed.** Written as four explicit fixed-length groups. It accepts exactly the same strings and has no repetition on a group. All tests still pass |
-| `detect-object-injection` (`eventLogger.js`, 5) | Code of the form `result[key] = value` or `TABLE[name]` with a key that is not a literal can let a key such as `__proto__` or `constructor` alter an object's prototype or return an inherited value | **Fixed.** The event-category table is a `Map`; the redaction step builds its output with `Object.fromEntries`, which creates plain own properties. A test confirms that sensitive fields are still redacted |
-| `detect-object-injection` (`env.js`) | `process.env[key]` in the start-up check for required settings | **Reviewed, false positive.** The keys come from a fixed array in the same file. A single-line `eslint-disable-next-line` explains this |
-| `detect-non-literal-fs-filename` (11 in shipped code) | File functions called with a variable path. This is dangerous only if an attacker controls the path (path traversal) | **Reviewed, false positive.** Paths come from operator-set settings (`LOG_DIR`, `SSL_KEY_PATH`, `SSL_CERT_PATH`) or fixed names inside the repository, never from a request. Each file carries a file-level directive that states this reason |
-| Warnings in `tests/` | The same rules fire on test fixtures that are never shipped | The two rules are switched off for `tests/` in `eslint.config.js`, with the reason beside the setting |
-| Unused `eslint-disable` comments | Left behind when code changed | Removed |
-| `react/no-unescaped-entities` | A raw `'` in JSX text can hide typing mistakes and is rejected by the React rules | **Fixed** with `&apos;` |
-| `npm audit`: `body-parser` (high), `qs`, `ip-address` | Known denial-of-service weaknesses in packages that Express depends on | **Fixed.** `npm audit fix` raised them to patched versions within the allowed ranges. Lock file updated; all backend tests pass |
-
-The configured pipeline rejects warnings. CI 24 passed these checks; its actual lint/audit/Trivy reports are linked above. The remaining backend development-tool advisories are recorded below rather than labelled fixed.
-
-## 4. Development-tool findings and scope
-
-The full backend audit from CI 24 reports **27 affected development-tool package entries**, including **one CRITICAL entry for Handlebars** in the Postman/Newman chain. All affected nodes are marked development-only in the backend lockfile and excluded from the production image by `npm ci --omit=dev`. The current production audit reports zero. Frontend full audit also reports zero.
-
-The [run review](evidence/ci-24-dbde7d2/REVIEW.md#development-tool-risk-review) lists every affected package, exact severity counts, tool exposure and follow-up. Newman/Postman accounts for 19 entries, Jest for 6 low entries, and nodemon for 2 moderate entries. The nodemon chain has a compatible fix reported available. npm proposes major downgrades of Newman/Jest for other chains; these require dependency review and retesting, not a blind `npm audit fix --force`.
-
-The existing Newman risk treatment is to exclude it from production, run only the checked-in trusted collection against an isolated stack, and publish the full audit report. The remaining advisories remain **unresolved tooling findings**. Scope isolation is a mitigation, not a fix or proof of non-exploitability. A subsequent scoped dependency-maintenance candidate applies the updates described below; CI 24 remains the earlier result. The rubric's highest security-analysis band cannot be guaranteed while these findings remain.
-
-### 4.1 Subsequent scoped dependency maintenance
-
-The locally tested maintenance candidate selects patched Newman/nodemon dependencies with explicit scoped npm overrides. It reduces the full backend audit from **27 to 12 affected dev-tool package entries**, removes the critical entry and leaves **6 LOW, 1 MODERATE, 5 HIGH, 0 CRITICAL**. Production package versions are unchanged and the production audit reports zero. All 127 backend tests and the real HTTPS/MongoDB Newman collection (67 requests, 90 assertions) passed. Its subsequent GitHub verification is CI 30; the dated local outputs remain linked below.
-
-The remaining entries derive from Faker, csv-parse and deepmerge in trusted development/test tooling. These are reviewed residual risks with bounded input/exposure, not fixed findings. See the [tooling dependency review and actual local reports](TOOLING_DEPENDENCY_REVIEW.md) for versions, compatibility checks and the reasons a further automatic override was not used. Historical CI 24 counts/reports above remain unchanged.
-
-## 5. CI 30 scan outcomes and CodeQL limitation
-
-| Check | Observed result | Evidence |
-| --- | --- | --- |
-| ESLint backend/frontend | Pass; 0 active errors/warnings | [Backend JSON](evidence/ci-30-7ef0cc1/backend/eslint-report.json), [frontend JSON](evidence/ci-30-7ef0cc1/frontend/eslint-report.json) |
-| Trivy repository | Pass; displayed counts 0 at configured filters | [Report](evidence/ci-30-7ef0cc1/trivy/trivy-repo.txt) |
-| Trivy backend image | Pass; no fixable HIGH/CRITICAL findings displayed | [Report](evidence/ci-30-7ef0cc1/trivy/trivy-backend-image.txt) |
-| Trivy frontend image | Pass; no fixable HIGH/CRITICAL findings displayed | [Report](evidence/ci-30-7ef0cc1/trivy/trivy-frontend-image.txt) |
-| CodeQL | Not active; not a passed scan | [CI repair explanation](CI_REPAIR.md) |
-
-Trivy's commands use `--ignore-unfixed`. Repository analysis selects HIGH/CRITICAL; image reports list HIGH/CRITICAL and the image failure gate blocks fixable CRITICAL. These reports are not an all-severity, all-unfixed-vulnerabilities or Git-history scan.
-
-CodeQL upload failed in run 18 because the private Classroom repository lacked the required Code Security/Advanced Security feature. The unsupported job was explicitly removed, without changing repository visibility or weakening the other gates. ESLint with security rules is the source-analysis tool used for this submission; Trivy/npm audit have the scopes described above. There is no claim of zero CodeQL alerts or identical coverage to CodeQL.
-
-## 6. Re-running locally
-
-```bash
-cd backend  && npm ci && npm run lint && npm run audit
-cd frontend && npm ci && npm run lint && npm run audit
-```
-
-## References
-
-ESLint, n.d. ESLint Documentation. [online] Available at: https://eslint.org/docs/latest/ [Accessed 30 October 2026].
-
-eslint-community, n.d. eslint-plugin-security. [online] GitHub. Available at: https://github.com/eslint-community/eslint-plugin-security [Accessed 30 October 2026].
-
-GitHub, n.d.c. About Code Scanning with CodeQL. [online] GitHub Docs. Available at: https://docs.github.com/en/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql [Accessed 30 October 2026].
-
-npm, n.d. npm-audit. [online] npm Docs. Available at: https://docs.npmjs.com/cli/commands/npm-audit [Accessed 30 October 2026].
-
-Aqua Security, n.d. Trivy Documentation. [online] Available at: https://trivy.dev/ [Accessed 30 October 2026].
+If the repository sits in an organisation that blocks the SonarCloud app, fork the repository, connect Sonar to the fork and link the fork in the README, as the brief allows.

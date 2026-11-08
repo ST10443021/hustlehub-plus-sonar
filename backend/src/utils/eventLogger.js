@@ -16,9 +16,10 @@
 //  3. an optional cloud log platform (see cloudLogger.js).
 //
 // Passwords, password hashes, tokens and raw request bodies are never logged. Any field whose name
-// looks sensitive is replaced with [REDACTED], long values are truncated, and database connection
+// looks sensitive is replaced with [REDACTED], e-mail addresses are replaced by a keyed hash
+// (emailHash, see pseudonymise.js), long values are truncated, and database connection
 // credentials are masked, so the log cannot become a new source of data leakage (OWASP, 2021;
-// OWASP, 2024d).
+// OWASP, 2024d; Republic of South Africa, 2013).
 /* eslint-disable security/detect-non-literal-fs-filename --
    Every path in this file is built from config.logDir, an operator-supplied environment setting
    (LOG_DIR), plus the fixed file name "events.log". No request data ever reaches a file path. */
@@ -27,11 +28,13 @@ const path = require('path');
 const { randomUUID } = require('crypto');
 const config = require('../config/env');
 const cloudLogger = require('./cloudLogger');
+const { pseudonymise } = require('./pseudonymise');
 
 const logFile = path.join(config.logDir, 'events.log');
 const MAX_FILE_BYTES = 5 * 1024 * 1024; // rotate at 5 MB
 const MAX_VALUE_LENGTH = 500;
 const SENSITIVE_KEY = /pass(word)?|token|secret|authorization|hash|cookie|credential/i;
+const EMAIL_KEY = /e-?mail/i;
 
 const CATEGORY_BY_EVENT = new Map(Object.entries({
   user_registered: 'auth', user_login: 'auth', login_failed: 'auth', login_blocked: 'auth',
@@ -73,7 +76,13 @@ function sanitise(details) {
   return Object.fromEntries(
     Object.entries(details || {})
       .filter(([, value]) => value !== undefined)
-      .map(([key, value]) => [key, sanitiseValue(key, value)])
+      .map(([key, value]) => (
+        // E-mail addresses are personal information (POPIA) and are sometimes mistyped passwords, so any
+        // field named like an e-mail is replaced by a keyed hash and stored under "<name>Hash".
+        EMAIL_KEY.test(key) && typeof value === 'string'
+          ? [`${key}Hash`, pseudonymise(value)]
+          : [key, sanitiseValue(key, value)]
+      ))
   );
 }
 

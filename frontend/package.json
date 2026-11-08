@@ -13,8 +13,7 @@
     "test:watch": "vitest",
     "lint:report": "eslint . --max-warnings 0 -f json -o test-results/eslint-report.json",
     "audit": "npm audit --omit=dev --audit-level=high",
-    "test:e2e": "playwright test",
-    "test:e2e:report": "playwright show-report"
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "axios": "^1.20.0",
@@ -31,6 +30,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",
+    "@vitest/coverage-v8": "^5.0.3",
     "eslint": "^9.39.5",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",

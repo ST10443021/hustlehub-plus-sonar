@@ -1,9 +1,14 @@
-# frontend production build
-✓ 98 modules transformed.
+
+> hustlehub-frontend@3.0.0 build
+> vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 97 modules transformed.
 rendering chunks...
 computing gzip size...
-dist/index.html                   0.46 kB │ gzip:   0.29 kB
+dist/index.html                   0.47 kB │ gzip:   0.30 kB
 dist/assets/index-B4fJFHx_.css    5.55 kB │ gzip:   1.65 kB
-dist/assets/index-ChBw98ym.js   337.77 kB │ gzip: 107.87 kB
+dist/assets/index-CBC2w0Bo.js   336.35 kB │ gzip: 107.45 kB
 
-✓ built in 1.09s
+✓ built in 812ms

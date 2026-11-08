@@ -1,0 +1,15 @@
+# Gitleaks configuration (Gitleaks, n.d.). The default rule set stays on; only fixed, non-secret test
+# values are allow-listed. Real secrets must never be committed: they belong in the git-ignored .env
+# files locally and in repository secrets (or per-run generated values) in CI.
+title = "HustleHub+ secret scanning"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Fixed test values used by the automated tests (not real credentials)"
+paths = [
+  '''backend/\.env\.test$''',
+  '''backend/tests/''',
+  '''frontend/src/tests/''',
+]

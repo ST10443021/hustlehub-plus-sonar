@@ -36,10 +36,10 @@ export default function DashboardPage() {
     {!loading && summary && <>
       <div className="dashboard-cards">
         <div className="card" aria-label="Total income"><h3>Total Income</h3><p className="stat">{rand(summary.totalIncome)}</p><p className="hint">{summary.transactionCount} booking(s)</p></div>
-        <div className="card" aria-label="Estimated annual tax"><h3>Estimated Annual Tax</h3><p className="stat">{rand(summary.estimatedAnnualTax)}</p><p className="hint">Effective rate: {summary.effectiveTaxRate}%</p>
+        <div className="card" aria-label="Estimated tax so far this tax year"><h3>Tax So Far This Tax Year</h3><p className="stat">{rand(summary.estimatedTaxToDate)}</p><p className="hint">Estimate on income received to date, not a full-year projection</p><p className="hint">Effective rate: {summary.effectiveTaxRate}%</p>
           {summary.marginalTaxRate !== undefined && <p className="hint">Marginal rate: {summary.marginalTaxRate}%</p>}
           {summary.taxYear && <p className="hint">Tax year {summary.taxYear}</p>}</div>
-        {summary.netIncomeAfterTax !== undefined && <div className="card" aria-label="Income after tax"><h3>Income After Tax</h3><p className="stat">{rand(summary.netIncomeAfterTax)}</p><p className="hint">Tax-year income less estimated tax</p></div>}
+        {summary.netIncomeAfterTax !== undefined && <div className="card" aria-label="Income after tax"><h3>Income After Tax</h3><p className="stat">{rand(summary.netIncomeAfterTax)}</p><p className="hint">Tax-year income received so far, less the estimated tax</p></div>}
       </div>
       <AlertMessage type="info" message={summary.disclaimer} />
       {summary.taxNote && <p className="hint dashboard-note" role="note">{summary.taxNote}</p>}

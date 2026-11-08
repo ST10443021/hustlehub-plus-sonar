@@ -1,45 +1,55 @@
-# Final PoE evidence index
+# Evidence index (final PoE)
 
-Updated 7 November 2026. Latest supplied application verification: [`7ef0cc1`](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/commit/7ef0cc1) on `blake`, **[successful CI 30](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32/actions/runs/42380128711)**. The README update itself is a later documentation change and does not relabel that application commit or invent a newer run result.
+Every rubric criterion has evidence that is easy to find. Text evidence is committed under `docs/part3/evidence/` and was produced by real runs on 7 and 8 November 2026. Screenshots are saved under `docs/part3/screenshots/` after the pipeline and cloud services have run on the team's GitHub repository, because they show the team's own accounts (IIE, 2026c).
 
-## Current evidence
+## Committed text evidence (already in the repository)
 
-| Area | Recorded result | Location |
+| File | What it proves | Produced by |
 | --- | --- | --- |
-| Backend tests | 127 passed / 8 suites; memory repositories and mocked cloud HTTP | [Summary](evidence/ci-30-7ef0cc1/backend/tests-summary.txt) |
-| Frontend component tests | 63 passed / 13 files; mocked API | [Summary](evidence/ci-30-7ef0cc1/frontend/tests-summary.txt) |
-| Playwright browser integration | 2 passed, zero failed/skipped/errors; real UI/API/MongoDB in CI | [JUnit](evidence/ci-30-7ef0cc1/browser/browser-junit.xml); [HTML report](evidence/ci-30-7ef0cc1/browser/index.html) |
-| Live Newman | 67 requests / 90 assertions / zero failures, including admin/security cases | [Safe summary](evidence/ci-30-7ef0cc1/stack/newman-summary.json); [JUnit](evidence/ci-30-7ef0cc1/stack/newman-junit.xml) |
-| ESLint/security rules | Both apps: zero active errors/warnings; targeted backend suppressions remain explained | [Backend](evidence/ci-30-7ef0cc1/backend/eslint-report.json); [frontend](evidence/ci-30-7ef0cc1/frontend/eslint-report.json); [explanation](STATIC_ANALYSIS.md) |
-| Production npm audits | Zero reported vulnerabilities in both apps | [Backend](evidence/ci-30-7ef0cc1/backend/npm-audit-production.txt); [frontend](evidence/ci-30-7ef0cc1/frontend/npm-audit-production.txt) |
-| Full npm audits | Frontend zero; backend 12 dev-tool entries: 6 low, 1 moderate, 5 high, zero critical | [Backend](evidence/ci-30-7ef0cc1/backend/npm-audit-full.json); [frontend](evidence/ci-30-7ef0cc1/frontend/npm-audit-full.json); [fixes/risk treatment](TOOLING_DEPENDENCY_REVIEW.md) |
-| Trivy | Displayed counts zero at configured filters | [Repository](evidence/ci-30-7ef0cc1/trivy/trivy-repo.txt); [backend image](evidence/ci-30-7ef0cc1/trivy/trivy-backend-image.txt); [frontend image](evidence/ci-30-7ef0cc1/trivy/trivy-frontend-image.txt) |
-| Docker | Both images built; all services healthy in CI and local rebuild; local login confirmed | [CI status](evidence/ci-30-7ef0cc1/stack/compose-ps.txt); [local verification](evidence/ci-30-7ef0cc1/local-docker-verification.txt) |
-| Frontend build | Passed in CI | [Output](evidence/ci-30-7ef0cc1/frontend/frontend-build.txt) |
-| Structured events | Required types present; example booking/transaction IDs match | [Safe correlation summary](evidence/ci-30-7ef0cc1/stack/event-correlation-summary.json) |
-| Azure delivery | Fresh login success/failure and logout rows confirmed after rebuild | [7 November observation](evidence/ci-30-7ef0cc1/azure-delivery-verification.md); earlier [Logging1](screenshots/Logging1.png), [Logging2](screenshots/Logging2.png) |
-| Additional security controls | CI 30 live lockout and token-reuse rejection; earlier visual evidence retained | [Lockout](screenshots/SecurityTest2.png); [revocation sequence](screenshots/SecurityTest.png); [current JUnit](evidence/ci-30-7ef0cc1/stack/newman-junit.xml) |
-| Threat/control review | Injection, XSS, authentication and access control mapped to code/tests | [README section 18](../../README.md#18-final-security-review); [supporting notes](SECURITY_REVIEW.md) |
+| `evidence/backend-tests.txt` | 146 of 146 backend tests pass (9 suites) | `npm test` in `backend/` |
+| `evidence/frontend-tests.txt` | 64 of 64 frontend tests pass (13 files) | `npm test` in `frontend/` |
+| `evidence/frontend-build.txt` | The production build succeeds | `npm run build` in `frontend/` |
+| `evidence/backend-lint.txt`, `evidence/frontend-lint.txt` | ESLint with the security plugin reports 0 problems | `npm run lint` |
+| `evidence/npm-audit.txt` | 0 production vulnerabilities in both applications | `npm run audit` |
+| `evidence/coverage-summary.txt` | Line coverage 84% backend, 89% frontend | `npm run test:coverage` |
+| `evidence/newman-local-run.txt`, `evidence/newman-local-summary.json` | Newman: 67 HTTP requests (55 requests in the collection, with the rate-limit probes repeating), 90 assertions, 0 failures, against the API with a MongoDB-compatible database over HTTPS | `npm run test:api` in `backend/` |
+| `evidence/gitleaks-local.txt` | No secrets in 80 scanned commits | Gitleaks v8.21.2 |
+| `evidence/trivy-repo-local.txt` | Trivy secrets and Dockerfile checks: 0 findings | Trivy 0.76.2 |
+| `evidence/logging-sample.jsonl` | Real structured log lines from the live Newman run of 8 November 2026: logins, failed logins (email stored only as `emailHash`), lockout, blocked login, token rejection, access denied, gig, booking, transaction, rate limit, admin access | The Newman run above |
 
-The [current review](evidence/ci-30-7ef0cc1/REVIEW.md) explains scopes and evidence provenance. Raw application console logs and portal account headers are omitted from selected evidence. CodeQL is not active because of the documented private Classroom entitlement limitation; it is not reported as passed.
+Part 2 history is kept in `docs/part2/` (dated verification record and Part 2 Newman summary).
 
-## Historical evidence retained
+## Pipeline artifacts (download from the GitHub Actions run, then commit the useful ones)
 
-- [CI 24](evidence/ci-24-dbde7d2/REVIEW.md), `dbde7d2`: earlier green application run, with 27 affected backend dev-tool package entries including one critical.
-- [Local tooling maintenance](TOOLING_DEPENDENCY_REVIEW.md): locally verified dependency fixes, subsequently confirmed by CI 30; raw local reports remain under `evidence/tooling-maintenance-2026-11-07/`.
-- [7 November local audit](evidence/review-2026-11-07/): backend/frontend tests, lint, audits and frontend build before the later live container run.
-- [October Newman output](evidence/newman-local-run.txt), [summary](evidence/newman-local-summary.json): earlier run, not relabelled as CI 30.
-- [Part 2 UI screenshots](../part2/screenshots/) and [Part 1 API screenshots](../part1/screenshots/): earlier visual records.
+Open the Actions run and download the artifacts at the bottom of the run page.
 
-## Final handoff
+| Artifact | Contains |
+| --- | --- |
+| `stack-evidence` | `docker-compose-ps.txt` (all containers healthy), `https-health.json`, `newman-run.txt`, `container-logs.txt`, `events.log` from the container, Trivy image reports, the Playwright HTML report and the Playwright screenshots in `e2e/evidence/` |
+| `backend-reports`, `frontend-reports` | lcov coverage, ESLint JSON, `npm audit` JSON |
+| `repo-scan-reports` | Gitleaks and Trivy repository reports |
 
-- [x] Actual CI run URL, application commit and dated results recorded.
-- [x] Analysis findings, scoped fixes and remaining development-tool risks explained.
-- [x] Docker local/CI execution and live Newman/browser evidence retained.
-- [x] Fresh Azure authentication delivery confirmed; older booking/transaction screenshots remain dated evidence.
-- [x] Existing lockout/revocation evidence retained and current live cases checked.
-- [ ] Add the accessible final demonstration-video URL to README section 19 (Pillar 9).
-- [ ] Keep the supplied CI/Azure/dashboard screenshots with the submission, or show those screens in the final demo. Original portal screenshots are not copied into this patch.
-- [ ] Review final branch/commit, meaningful contribution history, tracked-file exclusions and the actual submitted version's CI status using [FINAL_HANDOFF.md](FINAL_HANDOFF.md).
+## Screenshots to capture
 
-Public hosting is optional; the README documents local Docker evaluation. Do not pad commit history or relabel older evidence as a new result.
+Save each file in `docs/part3/screenshots/` with exactly these names so the README links resolve.
+
+| File | Rubric area | How to capture |
+| --- | --- | --- |
+| `pipeline-run-green.png` | CI/CD | Actions, latest run on `main`, all jobs green including **Pipeline passed** |
+| `pipeline-run-failing.png` | CI/CD (fails on problems) | Push a throw-away branch with one deliberately failing test, capture the red run, then delete the branch |
+| `playwright-report.png` | CI/CD, testing | Open `e2e/playwright-report/index.html` from the `stack-evidence` artifact (12 tests) |
+| `newman-run.png` | CI/CD, API tests | The "API tests" step log of the `stack` job, or `docs/part3/evidence/newman-local-run.txt` |
+| `docker-compose-ps.png` | Docker | `docker compose ps` showing mongo, backend and frontend as `healthy` |
+| `docker-app-running.png` | Docker | Browser on `https://localhost:8443` served by the containers |
+| `sonar-dashboard.png` | Static analysis | SonarCloud/SonarQube project overview with the quality gate |
+| `logging-azure-events.png` | Logging | Azure Logs: first query in `LOGGING.md` |
+| `logging-azure-chart.png` | Logging | Azure Logs: security timechart query in `LOGGING.md` |
+| `dashboard-income-tax.png` | Tax and income dashboard | Freelancer dashboard with income above R99,000 (copy `e2e/evidence/05-dashboard-income-and-tax.png` from the artifact) |
+| `account-lockout.png` | Own security feature | Copy `e2e/evidence/06-account-lockout.png` from the artifact |
+| `admin-console.png` | Own security feature | Copy `e2e/evidence/07-admin-console.png` from the artifact |
+
+Run `node docs/part3/check-evidence.mjs` from the repository root at any time: it lists every screenshot or file the README still links to that is missing.
+
+## Demonstration video
+
+Record a new video for Part 3 (the Part 2 video does not show the new features) and paste its link in the README. Suggested order: register and log in as freelancer, create a gig, log in as client, book, return as freelancer and show the dashboard income, tax, chart and tax method; show the lockout and the admin console; show the green pipeline run, `docker compose ps`, the Azure log view and the Sonar dashboard.

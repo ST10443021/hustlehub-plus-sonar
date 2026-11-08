@@ -1,7 +1,7 @@
 // Maps the existing, redacted eventLogger payload to Application Insights custom events.
 // This is a small HTTPS ingestion adapter, not automatic SDK instrumentation. Microsoft's
 // troubleshooting guide documents the regional /v2.1/track endpoint; connection strings
-// supply the instrumentation key and regional ingestion endpoint (Microsoft, n.d.).
+// supply the instrumentation key and regional ingestion endpoint (Microsoft, n.d.a; Microsoft, n.d.b).
 
 /** Accepts the full portal connection string. Never prints it or falls back to HTTP. */
 function parseConnectionString(connectionString) {

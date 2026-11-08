@@ -3,7 +3,7 @@
 // instead of "Not secure" (Mozilla, 2026a). Browsers only trust a certificate
 // whose issuing CA is in a store they use (Cooper et al., 2008). The CA only
 // signs the localhost certificate made by "npm run gen-cert"; remove it with
-// "npm run trust-cert -- --remove". Windows uses certutil (Microsoft, n.d.).
+// "npm run trust-cert -- --remove". Windows uses certutil (Microsoft, n.d.c).
 // Arguments go straight to execFileSync with no shell, so paths cannot be
 // injected (OWASP, 2021).
 const { execFileSync } = require('child_process');
@@ -24,7 +24,7 @@ const run = (cmd, args) => execFileSync(cmd, args, { stdio: 'inherit' });
 try {
   if (process.platform === 'win32') {
     // Current-user "Root" store: no administrator rights needed, but Windows
-    // shows a confirmation dialog - choose Yes (Microsoft, n.d.).
+    // shows a confirmation dialog - choose Yes (Microsoft, n.d.c).
     if (remove) run('certutil', ['-user', '-delstore', 'Root', 'HustleHub+ Local Development CA']);
     else run('certutil', ['-user', '-addstore', '-f', 'Root', caCert]);
   } else if (process.platform === 'darwin') {

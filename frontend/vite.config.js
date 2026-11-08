@@ -48,5 +48,7 @@ export default defineConfig({
     // Limit competing jsdom workers on slower development machines.
     maxWorkers: 2,
     testTimeout: 15000,
+    // lcov feeds SonarQube/SonarCloud in the CI pipeline; text-summary is printed in the job log.
+    coverage: { provider: 'v8', reporter: ['lcov', 'text-summary'], include: ['src/**/*.{js,jsx}'], exclude: ['src/tests/**', 'src/setupTests.js'] },
   },
 });
