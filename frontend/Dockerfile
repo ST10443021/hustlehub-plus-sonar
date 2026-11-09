@@ -12,7 +12,7 @@ ARG VITE_API_BASE_URL=/api
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
-FROM nginxinc/nginx-unprivileged:1.30-alpine AS runner
+FROM nginxinc/nginx-unprivileged:1.31-alpine AS runner
 # The base image runs as the non-root "nginx" user, so switch to root only for the package upgrade.
 # "apk upgrade" pulls in fixed Alpine packages (OpenSSL, brotli, ...) published since the base image was
 # built. The nginx package itself comes from nginx.org, a repository apk does not keep, so nginx is kept
