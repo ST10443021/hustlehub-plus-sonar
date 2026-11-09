@@ -38,8 +38,9 @@ export default [
     rules: { 'security/detect-object-injection': 'off' },
   },
   {
-    // Node-side config files (Vite config, header helper).
-    files: ['vite.config.js', 'securityHeaders.js', 'eslint.config.js'],
+    // Node-side config files (Vite config, header helper, Playwright config). These run in Node,
+    // where "process" exists, so they get Node globals instead of browser globals.
+    files: ['vite.config.js', 'securityHeaders.js', 'eslint.config.js', 'playwright.config.js'],
     languageOptions: { globals: { ...globals.node } },
   },
 ];

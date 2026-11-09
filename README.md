@@ -6,8 +6,8 @@ HustleHub+ is a secure freelance marketplace. **Freelancers** advertise gigs, **
 
 | | |
 | --- | --- |
-| **Repository** | _Paste the Classroom50 repository link here_ |
-| **Forked repository (only if Sonar or Render were connected to a fork)** | _Paste the fork link here, or delete this row_ |
+| **Repository** | [github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32](https://github.com/EMGPPT/insy7314-g1-part-2-and-poe-group-32) |
+| **Forked repository (SonarCloud and CodeQL were connected to this public fork)** | [github.com/ST10443021/hustlehub-plus-sonar](https://github.com/ST10443021/hustlehub-plus-sonar) |
 | **Demonstration video (Part 3)** | _Paste the new Part 3 video link here_ |
 | **Pipeline** | Repository **Actions** tab, workflow **CI** (`.github/workflows/ci.yml`) |
 

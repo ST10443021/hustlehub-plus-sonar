@@ -14,7 +14,10 @@ RUN npm run build
 
 FROM nginxinc/nginx-unprivileged:1.30-alpine AS runner
 # The base image runs as the non-root "nginx" user, so switch to root only for the package upgrade.
-# This picks up fixed nginx, OpenSSL and brotli packages even if the base tag has not been rebuilt yet.
+# "apk upgrade" pulls in fixed Alpine packages (OpenSSL, brotli, ...) published since the base image was
+# built. The nginx package itself comes from nginx.org, a repository apk does not keep, so nginx is kept
+# current by this base tag: the floating 1.30-alpine tag always points at the newest 1.30.x build.
+# Trivy fails the pipeline on fixable CRITICAL findings, so both mechanisms are needed.
 USER root
 RUN apk upgrade --no-cache
 COPY --from=build /app/dist /usr/share/nginx/html
