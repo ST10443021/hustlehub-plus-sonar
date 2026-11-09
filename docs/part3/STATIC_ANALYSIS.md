@@ -28,7 +28,7 @@ Every check below runs in the GitHub Actions pipeline (`.github/workflows/ci.yml
 | SonarQube / SonarCloud quality gate | Required: the pipeline fails if Sonar is not configured (below). The gate result is shown in the dashboard screenshot | Pipeline run log and `sonar-dashboard.png` |
 | CodeQL | Runs on public repositories | Repository Security tab |
 
-**SonarCloud result at the final analysis:** the quality gate passed, the security rating is A, **security issues are 0**, coverage is 80.6% and duplication is 0.0% (`sonar-dashboard.png`). The 10 issues Sonar listed at that analysis were not security issues (the security count was 0): 8 were the style rule "Prefer `Number.parseInt` over `parseInt`" (`env.js`, `userRepository.js`, `adminService.js`) and 2 were regular-expression backtracking warnings (`eventLogger.js` line 57 and `validation.js` line 2). None failed the quality gate, and all 10 were fixed afterwards (see the fixes table), so the next analysis should list none of them.
+**SonarCloud result at the final analysis (9 November 2026):** the quality gate **passed** (all conditions passed), **0 issues** overall, security rating **A**, **0 security issues**, coverage **80.7%** and duplication **0.0%** (`sonar-dashboard.png`). An earlier analysis had listed 10 issues; none were security issues and none failed the quality gate: 8 were the style rule "Prefer `Number.parseInt` over `parseInt`" (`env.js`, `userRepository.js`, `adminService.js`) and 2 were regular-expression backtracking warnings (`eventLogger.js` line 57 and `validation.js` line 2). All 10 were fixed (see the fixes table), and the final analysis above confirms that none remain.
 
 ### What the results mean
 
