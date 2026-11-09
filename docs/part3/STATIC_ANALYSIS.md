@@ -28,6 +28,8 @@ Every check below runs in the GitHub Actions pipeline (`.github/workflows/ci.yml
 | SonarQube / SonarCloud quality gate | Required: the pipeline fails if Sonar is not configured (below). The gate result is shown in the dashboard screenshot | Pipeline run log and `sonar-dashboard.png` |
 | CodeQL | Runs on public repositories | Repository Security tab |
 
+**SonarCloud result at the final analysis:** the quality gate passed, the security rating is A, **security issues are 0**, coverage is 80.6% and duplication is 0.0% (`sonar-dashboard.png`). The 10 open issues on the overview are not security issues (the security count is 0); they are reliability or maintainability findings and none of them fail the quality gate.
+
 ### What the results mean
 
 - **ESLint is clean with the security plugin enabled**, so the code contains none of the patterns the plugin treats as dangerous. Four suppressions exist in total, each with a written reason in the source: three `detect-non-literal-fs-filename` suppressions (`server.js`, `eventLogger.js`, `generateCert.js`) where every path is built from operator-set environment values and a fixed file name, never from request data, and one `detect-object-injection` suppression in `env.js` where keys come from a fixed list. None can be reached with user input.
