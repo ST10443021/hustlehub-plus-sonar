@@ -60,7 +60,7 @@ async function create({ email, passwordHash, role = 'client' }) {
 
 /** Newest-first list of accounts for the admin view (public fields only, plus a lock flag). */
 async function listAll(limit = 100) {
-  const cap = Math.min(Math.max(parseInt(limit, 10) || 100, 1), 200);
+  const cap = Math.min(Math.max(Number.parseInt(limit, 10) || 100, 1), 200);
   if (isDbConnected()) {
     const docs = await UserSchema.find({}).sort({ createdAt: -1 }).limit(cap).lean();
     return docs.map((doc) => ({ ...doc, id: doc._id.toString() }));

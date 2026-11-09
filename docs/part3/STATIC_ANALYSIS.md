@@ -28,7 +28,7 @@ Every check below runs in the GitHub Actions pipeline (`.github/workflows/ci.yml
 | SonarQube / SonarCloud quality gate | Required: the pipeline fails if Sonar is not configured (below). The gate result is shown in the dashboard screenshot | Pipeline run log and `sonar-dashboard.png` |
 | CodeQL | Runs on public repositories | Repository Security tab |
 
-**SonarCloud result at the final analysis:** the quality gate passed, the security rating is A, **security issues are 0**, coverage is 80.6% and duplication is 0.0% (`sonar-dashboard.png`). The 10 open issues on the overview are not security issues (the security count is 0); they are reliability or maintainability findings and none of them fail the quality gate.
+**SonarCloud result at the final analysis:** the quality gate passed, the security rating is A, **security issues are 0**, coverage is 80.6% and duplication is 0.0% (`sonar-dashboard.png`). The 10 issues Sonar listed at that analysis were not security issues (the security count was 0): 8 were the style rule "Prefer `Number.parseInt` over `parseInt`" (`env.js`, `userRepository.js`, `adminService.js`) and 2 were regular-expression backtracking warnings (`eventLogger.js` line 57 and `validation.js` line 2). None failed the quality gate, and all 10 were fixed afterwards (see the fixes table), so the next analysis should list none of them.
 
 ### What the results mean
 
@@ -52,6 +52,8 @@ Every check below runs in the GitHub Actions pipeline (`.github/workflows/ci.yml
 | User enumeration (429 for locked real accounts but 401 for unknown emails; unknown emails skipped bcrypt; the token middleware revealed deleted accounts) | Unknown emails follow the same lockout, a dummy bcrypt comparison equalises timing, and every token failure returns "Invalid or expired token." Tested in `hardening.test.js`. |
 | Raw email addresses in the event log (POPIA) | Any email field is stored as `emailHash`, a keyed HMAC-SHA-256 truncated to 16 hex characters. |
 | Unmaintained `xss-clean` package, which also altered passwords containing `<` | Replaced by `sanitizeInput.js`; React's text rendering and the CSP are documented as the real XSS controls. |
+| Sonar: 8 × "Prefer `Number.parseInt` over `parseInt`" | Every `parseInt(x, 10)` in `env.js`, `userRepository.js` and `adminService.js` now calls `Number.parseInt(x, 10)`. Behaviour is identical; the call is the same function on the `Number` namespace. |
+| Sonar: 2 × regular expression with super-linear backtracking (ReDoS risk) | `validation.js`: the email pattern is now `^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$`, where the dot is excluded from the domain classes so each character can match only one way. `eventLogger.js`: the connection-string mask is now `/:\/\/[^/@\s:]+:[^/@\s]+@/g`, which excludes the colon from the user part and no longer starts a scan at every word character. A 200,000-character hostile input is masked in under 1 ms. |
 | Tax card labelled "Estimated Annual Tax" although it covers income received so far | Renamed "Tax So Far This Tax Year" (`estimatedTaxToDate`) with an explanatory hint and method step. |
 
 ## Enabling SonarQube or SonarCloud

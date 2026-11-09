@@ -25,13 +25,13 @@ if (process.env.JWT_SECRET.length < 32 || process.env.JWT_SECRET.startsWith('rep
 }
 
 module.exports = {
-  port: parseInt(process.env.PORT, 10) || 5443,
+  port: Number.parseInt(process.env.PORT, 10) || 5443,
   nodeEnv: process.env.NODE_ENV || 'development',
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '1h',
   sslKeyPath: process.env.SSL_KEY_PATH || './certs/key.pem',
   sslCertPath: process.env.SSL_CERT_PATH || './certs/cert.pem',
-  bcryptSaltRounds: parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 12,
+  bcryptSaltRounds: Number.parseInt(process.env.BCRYPT_SALT_ROUNDS, 10) || 12,
 
   // --- Part 2 additions ---
   // MongoDB is required for normal runs; memory repositories are test-only.
@@ -47,8 +47,8 @@ module.exports = {
   // Separate, stricter rate-limit budget for booking creation, since
   // booking endpoints create financial/transaction records and are a
   // POE-specified sensitive endpoint (IIE, 2026b).
-  bookingRateLimitWindowMs: parseInt(process.env.BOOKING_RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
-  bookingRateLimitMax: parseInt(process.env.BOOKING_RATE_LIMIT_MAX, 10) || 10,
+  bookingRateLimitWindowMs: Number.parseInt(process.env.BOOKING_RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000,
+  bookingRateLimitMax: Number.parseInt(process.env.BOOKING_RATE_LIMIT_MAX, 10) || 10,
 
   // --- Part 3 additions ---
   // Directory for the local structured event log. Overridable so a container can mount a volume here.
@@ -67,8 +67,8 @@ module.exports = {
   // Account lockout: after this many consecutive failed sign-ins the account is locked for a
   // fixed period, which slows online password guessing per account as well as per IP address
   // (OWASP, 2024c; Grassi et al., 2017).
-  lockoutMaxAttempts: parseInt(process.env.LOCKOUT_MAX_ATTEMPTS, 10) || 5,
-  lockoutMinutes: parseInt(process.env.LOCKOUT_MINUTES, 10) || 15,
+  lockoutMaxAttempts: Number.parseInt(process.env.LOCKOUT_MAX_ATTEMPTS, 10) || 5,
+  lockoutMinutes: Number.parseInt(process.env.LOCKOUT_MINUTES, 10) || 15,
 
   // Illustrative freelancer income-tax bracket table for the 2026/27 South
   // African tax year (1 March 2026 - 28 February 2027 - the tax year

@@ -54,7 +54,7 @@ function levelFor(eventType) {
 
 /** Masks credentials embedded in connection strings, e.g. mongodb://user:pass@host. */
 function maskSecrets(text) {
-  return text.replace(/(\w+:\/\/)[^/@\s]+:[^/@\s]+@/g, '$1[REDACTED]@');
+  return text.replace(/:\/\/[^/@\s:]+:[^/@\s]+@/g, '://[REDACTED]@');
 }
 
 /** Makes one value safe to write to a log. */

@@ -34,7 +34,7 @@ async function listUsers(limit) {
 
 /** Newest-first authentication, authorisation and rate-limit events from the local log. */
 function listSecurityEvents(limit) {
-  const cap = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 200);
+  const cap = Math.min(Math.max(Number.parseInt(limit, 10) || 50, 1), 200);
   return readRecentEvents({ limit: cap, categories: ['auth', 'security'] });
 }
 

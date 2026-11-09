@@ -1,5 +1,5 @@
 export function validateAuth(form, registering = false) {
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) return 'Enter a valid email address.';
+  if (!/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(form.email.trim())) return 'Enter a valid email address.';
   if (!form.password) return 'Enter your password.';
   if (registering && (form.password.length < 8 || form.password.length > 72 || new TextEncoder().encode(form.password).length > 72 || !/[a-z]/.test(form.password) || !/[A-Z]/.test(form.password) || !/[0-9]/.test(form.password))) {
     return 'Use 8 to 72 characters, with uppercase, lowercase and a number.';
