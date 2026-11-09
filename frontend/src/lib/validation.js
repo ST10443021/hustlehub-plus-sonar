@@ -1,5 +1,12 @@
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+$/;
+
+function isValidEmail(value) {
+  if (!EMAIL_REGEX.test(value)) return false;
+  const labels = value.slice(value.indexOf('@') + 1).split('.');
+  return labels.length >= 2 && labels.every((label) => label.length > 0);
+}
 export function validateAuth(form, registering = false) {
-  if (!/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(form.email.trim())) return 'Enter a valid email address.';
+  if (!isValidEmail(form.email.trim())) return 'Enter a valid email address.';
   if (!form.password) return 'Enter your password.';
   if (registering && (form.password.length < 8 || form.password.length > 72 || new TextEncoder().encode(form.password).length > 72 || !/[a-z]/.test(form.password) || !/[A-Z]/.test(form.password) || !/[0-9]/.test(form.password))) {
     return 'Use 8 to 72 characters, with uppercase, lowercase and a number.';
