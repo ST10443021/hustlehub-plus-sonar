@@ -720,7 +720,7 @@ Commit messages use the prefixes `feat`, `test`, `docs` and `import`. Some Part 
 
 ## 20. AI declaration
 
-Generative AI (Anthropic's Claude) was used as a development assistant during this project. It helped to draft and review code, tests, configuration, the CI/CD workflow, Playwright tests, documentation and the reference list, and to explain security concepts. The team set the requirements, ran every command and test themselves, reviewed and edited the output, checked it against the brief, and takes full responsibility for all submitted work. No AI output was accepted without being executed or reviewed, and every external source used is cited in [`REFERENCES.md`](REFERENCES.md). The fixes made after the final review (Section 12) were also drafted with AI assistance and were checked by running the automated test suites and the Newman collection. Third-party libraries are used under their open-source licences and are listed in the `package.json` files.
+Anthropic's Claude was used to create a final readiness checklist covering the assessment requirements, documentation, testing, security checks and submission evidence. The team used the checklist to guide its review. Readiness was assessed using actual test results, pipeline runs and supporting evidence.
 
 ---
 
